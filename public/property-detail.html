@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1526 Carrolton Way, Chesapeake, VA 23320 | Vahome.com</title>
+<meta name="description" content="2 bed, 2 bath, 1,727 sqft condo at 1526 Carrolton Way, Chesapeake VA 23320. View photos, property details, and schedule a tour.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:#1f2937;line-height:1.6;background:#fff}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+ul{list-style:none}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --primary-light:#eff6ff;
+  --dark:#0f172a;
+  --dark-800:#1e293b;
+  --gray-50:#f8fafc;
+  --gray-100:#f1f5f9;
+  --gray-200:#e2e8f0;
+  --gray-300:#cbd5e1;
+  --gray-400:#94a3b8;
+  --gray-500:#64748b;
+  --gray-600:#475569;
+  --gray-700:#334155;
+  --red-500:#ef4444;
+  --red-600:#dc2626;
+  --red-700:#b91c1c;
+  --green-500:#22c55e;
+  --green-600:#16a34a;
+  --green-50:#f0fdf4;
+  --sold-primary:#7c3aed;
+  --sold-dark:#5b21b6;
+  --sold-light:#f5f3ff;
+  --radius:12px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+}
+
+/* ====== HEADER ====== */
+.header{background:#fff;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1400px;margin:0 auto;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:1.5rem;font-weight:800;color:var(--dark)}
+.logo span{color:var(--primary)}
+.nav{display:flex;gap:1.75rem;align-items:center}
+.nav a{font-size:.875rem;font-weight:500;color:var(--gray-600);transition:color .2s}
+.nav a:hover{color:var(--primary)}
+.header-actions{display:flex;gap:.75rem;align-items:center}
+.btn-outline{padding:.5rem 1.25rem;border:1.5px solid var(--gray-300);border-radius:8px;font-size:.875rem;font-weight:600;color:var(--dark);transition:all .2s}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-primary{padding:.5rem 1.25rem;background:var(--primary);color:#fff;border-radius:8px;font-size:.875rem;font-weight:600;transition:background .2s}
+.btn-primary:hover{background:var(--primary-dark)}
+
+/* ====== BREADCRUMB ====== */
+.breadcrumb{max-width:1400px;margin:0 auto;padding:.75rem 1.5rem}
+.breadcrumb a,.breadcrumb span{font-size:.8rem;color:var(--gray-500)}
+.breadcrumb a:hover{color:var(--primary)}
+.breadcrumb .sep{margin:0 .4rem}
+
+/* ====== PHOTO GALLERY + CTA ROW ====== */
+.gallery-row{max-width:1400px;margin:0 auto;padding:0 1.5rem .5rem;display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+.gallery{min-width:0}
+.gallery-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:220px 220px;gap:6px;border-radius:var(--radius);overflow:hidden}
+.gallery-cta{display:flex;flex-direction:column;gap:12px}
+.gallery-grid .main-photo{grid-row:1/3;position:relative;overflow:hidden}
+.gallery-grid .photo{position:relative;overflow:hidden;background:var(--gray-200)}
+.gallery-grid .photo img,.gallery-grid .main-photo img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.gallery-grid .photo:hover img,.gallery-grid .main-photo:hover img{transform:scale(1.03)}
+.photo-count{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.7);color:#fff;padding:6px 14px;border-radius:8px;font-size:.8rem;font-weight:600;display:flex;align-items:center;gap:6px;backdrop-filter:blur(4px)}
+.photo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gray-100),var(--gray-200));color:var(--gray-400);font-size:.875rem}
+
+/* ====== STATUS BADGE ====== */
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.status-badge.active{background:#dcfce7;color:#166534}
+.status-badge.active .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
+.status-badge.sold{background:#f3e8ff;color:#6b21a8}
+.status-badge.sold .dot{width:8px;height:8px;border-radius:50%;background:#7c3aed}
+.status-badge.contingent{background:#fef3c7;color:#92400e}
+.status-badge.contingent .dot{width:8px;height:8px;border-radius:50%;background:#f59e0b}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ====== MAIN LAYOUT ====== */
+.property-layout{max-width:1400px;margin:0 auto;padding:1.25rem 1.5rem 3rem;display:grid;grid-template-columns:1fr 380px;gap:2rem;align-items:start}
+.property-main{min-width:0}
+.property-sidebar{position:sticky;top:80px}
+
+/* ====== PRICE & ADDRESS BAR ====== */
+.price-bar{margin-bottom:1.5rem}
+.price-bar .status-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.price-bar .market-time{font-size:.8rem;color:var(--gray-500)}
+.price-bar .price{font-size:2.25rem;font-weight:800;color:var(--dark);letter-spacing:-.5px}
+.price-bar .address{font-size:1.1rem;color:var(--gray-600);margin-top:2px}
+.price-bar .mls-id{font-size:.8rem;color:var(--gray-400);margin-top:4px}
+
+/* ====== KEY STATS ROW ====== */
+.key-stats{display:flex;gap:0;margin:1.25rem 0 1.5rem;border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden}
+.key-stat{flex:1;padding:1rem;text-align:center;border-right:1px solid var(--gray-200)}
+.key-stat:last-child{border-right:none}
+.key-stat .value{font-size:1.5rem;font-weight:700;color:var(--dark)}
+.key-stat .label{font-size:.75rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* ====== QUICK FACTS PILLS ====== */
+.quick-facts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2rem}
+.fact-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;font-size:.8rem;color:var(--gray-700)}
+.fact-pill svg{width:16px;height:16px;color:var(--gray-400);flex-shrink:0}
+
+/* ====== SECTION STYLES ====== */
+.section{margin-bottom:2.25rem}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2px solid var(--gray-100)}
+.section-header h2{font-size:1.2rem;font-weight:700;color:var(--dark)}
+.section-header .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-header .icon svg{width:16px;height:16px}
+.section-header .icon.blue{background:var(--primary-light);color:var(--primary)}
+.section-header .icon.green{background:var(--green-50);color:var(--green-600)}
+.section-header .icon.purple{background:#f5f3ff;color:#7c3aed}
+.section-header .icon.amber{background:#fffbeb;color:#d97706}
+.section-header .icon.red{background:#fef2f2;color:var(--red-600)}
+.section-header .icon.slate{background:var(--gray-100);color:var(--gray-600)}
+.section-header{cursor:pointer;user-select:none}
+.toggle-arrow{width:20px;height:20px;flex-shrink:0;transition:transform .3s ease;color:var(--gray-400)}
+.section.collapsed{margin-bottom:.5rem}
+.section.collapsed .toggle-arrow{transform:rotate(-90deg)}
+.section.collapsed .section-header{margin-bottom:0;padding-bottom:.5rem;border-bottom:1px solid var(--gray-100)}
+.section-body{overflow:hidden;transition:max-height .35s ease,opacity .25s ease;max-height:2000px;opacity:1}
+.section.collapsed .section-body{max-height:0;opacity:0;margin:0;padding:0}
+
+/* ====== DESCRIPTION ====== */
+.description{font-size:.925rem;color:var(--gray-600);line-height:1.8}
+
+/* ====== DETAIL GRID ====== */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.detail-row{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--gray-100);font-size:.875rem}
+.detail-row:nth-child(odd){background:var(--gray-50)}
+.detail-row .dt{color:var(--gray-500);font-weight:500}
+.detail-row .dd{color:var(--dark);font-weight:600;text-align:right}
+
+/* ====== FEATURES LIST ====== */
+.features-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.feature-item{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:.85rem;color:var(--gray-700);background:var(--gray-50);border-radius:6px}
+.feature-item .check{color:var(--green-500);font-weight:700;font-size:.9rem;flex-shrink:0}
+
+/* ====== SCHOOLS ====== */
+.school-card{display:flex;align-items:center;gap:16px;padding:14px 16px;border:1px solid var(--gray-200);border-radius:10px;margin-bottom:8px;transition:border-color .2s}
+.school-card:hover{border-color:var(--primary)}
+.school-rating{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;flex-shrink:0}
+.school-rating.high{background:var(--green-600)}
+.school-rating.mid{background:#eab308}
+.school-rating.low{background:var(--red-500)}
+.school-info .name{font-size:.9rem;font-weight:600;color:var(--dark)}
+.school-info .meta{font-size:.8rem;color:var(--gray-500)}
+
+/* ====== SIDEBAR ====== */
+.sidebar-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow-md);margin-bottom:1rem}
+
+/* CTA Card */
+.cta-card{text-align:center}
+.cta-card .cta-label{font-size:.8rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:6px}
+.cta-card .cta-price{font-size:1.75rem;font-weight:800;color:var(--dark);margin-bottom:4px}
+.cta-card .cta-address{font-size:.85rem;color:var(--gray-500);margin-bottom:1.25rem}
+
+/* Active listing CTA */
+.cta-btn-tour{display:block;width:100%;padding:16px;background:var(--red-600);color:#fff;border-radius:10px;font-size:1.05rem;font-weight:700;text-align:center;cursor:pointer;transition:all .2s;border:none;box-shadow:0 4px 14px rgba(220,38,38,.35)}
+.cta-btn-tour:hover{background:var(--red-700);box-shadow:0 6px 20px rgba(220,38,38,.45);transform:translateY(-1px)}
+
+/* Sold listing CTA */
+.cta-btn-value{display:block;width:100%;padding:16px;background:var(--red-600);color:#fff;border-radius:10px;font-size:1.05rem;font-weight:700;text-align:center;cursor:pointer;transition:all .2s;border:none;box-shadow:0 4px 14px rgba(220,38,38,.35)}
+.cta-btn-value:hover{background:var(--red-700);box-shadow:0 6px 20px rgba(220,38,38,.45);transform:translateY(-1px)}
+
+.cta-sub{font-size:.8rem;color:var(--gray-500);margin-top:10px}
+.cta-sub a{color:var(--primary);font-weight:600}
+
+/* Agent Card */
+.agent-card{display:flex;align-items:center;gap:14px}
+.agent-photo{width:56px;height:56px;border-radius:50%;background:var(--gray-200);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:1.5rem}
+.agent-info .name{font-size:.95rem;font-weight:700;color:var(--dark)}
+.agent-info .brokerage{font-size:.8rem;color:var(--gray-500)}
+.agent-info .phone{font-size:.85rem;color:var(--primary);font-weight:600;margin-top:2px}
+.agent-contact-btn{display:block;width:100%;margin-top:14px;padding:11px;border:2px solid var(--primary);border-radius:8px;color:var(--primary);font-size:.9rem;font-weight:600;text-align:center;transition:all .2s;background:#fff}
+.agent-contact-btn:hover{background:var(--primary);color:#fff}
+
+/* Quick Details Sidebar */
+.sidebar-details{padding:1.25rem}
+.sidebar-detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:.85rem}
+.sidebar-detail-row:last-child{border-bottom:none}
+.sidebar-detail-row .label{color:var(--gray-500)}
+.sidebar-detail-row .val{color:var(--dark);font-weight:600}
+
+/* ====== SOLD OVERLAY ====== */
+.sold-banner{position:absolute;top:16px;left:16px;background:rgba(124,58,237,.9);color:#fff;padding:8px 20px;border-radius:8px;font-size:.9rem;font-weight:700;letter-spacing:.5px;z-index:2;backdrop-filter:blur(4px)}
+.sold-price-info{display:flex;gap:1.5rem;align-items:baseline;flex-wrap:wrap;margin-bottom:4px}
+.sold-price-info .sold-price{font-size:2.25rem;font-weight:800;color:var(--dark)}
+.sold-price-info .list-price{font-size:1rem;color:var(--gray-400);text-decoration:line-through}
+.sold-price-info .diff{font-size:.85rem;font-weight:600;padding:4px 10px;border-radius:6px}
+.sold-price-info .diff.over{background:#dcfce7;color:#166534}
+.sold-price-info .diff.under{background:#fef2f2;color:#991b1b}
+.sold-date{font-size:.85rem;color:var(--gray-500);margin-top:2px}
+
+/* ====== FOOTER ====== */
+.footer{background:var(--dark);color:rgba(255,255,255,.7);padding:2.5rem 1.5rem 1.5rem}
+.footer-inner{max-width:1400px;margin:0 auto}
+.footer-brand{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:.5rem}
+.footer-brand span{color:var(--primary)}
+.footer-disclaimer{font-size:.75rem;color:rgba(255,255,255,.4);line-height:1.7;max-width:800px;margin-top:1rem}
+.footer-bottom{margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;font-size:.75rem}
+
+/* ====== DEMO TOGGLE ====== */
+.demo-bar{background:var(--dark-800);color:#fff;text-align:center;padding:10px;font-size:.8rem;display:flex;align-items:center;justify-content:center;gap:12px}
+.demo-bar span{opacity:.7}
+.toggle-wrap{display:inline-flex;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden}
+.toggle-btn{padding:6px 16px;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;border:none;background:none;transition:all .2s}
+.toggle-btn.active-mode.on{background:var(--green-600);color:#fff}
+.toggle-btn.sold-mode.on{background:var(--sold-primary);color:#fff}
+
+/* ====== RESPONSIVE ====== */
+@media(max-width:1024px){
+  .gallery-row{grid-template-columns:1fr;gap:12px}
+  .gallery-cta{flex-direction:row}
+  .gallery-cta .sidebar-card{flex:1}
+  .property-layout{grid-template-columns:1fr;gap:1.5rem}
+  .property-sidebar{position:static;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+}
+@media(max-width:768px){
+  .gallery-row{grid-template-columns:1fr}
+  .gallery-cta{flex-direction:column}
+  .gallery-grid{grid-template-columns:1fr;grid-template-rows:280px}
+  .gallery-grid .photo:not(.main-photo){display:none}
+  .key-stats{flex-wrap:wrap}
+  .key-stat{flex:1 1 33%}
+  .detail-grid{grid-template-columns:1fr}
+  .features-list{grid-template-columns:1fr}
+  .property-sidebar{grid-template-columns:1fr}
+  .nav{display:none}
+  .quick-facts{gap:6px}
+}
+
+/* ====== HIDE/SHOW by mode ====== */
+body.mode-active .sold-only{display:none!important}
+body.mode-sold .active-only{display:none!important}
+</style>
+</head>
+<body class="mode-active">
+
+<!-- DEMO MODE TOGGLE (remove in production) -->
+<div class="demo-bar">
+  <span>Template Preview:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active-mode on" onclick="setMode('active')">Active Listing</button>
+    <button class="toggle-btn sold-mode" onclick="setMode('sold')">Sold</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">Vahome<span>.com</span></a>
+    <nav class="nav">
+      <a href="#">Buy</a>
+      <a href="#">Sell</a>
+      <a href="#">Areas</a>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <a href="#" class="btn-outline">Call Us</a>
+      <a href="#" class="btn-primary">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="#">Home</a><span class="sep">/</span>
+  <a href="#">Virginia</a><span class="sep">/</span>
+  <a href="#">Chesapeake</a><span class="sep">/</span>
+  <a href="#">The Retreat at Greenbrier</a><span class="sep">/</span>
+  <span>1526 Carrolton Way</span>
+</div>
+
+<!-- PHOTO GALLERY + CTA ROW -->
+<div class="gallery-row">
+  <div class="gallery">
+    <div class="gallery-grid">
+      <div class="main-photo">
+        <div class="sold-only sold-banner">SOLD</div>
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&h=600&fit=crop" alt="1526 Carrolton Way exterior">
+        <div class="photo-count">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          32 Photos
+        </div>
+      </div>
+      <div class="photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=450&h=300&fit=crop" alt="Living room"></div>
+      <div class="photo"><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=450&h=300&fit=crop" alt="Kitchen"></div>
+      <div class="photo"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=450&h=300&fit=crop" alt="Primary bedroom"></div>
+      <div class="photo"><img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=450&h=300&fit=crop" alt="Bathroom"></div>
+    </div>
+  </div>
+
+  <!-- CTA CARDS &mdash; right side, next to photos -->
+  <div class="gallery-cta">
+    <!-- ACTIVE LISTING CTA (buyer-oriented) -->
+    <div class="sidebar-card cta-card active-only">
+      <div class="cta-label" style="color:var(--green-600)">Active Listing</div>
+      <div class="cta-price">$425,000</div>
+      <div class="cta-address">1526 Carrolton Way, Chesapeake</div>
+      <button class="cta-btn-tour" onclick="alert('Tour scheduling form would open here')">
+        &#128197; Schedule Your Tour Today
+      </button>
+      <div class="cta-sub">or call <a href="tel:7577777577">(757) 777-7577</a></div>
+    </div>
+
+    <!-- SOLD LISTING CTA (seller-oriented) -->
+    <div class="sidebar-card cta-card sold-only">
+      <div class="cta-label" style="color:var(--sold-primary)">Recently Sold</div>
+      <div class="cta-price">$430,000</div>
+      <div class="cta-address">Sold March 28, 2026</div>
+      <button class="cta-btn-value" onclick="alert('Home value form would open here')">
+        &#127968; Get A Home Value Today
+      </button>
+      <div class="cta-sub">Find out what your home is worth &mdash; <a href="#">Free CMA</a></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAIN CONTENT AREA -->
+<div class="property-layout">
+
+  <!-- LEFT: PROPERTY DETAILS -->
+  <div class="property-main">
+
+    <!-- PRICE & ADDRESS -->
+    <div class="price-bar">
+      <div class="status-row">
+        <span class="status-badge active active-only"><span class="dot"></span> Active</span>
+        <span class="status-badge sold sold-only"><span class="dot"></span> Sold</span>
+        <span class="market-time active-only">6 days on market</span>
+      </div>
+
+      <!-- Active Mode Price -->
+      <div class="active-only">
+        <div class="price">$425,000</div>
+      </div>
+
+      <!-- Sold Mode Price -->
+      <div class="sold-only">
+        <div class="sold-price-info">
+          <span class="sold-price">$430,000</span>
+          <span class="list-price">$425,000</span>
+          <span class="diff over">+$5,000 over list</span>
+        </div>
+        <div class="sold-date">Sold on March 28, 2026 &middot; Closed in 32 days</div>
+      </div>
+
+      <div class="address">1526 Carrolton Way, Chesapeake, VA 23320</div>
+      <div class="mls-id">MLS# 10625886 &middot; The Retreat at Greenbrier &middot; 32 - South Chesapeake</div>
+    </div>
+
+    <!-- KEY STATS -->
+    <div class="key-stats">
+      <div class="key-stat">
+        <div class="value">2</div>
+        <div class="label">Beds</div>
+      </div>
+      <div class="key-stat">
+        <div class="value">2</div>
+        <div class="label">Baths</div>
+      </div>
+      <div class="key-stat">
+        <div class="value">1,727</div>
+        <div class="label">Sq Ft</div>
+      </div>
+      <div class="key-stat">
+        <div class="value">$246</div>
+        <div class="label">$/Sq Ft</div>
+      </div>
+      <div class="key-stat">
+        <div class="value">2008</div>
+        <div class="label">Built</div>
+      </div>
+      <div class="key-stat">
+        <div class="value">1</div>
+        <div class="label">Garage</div>
+      </div>
+    </div>
+
+    <!-- QUICK FACTS PILLS -->
+    <div class="quick-facts">
+      <span class="fact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Condo &middot; Attached
+      </span>
+      <span class="fact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
+        Quadraville Style
+      </span>
+      <span class="fact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+        1 Story
+      </span>
+      <span class="fact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        HOA: $425/mo
+      </span>
+      <span class="fact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Water View
+      </span>
+      <span class="fact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Corner Lot
+      </span>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        </div>
+        <h2>Description</h2>
+      </div>
+      <div class="section-body">
+      <p class="description">Welcome to "EasyG" where easy living meets the heart of Greenbrier. Low-maintenance comfort with space to relax and enjoy the day. Picture starting your morning with coffee on the covered front porch before heading out for a walk past the neighborhood pond and fountain. Inside, the well-maintained single-level layout offers vaulted ceilings, wide-plank LVP flooring, and a cozy gas fireplace that anchors the main living space. The kitchen flows easily into the dining and living areas and includes a bright breakfast area, currently arranged as a sitting and workspace, offering flexibility for hobbies, reading, or morning coffee. The primary suite features a tray ceiling and abundant natural light. Additional highlights include a two-car attached garage and corner location. Community amenities include clubhouse, pool, fitness center, and maintained grounds. At EasyG, everyday living really can feel this simple.</p>
+      </div>
+    </div>
+
+    <!-- PROPERTY DETAILS -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        </div>
+        <h2>Property Details</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Property Type</span><span class="dd">Residential &middot; Condo</span></div>
+        <div class="detail-row"><span class="dt">Style</span><span class="dd">Quadraville</span></div>
+        <div class="detail-row"><span class="dt">Res Type</span><span class="dd">Attached</span></div>
+        <div class="detail-row"><span class="dt">Stories</span><span class="dd">1.0</span></div>
+        <div class="detail-row"><span class="dt">Year Built</span><span class="dd">2008</span></div>
+        <div class="detail-row"><span class="dt">Approx Sq Ft</span><span class="dd">1,727</span></div>
+        <div class="detail-row"><span class="dt">Bedrooms</span><span class="dd">2</span></div>
+        <div class="detail-row"><span class="dt">Beds w/ Ensuite</span><span class="dd">1</span></div>
+        <div class="detail-row"><span class="dt">Full Baths</span><span class="dd">2</span></div>
+        <div class="detail-row"><span class="dt">Half Baths</span><span class="dd">0</span></div>
+        <div class="detail-row"><span class="dt">Total Rooms</span><span class="dd">6</span></div>
+        <div class="detail-row"><span class="dt">Condo Level</span><span class="dd">1</span></div>
+        <div class="detail-row"><span class="dt">Unit Desc</span><span class="dd">1 Living Lvl, Corner Unit</span></div>
+        <div class="detail-row"><span class="dt">1st Flr Bed/Bath</span><span class="dd">Yes</span></div>
+        <div class="detail-row"><span class="dt">Other Rooms</span><span class="dd">1st Floor BR, 1st Floor Primary BR, Attic, Breakfast Area, PBR with Bath, Pantry, Porch, Utility Room</span></div>
+        <div class="detail-row"><span class="dt">Fireplace</span><span class="dd">1 &middot; Gas-Natural</span></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- CONSTRUCTION & EXTERIOR -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M4 20V8l8-6 8 6v12"/><path d="M9 20v-6h6v6"/></svg>
+        </div>
+        <h2>Construction &amp; Exterior</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Exterior</span><span class="dd">Brick, Vinyl</span></div>
+        <div class="detail-row"><span class="dt">Foundation</span><span class="dd">Slab</span></div>
+        <div class="detail-row"><span class="dt">Roof</span><span class="dd">Asphalt Shingle</span></div>
+        <div class="detail-row"><span class="dt">Exterior Features</span><span class="dd">Corner</span></div>
+        <div class="detail-row"><span class="dt">Pool</span><span class="dd">No Pool</span></div>
+        <div class="detail-row"><span class="dt">Fence</span><span class="dd">None</span></div>
+        <div class="detail-row"><span class="dt">View</span><span class="dd">Water</span></div>
+        <div class="detail-row"><span class="dt">Waterfront</span><span class="dd">Not Waterfront</span></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- INTERIOR FEATURES -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 9V6a2 2 0 00-2-2H6a2 2 0 00-2 2v3"/><path d="M2 11v5a2 2 0 002 2h16a2 2 0 002-2v-5a3 3 0 00-3-3H5a3 3 0 00-3 3z"/><path d="M4 18v2M20 18v2"/></svg>
+        </div>
+        <h2>Interior Features</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Flooring</span><span class="dd">Carpet, Laminate/LVP</span></div>
+        <div class="detail-row"><span class="dt">Cooling</span><span class="dd">Central Air</span></div>
+        <div class="detail-row"><span class="dt">Heating</span><span class="dd">Heat Pump, Nat Gas</span></div>
+        <div class="detail-row"><span class="dt">Accessibility</span><span class="dd">Main Floor Laundry</span></div>
+      </div>
+      <div style="margin-top:14px">
+        <div style="font-size:.8rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Interior Amenities</div>
+        <div class="features-list">
+          <div class="feature-item"><span class="check">&#10003;</span> Fireplace Gas-Natural</div>
+          <div class="feature-item"><span class="check">&#10003;</span> Handicap Accessible</div>
+          <div class="feature-item"><span class="check">&#10003;</span> Walk-In Closet</div>
+          <div class="feature-item"><span class="check">&#10003;</span> Window Treatments</div>
+          <div class="feature-item"><span class="check">&#10003;</span> Vaulted Ceilings</div>
+          <div class="feature-item"><span class="check">&#10003;</span> Tray Ceiling</div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- APPLIANCES & EQUIPMENT -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon slate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><circle cx="12" cy="16" r="2"/></svg>
+        </div>
+        <h2>Appliances &amp; Equipment</h2>
+      </div>
+      <div class="section-body">
+      <div class="features-list">
+        <div class="feature-item"><span class="check">&#10003;</span> Dishwasher</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Disposal</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Dryer</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Microwave</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Range-Electric</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Refrigerator</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Washer</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Cable Hookup</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Ceiling Fan</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Gar Door Opener</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Jetted Tub</div>
+      </div>
+      </div>
+    </div>
+
+    <!-- PARKING & GARAGE -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <h2>Parking &amp; Garage</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Garage</span><span class="dd">Yes</span></div>
+        <div class="detail-row"><span class="dt">Garage Sq Ft</span><span class="dd">536</span></div>
+        <div class="detail-row"><span class="dt">Parking</span><span class="dd">Garage Att 2 Car, 2 Space, Driveway Spc</span></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- UTILITIES -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h2>Utilities</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Water</span><span class="dd">City/County</span></div>
+        <div class="detail-row"><span class="dt">Sewer</span><span class="dd">City/County</span></div>
+        <div class="detail-row"><span class="dt">Water Heater</span><span class="dd">Gas</span></div>
+        <div class="detail-row"><span class="dt">Heating</span><span class="dd">Heat Pump, Nat Gas</span></div>
+        <div class="detail-row"><span class="dt">Cooling</span><span class="dd">Central Air</span></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- FINANCIAL DETAILS -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <h2>Financial Details</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">List Price</span><span class="dd">$425,000</span></div>
+        <div class="detail-row"><span class="dt">Price/Sq Ft</span><span class="dd">$246.09</span></div>
+        <div class="detail-row"><span class="dt">Approx Taxes</span><span class="dd">$4,021/yr</span></div>
+        <div class="detail-row"><span class="dt">HOA/POA</span><span class="dd">Yes</span></div>
+        <div class="detail-row"><span class="dt">Mo. HOA/POA Fees</span><span class="dd">$0</span></div>
+        <div class="detail-row"><span class="dt">Mo. Condo Fees</span><span class="dd">$425</span></div>
+        <div class="detail-row"><span class="dt">Financing</span><span class="dd">None listed</span></div>
+        <div class="detail-row"><span class="dt">Possession</span><span class="dd">At Settlement</span></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- COMMUNITY AMENITIES -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h2>Community Amenities</h2>
+      </div>
+      <div class="section-body">
+      <div class="features-list">
+        <div class="feature-item"><span class="check">&#10003;</span> Clubhouse</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Exercise Room</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Ground Maintenance</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Pool</div>
+        <div class="feature-item"><span class="check">&#10003;</span> Trash Pickup</div>
+      </div>
+      </div>
+    </div>
+
+    <!-- SCHOOLS -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+        </div>
+        <h2>Schools</h2>
+      </div>
+      <div class="section-body">
+      <div class="school-card">
+        <div class="school-rating" style="background:var(--gray-400)">&mdash;</div>
+        <div class="school-info">
+          <div class="name">Great Bridge Primary</div>
+          <div class="meta">Elementary School &middot; Chesapeake Public Schools</div>
+        </div>
+      </div>
+      <div class="school-card">
+        <div class="school-rating" style="background:var(--gray-400)">&mdash;</div>
+        <div class="school-info">
+          <div class="name">Greenbrier Middle</div>
+          <div class="meta">Middle School &middot; Chesapeake Public Schools</div>
+        </div>
+      </div>
+      <div class="school-card">
+        <div class="school-rating" style="background:var(--gray-400)">&mdash;</div>
+        <div class="school-info">
+          <div class="name">Indian River High</div>
+          <div class="meta">High School &middot; Chesapeake Public Schools</div>
+        </div>
+      </div>
+      <div style="font-size:.65rem;color:var(--gray-400);margin-top:6px">School ratings provided by GreatSchools.org</div>
+      </div>
+    </div>
+
+    <!-- LOCATION & ZONING -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h2>Location &amp; Zoning</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Area</span><span class="dd">32 - South Chesapeake</span></div>
+        <div class="detail-row"><span class="dt">Subdivision</span><span class="dd">407 - The Retreat at Greenbrier</span></div>
+        <div class="detail-row"><span class="dt">Parcel ID</span><span class="dd">0294003000100</span></div>
+        <div class="detail-row"><span class="dt">Zoning</span><span class="dd">Not Specified</span></div>
+        <div class="detail-row"><span class="dt">AICUZ Noise</span><span class="dd">~65</span></div>
+        <div class="detail-row"><span class="dt">AICUZ Crash</span><span class="dd">None</span></div>
+        <div class="detail-row"><span class="dt">New Construction</span><span class="dd">No</span></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- DISCLOSURES -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon slate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h2>Disclosures &amp; Compliance</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Disclosures</span><span class="dd">Residential 55+ Community, Disclosure Statement</span></div>
+        <div class="detail-row"><span class="dt">Green Cert</span><span class="dd">&mdash;</span></div>
+        <div class="detail-row"><span class="dt">Sustainability</span><span class="dd">&mdash;</span></div>
+        <div class="detail-row"><span class="dt">Contingencies</span><span class="dd">&mdash;</span></div>
+        <div class="detail-row"><span class="dt">Miscellaneous</span><span class="dd">&mdash;</span></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- ROOM DETAILS -->
+    <div class="section" onclick="toggleSection(this)">
+      <div class="section-header">
+        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <h2>Room Details</h2>
+      </div>
+      <div class="section-body">
+      <div class="detail-grid">
+        <div class="detail-row"><span class="dt">Primary Bedroom</span><span class="dd">Level 1</span></div>
+      </div>
+      <div style="font-size:.8rem;color:var(--gray-400);margin-top:8px;font-style:italic">Additional room dimensions available upon request.</div>
+      </div>
+    </div>
+
+    <!-- LISTING INFO -->
+    <div class="section" style="margin-top:2rem;padding-top:1.5rem;border-top:2px solid var(--gray-200)">
+      <div style="font-size:.75rem;color:var(--gray-400);line-height:1.8">
+        <strong>Listing Information</strong><br>
+        Listed by: BHHS RW Towne Realty &middot; MLS# 10625886<br>
+        Data provided by REIN MLS. Information deemed reliable but not guaranteed.<br>
+        Last updated: April 1, 2026 at 10:57 PM<br>
+        Listing courtesy of BHHS RW Towne Realty.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: SIDEBAR -->
+  <div class="property-sidebar">
+
+    <!-- QUICK DETAILS SIDEBAR -->
+    <div class="sidebar-card sidebar-details">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:10px;color:var(--dark)">Quick Facts</div>
+      <div class="sidebar-detail-row"><span class="label">Type</span><span class="val">Condo</span></div>
+      <div class="sidebar-detail-row"><span class="label">Year Built</span><span class="val">2008</span></div>
+      <div class="sidebar-detail-row"><span class="label">Lot Size</span><span class="val">&mdash;</span></div>
+      <div class="sidebar-detail-row"><span class="label">Taxes</span><span class="val">$4,021/yr</span></div>
+      <div class="sidebar-detail-row"><span class="label">HOA</span><span class="val">$425/mo</span></div>
+      <div class="sidebar-detail-row"><span class="label">Parking</span><span class="val">2 Car Garage</span></div>
+      <div class="sidebar-detail-row"><span class="label">Heating</span><span class="val">Heat Pump</span></div>
+      <div class="sidebar-detail-row"><span class="label">Cooling</span><span class="val">Central Air</span></div>
+    </div>
+
+    <!-- MONTHLY COST ESTIMATE (Active only) -->
+    <div class="sidebar-card active-only" style="padding:1.25rem">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:12px;color:var(--dark)">Estimated Monthly Cost</div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">Principal &amp; Interest</span><span style="font-weight:600">$2,095</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">Property Tax</span><span style="font-weight:600">$335</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">HOA/Condo Fee</span><span style="font-weight:600">$425</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">Insurance</span><span style="font-weight:600">$175</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:1rem"><span style="font-weight:700;color:var(--dark)">Total</span><span style="font-weight:800;color:var(--primary);font-size:1.1rem">$3,030/mo</span></div>
+      <div style="font-size:.7rem;color:var(--gray-400);margin-top:8px">*Estimated based on 20% down, 6.5% rate. For illustration only.</div>
+    </div>
+
+    <!-- SOLD COMPARISON CARD (Sold only) -->
+    <div class="sidebar-card sold-only" style="padding:1.25rem">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:12px;color:var(--dark)">Sale Summary</div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">List Price</span><span style="font-weight:600">$425,000</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">Sold Price</span><span style="font-weight:600;color:var(--green-600)">$430,000</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">Over/Under</span><span style="font-weight:600;color:var(--green-600)">+$5,000 (1.2%)</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-500)">Days on Market</span><span style="font-weight:600">32</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem"><span style="color:var(--gray-500)">Date Closed</span><span style="font-weight:600">03/28/2026</span></div>
+      <div style="margin-top:16px;padding:14px;background:var(--sold-light);border-radius:8px;text-align:center">
+        <div style="font-size:.8rem;color:var(--sold-dark);font-weight:600;margin-bottom:4px">Thinking of selling?</div>
+        <div style="font-size:.75rem;color:var(--gray-600)">Homes in this area are selling fast. Find out what yours is worth.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Vahome<span>.com</span></div>
+    <div class="footer-disclaimer">
+      Listing information provided by REIN MLS. Information is deemed reliable but is not guaranteed. All measurements are approximate. Buyer should independently verify all information. Equal Housing Opportunity.
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Vahome.com. All rights reserved.</span>
+      <span>
+        <a href="#" style="color:rgba(255,255,255,.5)">Privacy</a> &middot;
+        <a href="#" style="color:rgba(255,255,255,.5)">Terms</a> &middot;
+        <a href="#" style="color:rgba(255,255,255,.5)">Fair Housing</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function setMode(mode) {
+  document.body.className = 'mode-' + mode;
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('on'));
+  if (mode === 'active') {
+    document.querySelector('.toggle-btn.active-mode').classList.add('on');
+  } else {
+    document.querySelector('.toggle-btn.sold-mode').classList.add('on');
+  }
+}
+function toggleSection(el) {
+  el.classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>
