@@ -244,6 +244,7 @@ export function listingsToGeoJSON(listings: Listing[]) {
         id: l.id,
         price: l.price,
         priceLabel: formatPrice(l.price),
+        priceFull: formatPriceFull(l.price),
         address: getFullAddress(l),
         beds: l.beds,
         baths: l.baths,
