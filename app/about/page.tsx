@@ -4,7 +4,7 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4">
         {/* Hero */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Meet Tom & Dariya Milan</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">About VaHome</h1>
           <p className="text-gray-500 text-lg">
             Your trusted real estate team in Hampton Roads, Virginia.
           </p>
@@ -19,13 +19,13 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Story</h2>
             <div className="space-y-4 text-gray-600 leading-relaxed">
               <p>
-                We&apos;re Tom and Dariya Milan, a husband-and-wife real estate team based in Virginia Beach.
+                VaHome is a dedicated real estate team based in Virginia Beach.
                 With over a decade of experience in the Hampton Roads market, we&apos;ve helped families find
                 their perfect homes across Virginia Beach, Norfolk, Chesapeake, Suffolk, and beyond.
               </p>
               <p>
                 As active real estate investors ourselves, we bring a unique perspective to every transaction.
-                We don&apos;t just find houses — we identify value, spot potential issues, and negotiate the best
+                We don&apos;t just find houses &mdash; we identify value, spot potential issues, and negotiate the best
                 deals for our clients.
               </p>
               <p>
