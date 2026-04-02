@@ -171,9 +171,9 @@ export default function MapPage() {
           filter: ['!', ['has', 'point_count']],
           paint: {
             'circle-radius': 14,
-            'circle-color': '#ffffff',
+            'circle-color': '#1e3a5f',
             'circle-stroke-width': 1.5,
-            'circle-stroke-color': '#cbd5e1',
+            'circle-stroke-color': '#ffffff',
             'circle-opacity': 0.95,
           },
         })
@@ -192,7 +192,7 @@ export default function MapPage() {
             'text-ignore-placement': false,
           },
           paint: {
-            'text-color': '#111827',
+            'text-color': '#ffffff',
           },
         })
 
