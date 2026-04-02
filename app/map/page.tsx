@@ -1,84 +1,102 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import { sampleListings, videoMarkers, formatPrice, formatPriceFull, getFullAddress, getListingUrl, listingsToGeoJSON } from '../lib/listings'
+import type { Listing, VideoMarker as VideoMarkerType } from '../lib/listings'
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 
-// ---- Sample listing data (will be replaced with REIN MLS feed) ----
-const sampleListings = [
-  { id:1, lat:36.8507, lng:-76.4345, price:664900, beds:3, baths:2, sqft:2558, type:'New Construction', address:'317 Rhapsody Dr, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop' },
-  { id:2, lat:36.8623, lng:-76.4187, price:475000, beds:3, baths:3, sqft:2500, type:'House for sale', address:'3005 Wincanton Cv, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop' },
-  { id:3, lat:36.8341, lng:-76.4512, price:329000, beds:4, baths:2, sqft:1566, type:'House for sale', address:'5628 Plummer Blvd, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop' },
-  { id:4, lat:36.8789, lng:-76.3998, price:415000, beds:4, baths:2.5, sqft:2100, type:'House for sale', address:'1204 Copper Stone Cir, Chesapeake, VA 23322', img:'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=400&h=300&fit=crop' },
-  { id:5, lat:36.8156, lng:-76.4678, price:289900, beds:3, baths:2, sqft:1450, type:'House for sale', address:'4012 River Shore Rd, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop' },
-  { id:6, lat:36.8934, lng:-76.4123, price:545000, beds:5, baths:3, sqft:3200, type:'House for sale', address:'2301 Eagles Nest Trl, Chesapeake, VA 23322', img:'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&h=300&fit=crop' },
-  { id:7, lat:36.8445, lng:-76.3876, price:375000, beds:3, baths:2, sqft:1890, type:'Townhouse', address:'887 Cantebury Ln, Chesapeake, VA 23320', img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop' },
-  { id:8, lat:36.8678, lng:-76.4534, price:599000, beds:4, baths:3.5, sqft:2850, type:'New Construction', address:'150 Waterford Way, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&h=300&fit=crop' },
-  { id:9, lat:36.8234, lng:-76.4234, price:249900, beds:2, baths:1, sqft:1100, type:'Condo for sale', address:'6789 Harbor View Blvd, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=400&h=300&fit=crop' },
-  { id:10, lat:36.8812, lng:-76.4401, price:725000, beds:5, baths:4, sqft:3600, type:'House for sale', address:'501 Bridge Hampton Way, Chesapeake, VA 23322', img:'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop' },
-  { id:11, lat:36.7965, lng:-76.4890, price:215000, beds:2, baths:1.5, sqft:980, type:'Condo for sale', address:'120 Marina Dr, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=300&fit=crop' },
-  { id:12, lat:36.9012, lng:-76.3765, price:879000, beds:6, baths:4.5, sqft:4200, type:'Luxury Home', address:'900 Greenbrier Pkwy, Chesapeake, VA 23320', img:'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&h=300&fit=crop' },
-  { id:13, lat:36.8567, lng:-76.3543, price:345000, beds:3, baths:2, sqft:1750, type:'House for sale', address:'2455 Cedar Rd, Chesapeake, VA 23322', img:'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=400&h=300&fit=crop' },
-  { id:14, lat:36.8345, lng:-76.3987, price:395000, beds:3, baths:2.5, sqft:2000, type:'Townhouse', address:'789 Volvo Pkwy, Chesapeake, VA 23320', img:'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop' },
-  { id:15, lat:36.8123, lng:-76.4456, price:275000, beds:3, baths:1.5, sqft:1350, type:'House for sale', address:'333 Pughsville Rd, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=400&h=300&fit=crop' },
-  { id:16, lat:36.8890, lng:-76.4267, price:499000, beds:4, baths:3, sqft:2650, type:'House for sale', address:'1700 Battlefield Blvd S, Chesapeake, VA 23322', img:'https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=400&h=300&fit=crop' },
-  { id:17, lat:36.8678, lng:-76.3678, price:310000, beds:3, baths:2, sqft:1600, type:'House for sale', address:'4500 Indian River Rd, Chesapeake, VA 23325', img:'https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=400&h=300&fit=crop' },
-  { id:18, lat:36.8456, lng:-76.4789, price:450000, beds:4, baths:2.5, sqft:2300, type:'House for sale', address:'800 Sleepy Hole Rd, Suffolk, VA 23435', img:'https://images.unsplash.com/photo-1600047508006-aa71d8adfe8d?w=400&h=300&fit=crop' },
-]
-
-// ---- Video markers (neighborhood tours) ----
-const videoMarkers = [
-  { id:'v1', lat:36.8430, lng:-76.4350, title:'Harbor View, Suffolk', videoId:'dQw4w9WgXcQ', description:'Explore the Harbor View community with waterfront dining and new construction homes.' },
-  { id:'v2', lat:36.8900, lng:-76.3900, title:'Greenbrier, Chesapeake', videoId:'dQw4w9WgXcQ', description:'Tour Greenbrier with top-rated schools, shopping, and family-friendly neighborhoods.' },
-  { id:'v3', lat:36.8200, lng:-76.4600, title:'Downtown Suffolk', videoId:'dQw4w9WgXcQ', description:'Historic downtown Suffolk with charming shops, restaurants, and revitalized living.' },
-  { id:'v4', lat:36.8700, lng:-76.4500, title:'Western Branch, Chesapeake', videoId:'dQw4w9WgXcQ', description:'Western Branch offers quiet suburban living with easy access to I-664.' },
-  { id:'v5', lat:36.8550, lng:-76.3700, title:'Great Bridge, Chesapeake', videoId:'dQw4w9WgXcQ', description:'Great Bridge features the Battlefield Park, excellent schools, and a tight-knit community.' },
-]
-
-function formatPrice(price: number): string {
-  if (price >= 1000000) return '$' + (price / 1000000).toFixed(1) + 'M'
-  return '$' + (price / 1000).toFixed(0) + 'K'
+// ---- Filter types ----
+interface Filters {
+  type: string
+  minPrice: number
+  maxPrice: number
+  minBeds: number
 }
 
-function formatPriceFull(price: number): string {
-  return '$' + price.toLocaleString()
+const DEFAULT_FILTERS: Filters = {
+  type: 'all',
+  minPrice: 0,
+  maxPrice: 5000000,
+  minBeds: 0,
 }
 
-type Listing = typeof sampleListings[number]
+function filterListings(listings: Listing[], filters: Filters): Listing[] {
+  return listings.filter(l => {
+    if (filters.type !== 'all') {
+      const t = l.type.toLowerCase()
+      if (filters.type === 'house' && !t.includes('house') && !t.includes('construction')) return false
+      if (filters.type === 'condo' && !t.includes('condo')) return false
+      if (filters.type === 'townhouse' && !t.includes('townhouse')) return false
+    }
+    if (l.price < filters.minPrice || l.price > filters.maxPrice) return false
+    if (l.beds < filters.minBeds) return false
+    return true
+  })
+}
+
+// ---- Price range options ----
+const priceOptions = [
+  { label: 'Any', min: 0, max: 5000000 },
+  { label: 'Under $300K', min: 0, max: 300000 },
+  { label: '$300K–$500K', min: 300000, max: 500000 },
+  { label: '$500K–$750K', min: 500000, max: 750000 },
+  { label: '$750K+', min: 750000, max: 5000000 },
+]
+
+const bedOptions = [
+  { label: 'Any', value: 0 },
+  { label: '2+', value: 2 },
+  { label: '3+', value: 3 },
+  { label: '4+', value: 4 },
+  { label: '5+', value: 5 },
+]
 
 export default function MapPage() {
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
-  const markersRef = useRef<any[]>([])
+  const videoMarkersRef = useRef<any[]>([])
   const [visibleListings, setVisibleListings] = useState<Listing[]>(sampleListings)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
-  const [activeFilter, setActiveFilter] = useState('all')
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null)
-  const [activeVideo, setActiveVideo] = useState<typeof videoMarkers[number] | null>(null)
+  const [activeVideo, setActiveVideo] = useState<VideoMarkerType | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
 
+  // Filter listings based on current filters
+  const filteredListings = useMemo(() => filterListings(sampleListings, filters), [filters])
+
+  // Update visible listings based on map bounds + filters
   const updateVisibleListings = useCallback(() => {
     if (!mapRef.current) return
     const bounds = mapRef.current.getBounds()
-    const visible = sampleListings.filter(l => {
+    const visible = filteredListings.filter(l => {
       return l.lng >= bounds.getWest() && l.lng <= bounds.getEast() &&
-             l.lat >= bounds.getSouth() && l.lat <= bounds.getNorth()
-    }).filter(l => {
-      if (activeFilter === 'all') return true
-      if (activeFilter === 'house') return l.type.toLowerCase().includes('house') || l.type.toLowerCase().includes('construction') || l.type.toLowerCase().includes('luxury')
-      if (activeFilter === 'condo') return l.type.toLowerCase().includes('condo')
-      if (activeFilter === 'townhouse') return l.type.toLowerCase().includes('townhouse')
-      return true
+        l.lat >= bounds.getSouth() && l.lat <= bounds.getNorth()
     })
     setVisibleListings(visible)
-  }, [activeFilter])
+  }, [filteredListings])
 
+  // Update GeoJSON source when filters change
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return
+    const source = mapRef.current.getSource('listings')
+    if (source) {
+      source.setData(listingsToGeoJSON(filteredListings))
+    }
+    updateVisibleListings()
+  }, [filteredListings, mapLoaded, updateVisibleListings])
+
+  // Initialize map
   useEffect(() => {
     if (mapRef.current || !mapContainer.current) return
 
     const initMap = async () => {
       const mapboxgl = (await import('mapbox-gl')).default
-      // Load Mapbox CSS
+
+      // Preload Mapbox CSS
       if (!document.getElementById('mapbox-gl-css')) {
         const link = document.createElement('link')
         link.id = 'mapbox-gl-css'
@@ -99,43 +117,38 @@ export default function MapPage() {
       })
 
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
-
+      map.addControl(new mapboxgl.GeolocateControl({ trackUserLocation: false }), 'top-right')
       mapRef.current = map
 
       map.on('load', () => {
         setMapLoaded(true)
 
-        // Add listing markers as a GeoJSON source with clustering
+        // ---- GeoJSON source with clustering ----
         map.addSource('listings', {
           type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: sampleListings.map(l => ({
-              type: 'Feature' as const,
-              properties: { id: l.id, price: l.price, priceLabel: formatPrice(l.price), address: l.address, beds: l.beds, baths: l.baths, sqft: l.sqft, type: l.type, img: l.img },
-              geometry: { type: 'Point' as const, coordinates: [l.lng, l.lat] }
-            }))
-          },
+          data: listingsToGeoJSON(sampleListings),
           cluster: true,
-          clusterMaxZoom: 14,
-          clusterRadius: 60
+          clusterMaxZoom: 13,
+          clusterRadius: 60,
         })
 
-        // Cluster circles
+        // ---- Cluster circles ----
         map.addLayer({
           id: 'clusters',
           type: 'circle',
           source: 'listings',
           filter: ['has', 'point_count'],
           paint: {
-            'circle-color': ['step', ['get', 'point_count'], '#f94432', 10, '#c21e11', 30, '#841e17'],
-            'circle-radius': ['step', ['get', 'point_count'], 24, 10, 30, 30, 36],
+            'circle-color': ['step', ['get', 'point_count'],
+              '#f94432', 10, '#c21e11', 50, '#841e17', 200, '#5c0a0a'],
+            'circle-radius': ['step', ['get', 'point_count'],
+              22, 10, 28, 50, 34, 200, 40],
             'circle-stroke-width': 3,
-            'circle-stroke-color': '#ffffff'
-          }
+            'circle-stroke-color': '#ffffff',
+          },
         })
 
-        // Cluster count labels
+        // ---- Cluster count labels ----
         map.addLayer({
           id: 'cluster-count',
           type: 'symbol',
@@ -144,24 +157,82 @@ export default function MapPage() {
           layout: {
             'text-field': '{point_count_abbreviated}',
             'text-font': ['DIN Pro Medium', 'Arial Unicode MS Bold'],
-            'text-size': 14
+            'text-size': 13,
           },
-          paint: { 'text-color': '#ffffff' }
+          paint: { 'text-color': '#ffffff' },
         })
 
-        // Individual listing points (invisible - we use HTML markers instead for price pills)
+        // ---- Individual listing circles (base layer for interaction) ----
         map.addLayer({
-          id: 'unclustered-point',
+          id: 'listing-points',
           type: 'circle',
           source: 'listings',
           filter: ['!', ['has', 'point_count']],
           paint: {
-            'circle-radius': 0,
-            'circle-opacity': 0
+            'circle-radius': 20,
+            'circle-color': '#ffffff',
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#f94432',
+            'circle-opacity': 0.95,
+          },
+        })
+
+        // ---- Price labels on individual listings ----
+        map.addLayer({
+          id: 'listing-prices',
+          type: 'symbol',
+          source: 'listings',
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'text-field': ['get', 'priceLabel'],
+            'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
+            'text-size': 11,
+            'text-allow-overlap': true,
+            'text-ignore-placement': false,
+          },
+          paint: {
+            'text-color': '#111827',
+          },
+        })
+
+        // ---- Hover state: enlarge on hover ----
+        let hoveredFeatureId: number | null = null
+
+        map.on('mouseenter', 'listing-points', (e: any) => {
+          map.getCanvas().style.cursor = 'pointer'
+          if (e.features && e.features.length > 0) {
+            const id = e.features[0].properties.id
+            setHoveredId(id)
           }
         })
 
-        // Click cluster to zoom in
+        map.on('mouseleave', 'listing-points', () => {
+          map.getCanvas().style.cursor = ''
+          setHoveredId(null)
+        })
+
+        // ---- Click listing → navigate to property detail page ----
+        map.on('click', 'listing-points', (e: any) => {
+          if (e.features && e.features.length > 0) {
+            const props = e.features[0].properties
+            const url = props.url
+            if (url) {
+              window.location.href = url
+            }
+          }
+        })
+
+        map.on('click', 'listing-prices', (e: any) => {
+          if (e.features && e.features.length > 0) {
+            const props = e.features[0].properties
+            const url = props.url
+            if (url) {
+              window.location.href = url
+            }
+          }
+        })
+
+        // ---- Click cluster to zoom in ----
         map.on('click', 'clusters', (e: any) => {
           const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
           if (!features.length) return
@@ -173,67 +244,37 @@ export default function MapPage() {
           })
         })
 
-        // Change cursor on cluster hover
-        map.on('mouseenter', 'clusters', () => { map.getCanvas().style.cursor = 'pointer' })
-        map.on('mouseleave', 'clusters', () => { map.getCanvas().style.cursor = '' })
+        map.on('mouseenter', 'clusters', () => {
+          map.getCanvas().style.cursor = 'pointer'
+        })
+        map.on('mouseleave', 'clusters', () => {
+          map.getCanvas().style.cursor = ''
+        })
 
-        // Update visible listings on move
-        map.on('moveend', () => updateVisibleListings())
+        // Update visible listings on map move — using 'idle' instead of 'moveend'
+        // for smoother updates, and 'idle' only fires once the map is done rendering
+        map.on('idle', () => updateVisibleListings())
         updateVisibleListings()
       })
 
-      // Add price pill HTML markers for unclustered points
-      const updateMarkers = () => {
-        if (!map.isStyleLoaded()) return
-        // Clear old markers
-        markersRef.current.forEach(m => m.remove())
-        markersRef.current = []
-
-        const features = map.querySourceFeatures('listings', { filter: ['!', ['has', 'point_count']] } as any)
-        const seen = new Set<number>()
-        features.forEach((f: any) => {
-          const id = f.properties.id
-          if (seen.has(id)) return
-          seen.add(id)
-
-          const el = document.createElement('div')
-          el.className = 'map-price-marker'
-          el.setAttribute('data-listing-id', String(id))
-          el.textContent = f.properties.priceLabel
-          el.onclick = () => {
-            const listing = sampleListings.find(l => l.id === id)
-            if (listing) setSelectedListing(listing)
-          }
-          el.onmouseenter = () => setHoveredId(id)
-          el.onmouseleave = () => setHoveredId(null)
-
-          const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
-            .setLngLat(f.geometry.coordinates as [number, number])
-            .addTo(map)
-          markersRef.current.push(marker)
-        })
-      }
-
-      map.on('render', () => {
-        if (map.isSourceLoaded('listings')) updateMarkers()
-      })
-
-      // Add video markers
+      // ---- Video markers (HTML markers — only 5, so DOM is fine) ----
       videoMarkers.forEach(v => {
         const el = document.createElement('div')
         el.className = 'map-video-marker'
         el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>'
         el.onclick = () => setActiveVideo(v)
-
-        new mapboxgl.Marker({ element: el, anchor: 'center' })
+        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
           .setLngLat([v.lng, v.lat])
           .addTo(map)
+        videoMarkersRef.current.push(marker)
       })
     }
 
     initMap()
 
     return () => {
+      videoMarkersRef.current.forEach(m => m.remove())
+      videoMarkersRef.current = []
       if (mapRef.current) {
         mapRef.current.remove()
         mapRef.current = null
@@ -241,27 +282,19 @@ export default function MapPage() {
     }
   }, [updateVisibleListings])
 
-  // Update filter
-  useEffect(() => {
-    updateVisibleListings()
-  }, [activeFilter, updateVisibleListings])
-
-  // Highlight marker on hover
-  useEffect(() => {
-    document.querySelectorAll('.map-price-marker').forEach(el => {
-      const id = parseInt(el.getAttribute('data-listing-id') || '0')
-      if (id === hoveredId) el.classList.add('hovered')
-      else el.classList.remove('hovered')
-    })
-  }, [hoveredId])
-
+  // Fly to listing from panel click
   const flyToListing = (listing: Listing) => {
     if (!mapRef.current) return
-    mapRef.current.flyTo({ center: [listing.lng, listing.lat], zoom: 15, duration: 800 })
+    mapRef.current.flyTo({
+      center: [listing.lng, listing.lat],
+      zoom: 15,
+      duration: 800,
+    })
     setSelectedListing(listing)
+    setMobileDrawerOpen(false)
   }
 
-  const filters = [
+  const typeFilters = [
     { key: 'all', label: 'All' },
     { key: 'house', label: 'Houses' },
     { key: 'condo', label: 'Condos' },
@@ -270,71 +303,42 @@ export default function MapPage() {
 
   return (
     <div className="flex flex-col h-screen">
-      {/* Injected styles for map markers */}
+      {/* Styles for map markers and mobile drawer */}
       <style jsx global>{`
-        .map-price-marker {
-          background: #ffffff;
-          border: 2px solid #f94432;
-          color: #111827;
-          font-size: 12px;
-          font-weight: 700;
-          padding: 4px 8px;
-          border-radius: 6px;
-          white-space: nowrap;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-          cursor: pointer;
-          transition: all 0.15s ease;
-          font-family: Inter, system-ui, sans-serif;
-          position: relative;
-        }
-        .map-price-marker::after {
-          content: '';
-          position: absolute;
-          bottom: -7px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 0; height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-top: 7px solid #f94432;
-        }
-        .map-price-marker:hover, .map-price-marker.hovered {
-          background: #f94432;
-          color: #ffffff;
-          transform: scale(1.1);
-          z-index: 10 !important;
-        }
         .map-video-marker {
-          width: 40px;
-          height: 40px;
-          background: #f94432;
-          border: 3px solid #ffffff;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #ffffff;
-          cursor: pointer;
+          width: 40px; height: 40px; background: #f94432;
+          border: 3px solid #ffffff; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          color: #ffffff; cursor: pointer;
           box-shadow: 0 2px 8px rgba(0,0,0,0.3);
           transition: all 0.2s ease;
         }
         .map-video-marker:hover {
-          background: #c21e11;
-          transform: scale(1.15);
+          background: #c21e11; transform: scale(1.15);
         }
         .mapboxgl-ctrl-attrib { font-size: 10px !important; }
+        .mobile-drawer {
+          transition: transform 0.3s ease;
+        }
+        .mobile-drawer.open {
+          transform: translateY(0);
+        }
+        .mobile-drawer.closed {
+          transform: translateY(calc(100% - 60px));
+        }
       `}</style>
 
       {/* Filter Bar */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-2 flex-wrap" style={{ marginTop: '72px' }}>
-        <div className="flex gap-2">
-          {filters.map(f => (
+        {/* Type filters */}
+        <div className="flex gap-1.5">
+          {typeFilters.map(f => (
             <button
               key={f.key}
-              onClick={() => setActiveFilter(f.key)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                activeFilter === f.key
-                  ? 'bg-primary-500 text-white'
+              onClick={() => setFilters(prev => ({ ...prev, type: f.key }))}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                filters.type === f.key
+                  ? 'bg-red-500 text-white shadow-sm'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -342,40 +346,127 @@ export default function MapPage() {
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-2 ml-2">
-          <span className="flex items-center gap-1.5 text-xs text-gray-400">
-            <span className="w-3 h-3 rounded-full bg-primary-500 inline-block border-2 border-white shadow-sm"></span>
-            Video Tour
-          </span>
-        </div>
+
+        {/* More filters toggle */}
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-1 ${
+            showFilters ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+          Filters
+        </button>
+
+        {/* Video tour legend */}
+        <span className="flex items-center gap-1.5 text-xs text-gray-400 ml-1">
+          <span className="w-3 h-3 rounded-full bg-red-500 inline-block border-2 border-white shadow-sm"></span>
+          Video Tour
+        </span>
+
+        {/* Count */}
         <div className="ml-auto text-sm text-gray-500 font-semibold">
-          {visibleListings.length} homes in view
+          {visibleListings.length} home{visibleListings.length !== 1 ? 's' : ''} in view
         </div>
       </div>
 
+      {/* Expanded filter row */}
+      {showFilters && (
+        <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-4 flex-wrap">
+          {/* Price range */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 font-medium">Price:</span>
+            <div className="flex gap-1">
+              {priceOptions.map(p => (
+                <button
+                  key={p.label}
+                  onClick={() => setFilters(prev => ({ ...prev, minPrice: p.min, maxPrice: p.max }))}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                    filters.minPrice === p.min && filters.maxPrice === p.max
+                      ? 'bg-red-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Beds */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 font-medium">Beds:</span>
+            <div className="flex gap-1">
+              {bedOptions.map(b => (
+                <button
+                  key={b.label}
+                  onClick={() => setFilters(prev => ({ ...prev, minBeds: b.value }))}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                    filters.minBeds === b.value
+                      ? 'bg-red-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Reset */}
+          {(filters.minPrice !== 0 || filters.maxPrice !== 5000000 || filters.minBeds !== 0 || filters.type !== 'all') && (
+            <button
+              onClick={() => setFilters(DEFAULT_FILTERS)}
+              className="text-xs text-red-500 hover:text-red-700 font-medium"
+            >
+              Reset all
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Main Layout */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
         {/* Map */}
         <div className="flex-1 relative">
           <div ref={mapContainer} className="w-full h-full" />
+
+          {/* Loading skeleton */}
           {!mapLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-              <div className="text-gray-400 text-lg">Loading map...</div>
+            <div className="absolute inset-0 bg-gray-100 flex flex-col items-center justify-center">
+              <div className="w-12 h-12 border-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
+              <p className="text-gray-400 text-sm mt-4">Loading map...</p>
             </div>
           )}
+
+          {/* Mobile drawer toggle */}
+          <button
+            onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
+            className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-full px-5 py-2.5 text-sm font-semibold text-gray-700 border border-gray-200 z-10 flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            {visibleListings.length} homes
+            <svg className={`w-4 h-4 transition-transform ${mobileDrawerOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
         </div>
 
-        {/* Listing Panel */}
+        {/* Desktop Listing Panel */}
         <div className="w-[400px] bg-white border-l border-gray-200 overflow-y-auto hidden md:block">
           {/* Selected listing detail */}
           {selectedListing && (
-            <div className="border-b-2 border-primary-500 bg-primary-50">
+            <div className="border-b-2 border-red-500 bg-red-50">
               <div className="relative">
                 <img
                   src={selectedListing.img}
-                  alt={selectedListing.address}
+                  alt={getFullAddress(selectedListing)}
                   className="w-full h-48 object-cover"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                  loading="lazy"
                 />
                 <button
                   onClick={() => setSelectedListing(null)}
@@ -383,14 +474,26 @@ export default function MapPage() {
                 >
                   &times;
                 </button>
+                {selectedListing.daysOnMarket !== undefined && (
+                  <span className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                    {selectedListing.daysOnMarket === 0 ? 'Just listed' : `${selectedListing.daysOnMarket}d on market`}
+                  </span>
+                )}
               </div>
               <div className="p-4">
                 <div className="text-2xl font-black text-gray-900">{formatPriceFull(selectedListing.price)}</div>
                 <div className="text-sm text-gray-500 mt-1">
-                  {selectedListing.beds} bd | {selectedListing.baths} ba | {selectedListing.sqft.toLocaleString()} sqft | {selectedListing.type}
+                  {selectedListing.beds} bd | {selectedListing.baths} ba | {selectedListing.sqft.toLocaleString()} sqft
+                  {selectedListing.yearBuilt ? ` | Built ${selectedListing.yearBuilt}` : ''}
                 </div>
-                <div className="text-sm text-gray-700 mt-1">{selectedListing.address}</div>
-                <a href="/property-detail.html" className="block mt-3 text-center bg-primary-500 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-600 transition-colors">
+                <div className="text-sm text-gray-700 mt-1">{getFullAddress(selectedListing)}</div>
+                {selectedListing.description && (
+                  <p className="text-sm text-gray-500 mt-2 line-clamp-2">{selectedListing.description}</p>
+                )}
+                <a
+                  href={getListingUrl(selectedListing)}
+                  className="block mt-3 text-center bg-red-500 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors"
+                >
                   View Full Details
                 </a>
               </div>
@@ -404,23 +507,35 @@ export default function MapPage() {
                 key={l.id}
                 className={`flex gap-3 p-3 border-b border-gray-100 cursor-pointer transition-colors ${
                   hoveredId === l.id ? 'bg-blue-50' : 'hover:bg-gray-50'
-                } ${selectedListing?.id === l.id ? 'bg-primary-50 border-l-4 border-l-primary-500' : ''}`}
+                } ${selectedListing?.id === l.id ? 'bg-red-50 border-l-4 border-l-red-500' : ''}`}
                 onClick={() => flyToListing(l)}
                 onMouseEnter={() => setHoveredId(l.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
                 <img
                   src={l.img}
-                  alt={l.address}
+                  alt={getFullAddress(l)}
                   className="w-28 h-20 rounded-lg object-cover flex-shrink-0"
-                  onError={(e) => { (e.target as HTMLImageElement).style.background = '#e5e7eb'; (e.target as HTMLImageElement).alt = 'Photo' }}
+                  loading="lazy"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="text-lg font-black text-gray-900">{formatPriceFull(l.price)}</div>
+                  <div className="flex justify-between items-start">
+                    <div className="text-lg font-black text-gray-900">{formatPriceFull(l.price)}</div>
+                    {l.daysOnMarket !== undefined && l.daysOnMarket <= 7 && (
+                      <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-medium">New</span>
+                    )}
+                  </div>
                   <div className="text-xs text-gray-500">
                     {l.beds} bd | {l.baths} ba | {l.sqft.toLocaleString()} sqft
                   </div>
-                  <div className="text-xs text-gray-600 mt-0.5 truncate">{l.address}</div>
+                  <div className="text-xs text-gray-600 mt-0.5 truncate">{getFullAddress(l)}</div>
+                  <a
+                    href={getListingUrl(l)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs text-red-500 hover:text-red-700 font-medium mt-1 inline-block"
+                  >
+                    View details &rarr;
+                  </a>
                 </div>
               </div>
             ))}
@@ -428,16 +543,70 @@ export default function MapPage() {
               <div className="p-8 text-center text-gray-400">
                 <p className="text-lg font-semibold">No homes in this area</p>
                 <p className="text-sm mt-1">Zoom out or pan the map to see listings</p>
+                {(filters.type !== 'all' || filters.minPrice > 0 || filters.minBeds > 0) && (
+                  <button
+                    onClick={() => setFilters(DEFAULT_FILTERS)}
+                    className="text-sm text-red-500 hover:text-red-700 font-medium mt-3"
+                  >
+                    Clear filters
+                  </button>
+                )}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Mobile Listing Drawer */}
+        <div
+          className={`md:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-20 mobile-drawer ${
+            mobileDrawerOpen ? 'open' : 'closed'
+          }`}
+          style={{ height: '60vh' }}
+        >
+          {/* Drag handle */}
+          <div
+            className="flex justify-center py-3 cursor-pointer"
+            onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
+          >
+            <div className="w-10 h-1.5 bg-gray-300 rounded-full"></div>
+          </div>
+
+          <div className="overflow-y-auto" style={{ height: 'calc(60vh - 60px)' }}>
+            {visibleListings.map(l => (
+              <div
+                key={l.id}
+                className="flex gap-3 p-3 border-b border-gray-100"
+                onClick={() => flyToListing(l)}
+              >
+                <img src={l.img} alt={getFullAddress(l)} className="w-24 h-18 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-base font-black text-gray-900">{formatPriceFull(l.price)}</div>
+                  <div className="text-xs text-gray-500">{l.beds} bd | {l.baths} ba | {l.sqft.toLocaleString()} sqft</div>
+                  <div className="text-xs text-gray-600 truncate">{getFullAddress(l)}</div>
+                  <a
+                    href={getListingUrl(l)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs text-red-500 font-medium"
+                  >
+                    View details &rarr;
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* Video Modal */}
       {activeVideo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setActiveVideo(null)}>
-          <div className="bg-white rounded-2xl overflow-hidden shadow-2xl max-w-2xl w-full mx-4" onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+          onClick={() => setActiveVideo(null)}
+        >
+          <div
+            className="bg-white rounded-2xl overflow-hidden shadow-2xl max-w-2xl w-full mx-4"
+            onClick={e => e.stopPropagation()}
+          >
             <div className="relative bg-black" style={{ paddingBottom: '56.25%' }}>
               <iframe
                 className="absolute inset-0 w-full h-full"
