@@ -56,6 +56,7 @@ export default function MapPage() {
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
   const videoMarkersRef = useRef<any[]>([])
+  const popupRef = useRef<any>(null)
   const [visibleListings, setVisibleListings] = useState<Listing[]>(sampleListings)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null)
@@ -169,10 +170,10 @@ export default function MapPage() {
           source: 'listings',
           filter: ['!', ['has', 'point_count']],
           paint: {
-            'circle-radius': 20,
+            'circle-radius': 14,
             'circle-color': '#ffffff',
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#f94432',
+            'circle-stroke-width': 1.5,
+            'circle-stroke-color': '#cbd5e1',
             'circle-opacity': 0.95,
           },
         })
@@ -186,7 +187,7 @@ export default function MapPage() {
           layout: {
             'text-field': ['get', 'priceLabel'],
             'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'],
-            'text-size': 11,
+            'text-size': 10,
             'text-allow-overlap': true,
             'text-ignore-placement': false,
           },
@@ -211,26 +212,47 @@ export default function MapPage() {
           setHoveredId(null)
         })
 
-        // ---- Click listing → navigate to property detail page ----
-        map.on('click', 'listing-points', (e: any) => {
-          if (e.features && e.features.length > 0) {
-            const props = e.features[0].properties
-            const url = props.url
-            if (url) {
-              window.location.href = url
-            }
-          }
-        })
+        // ---- Click listing → show popup card (Zillow style) ----
+        const showListingPopup = (e: any) => {
+          if (!e.features || e.features.length === 0) return
+          const feat = e.features[0]
+          const props = feat.properties
+          const coords = (feat.geometry as any).coordinates.slice()
 
-        map.on('click', 'listing-prices', (e: any) => {
-          if (e.features && e.features.length > 0) {
-            const props = e.features[0].properties
-            const url = props.url
-            if (url) {
-              window.location.href = url
-            }
+          // Close existing popup
+          if (popupRef.current) {
+            popupRef.current.remove()
+            popupRef.current = null
           }
-        })
+
+          const html = `
+            <a href="${props.url}" class="popup-card" style="display:block;text-decoration:none;color:inherit;width:240px;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+              <img src="${props.img}" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;display:block;" />
+              <div style="padding:10px 12px 12px;">
+                <div style="font-size:18px;font-weight:800;color:#111827;">${props.priceFull || props.priceLabel}</div>
+                <div style="font-size:12px;color:#6b7280;margin-top:2px;">${props.beds} bd | ${props.baths} ba | ${Number(props.sqft).toLocaleString()} sqft</div>
+                <div style="font-size:12px;color:#374151;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${props.address}</div>
+                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details →</div>
+              </div>
+            </a>
+          `
+
+          const popup = new mapboxgl.Popup({
+            closeButton: true,
+            closeOnClick: true,
+            maxWidth: '260px',
+            offset: 18,
+            className: 'listing-popup',
+          })
+            .setLngLat(coords)
+            .setHTML(html)
+            .addTo(map)
+
+          popupRef.current = popup
+        }
+
+        map.on('click', 'listing-points', showListingPopup)
+        map.on('click', 'listing-prices', showListingPopup)
 
         // ---- Click cluster to zoom in ----
         map.on('click', 'clusters', (e: any) => {
@@ -317,6 +339,30 @@ export default function MapPage() {
           background: #c21e11; transform: scale(1.15);
         }
         .mapboxgl-ctrl-attrib { font-size: 10px !important; }
+        .listing-popup .mapboxgl-popup-content {
+          padding: 0 !important;
+          border-radius: 10px !important;
+          overflow: hidden;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.18) !important;
+        }
+        .listing-popup .mapboxgl-popup-close-button {
+          font-size: 18px;
+          color: #fff;
+          right: 6px;
+          top: 4px;
+          text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+          z-index: 2;
+        }
+        .listing-popup .mapboxgl-popup-close-button:hover {
+          background: transparent;
+          color: #fff;
+        }
+        .listing-popup .mapboxgl-popup-tip {
+          border-top-color: #fff;
+        }
+        .popup-card:hover {
+          opacity: 0.95;
+        }
         .mobile-drawer {
           transition: transform 0.3s ease;
         }
