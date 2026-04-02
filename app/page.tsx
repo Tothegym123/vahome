@@ -6,13 +6,13 @@ import Link from 'next/link'
 const testimonials = [
   {
     name: 'Foxrain M.',
-    text: 'Tom and Dariya helped my wife and I find a lovely home in Virginia. We moved from Washington state, so we were feeling overwhelmed with picking the right area. They were both super friendly and helpful throughout the entire process.',
+    text: 'The VaHome team helped my wife and I find a lovely home in Virginia. We moved from Washington state, so we were feeling overwhelmed with picking the right area. They were both super friendly and helpful throughout the entire process.',
     rating: 5,
     date: 'May 2025',
   },
   {
     name: 'Kim D.',
-    text: 'Tom was literally the man! This was our first time purchasing a home, and I knew very little on how the process worked. Thanks to him, the process was painless. He has a lot of experience with general contracting too.',
+    text: 'The VaHome team was incredible! This was our first time purchasing a home, and I knew very little on how the process worked. Thanks to him, the process was painless. He has a lot of experience with general contracting too.',
     rating: 5,
     date: 'Jul 2020',
   },
@@ -107,7 +107,7 @@ export default function HomePage() {
               Why Work With Us
             </h2>
             <p className="text-gray-500 text-lg">
-              Tom & Dariya Milan — your local Hampton Roads real estate experts.
+              The VaHome Team — your local Hampton Roads real estate experts.
             </p>
           </div>
 
@@ -134,7 +134,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">5-Star Service</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Every client gets our full attention. 11 five-star reviews and counting — your satisfaction is guaranteed.
+                Every client gets our full attention. 11 five-star reviews and counting â your satisfaction is guaranteed.
               </p>
             </div>
 
