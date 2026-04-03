@@ -394,13 +394,16 @@ export const sampleListings: Listing[] = [
   },
 ];
 
-// Video markers for neighborhood tour locations
-export const videoMarkers: {
+// Video marker type
+export interface VideoMarker {
   lat: number;
   lng: number;
   title: string;
   videoUrl: string;
-}[] = [
+}
+
+// Video markers for neighborhood tour locations
+export const videoMarkers: VideoMarker[] = [
   {
     lat: 36.85,
     lng: -76.05,
