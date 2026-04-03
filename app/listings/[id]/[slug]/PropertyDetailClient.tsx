@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../lib/listings';
+import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
 import Image from 'next/image';
 
 interface PropertyDetailClientProps {
@@ -182,7 +182,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 {listing.city}, {listing.state} {listing.zip}
               </p>
               <p className="text-gray-500 text-xs mt-3">
-                MLS# {listing.mlsNumber} · {listing.subdivision} · {listing.county}
+                MLS# {listing.mlsNumber} Â· {listing.subdivision} Â· {listing.county}
               </p>
             </div>
 
@@ -231,7 +231,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="description"
                 title="Description"
-                icon="📝"
+                icon="ð"
                 iconBg="bg-blue-100"
               >
                 <p className="text-gray-700 text-sm leading-6">
@@ -243,7 +243,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="property-details"
                 title="Property Details"
-                icon="🏠"
+                icon="ð "
                 iconBg="bg-green-100"
               >
                 <DetailGrid
@@ -266,7 +266,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="construction"
                 title="Construction & Exterior"
-                icon="🔨"
+                icon="ð¨"
                 iconBg="bg-amber-100"
               >
                 <DetailGrid
@@ -289,7 +289,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="interior"
                 title="Interior Features"
-                icon="✨"
+                icon="â¨"
                 iconBg="bg-purple-100"
               >
                 <DetailGrid
@@ -311,13 +311,13 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 <CollapsibleSection
                   id="appliances"
                   title="Appliances & Equipment"
-                  icon="⚙️"
+                  icon="âï¸"
                   iconBg="bg-slate-100"
                 >
                   <div className="space-y-2">
                     {listing.appliancesIncluded.map((appliance, idx) => (
                       <div key={idx} className="flex items-center gap-3 text-sm text-gray-700">
-                        <span className="text-green-600 font-bold">✓</span>
+                        <span className="text-green-600 font-bold">â</span>
                         <span>{appliance}</span>
                       </div>
                     ))}
@@ -329,7 +329,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="parking"
                 title="Parking & Garage"
-                icon="🚗"
+                icon="ð"
                 iconBg="bg-blue-100"
               >
                 <DetailGrid
@@ -344,7 +344,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="utilities"
                 title="Utilities"
-                icon="⚡"
+                icon="â¡"
                 iconBg="bg-green-100"
               >
                 <DetailGrid
@@ -361,7 +361,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="financial"
                 title="Financial Details"
-                icon="💰"
+                icon="ð°"
                 iconBg="bg-amber-100"
               >
                 <DetailGrid
@@ -384,7 +384,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="schools"
                 title="Schools"
-                icon="🎓"
+                icon="ð"
                 iconBg="bg-blue-100"
               >
                 <div className="grid grid-cols-3 gap-4">
@@ -398,7 +398,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <CollapsibleSection
                 id="location"
                 title="Location & Zoning"
-                icon="📍"
+                icon="ð"
                 iconBg="bg-red-100"
               >
                 <DetailGrid
@@ -414,7 +414,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
             {/* Footer Info */}
             <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 text-center text-xs text-gray-500">
               <p className="mb-2">
-                Listed by: <span className="font-medium text-gray-700">{listing.listingOffice}</span> · MLS#
+                Listed by: <span className="font-medium text-gray-700">{listing.listingOffice}</span> Â· MLS#
                 <span className="font-medium text-gray-700">{listing.mlsNumber}</span>
               </p>
               <p>Data provided by REIN MLS. Information deemed reliable but not guaranteed.</p>
