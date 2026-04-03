@@ -70,7 +70,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} VaHome.com | Tom & Dariya Milan | LPT Realty. All rights reserved.
+            &copy; {new Date().getFullYear()} VaHome.com. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacy Policy</Link>
