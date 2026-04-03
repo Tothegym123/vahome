@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getListingById, formatPriceFull } from '../../lib/listings';
+import { getListingById, formatPriceFull } from '../../../lib/listings';
 import PropertyDetailClient from './PropertyDetailClient';
 
 export const revalidate = 60;
