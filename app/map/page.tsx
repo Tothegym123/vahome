@@ -515,7 +515,7 @@ export default function MapPage() {
                   loading="lazy"
                 />
                 <button
-                  <div className="absolute top-2 right-10" onClick={(e) => e.stopPropagation()}>
+                  <<div className="absolute top-2 right-10" onClick={(e) => e.stopPropagation()}>
                   <FavoriteButton listingId={selectedListing.id} listingData={selectedListing} size="sm" />
                 </div>
                 <button onClick={() => setSelectedListing(null)}
