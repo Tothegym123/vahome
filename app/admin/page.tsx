@@ -444,7 +444,7 @@ export default function AdminDashboard() {
                               </span>
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-700">
-                              {tour.metadata?.date || '-'} {tour.metadata?.time || ''}
+                              {typeof tour.metadata?.date === 'object' ? (tour.metadata.date.dayName + ' ' + tour.metadata.date.monthDay) : (tour.metadata?.date || '-')} {tour.metadata?.time || ''}
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-500 font-mono">{tour.mls_number}</td>
                           </tr>
