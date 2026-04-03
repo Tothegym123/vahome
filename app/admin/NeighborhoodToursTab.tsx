@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import { createClient } from '../lib/supabase/client'
 
 type NeighborhoodTour = {
@@ -58,7 +59,6 @@ export default function NeighborhoodToursTab() {
 
     const initMap = async () => {
       const mapboxgl = (await import('mapbox-gl')).default
-      await import('mapbox-gl/dist/mapbox-gl.css')
 
       if (cancelled || !mapContainerRef.current) return
 
