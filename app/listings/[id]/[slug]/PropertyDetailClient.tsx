@@ -183,7 +183,7 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
     </div>
   );
 }
-/* ── Tour Scheduling Modal ── */
+/* ââ Tour Scheduling Modal ââ */
 
 function getUpcomingDays(count: number): Array<{ date: Date; dayName: string; monthDay: string }> {
   const days = [];
@@ -465,7 +465,7 @@ function TourModal({
   );
 }
 
-/* ── Main Component ── */
+/* ââ Main Component ââ */
 
 export default function PropertyDetailClient({ listing }: PropertyDetailClientProps) {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
@@ -808,7 +808,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
             {/* Footer Info */}
             <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 text-center text-base text-gray-500">
               <p className="mb-2">
-                Listed by:{' '}
+                Listing Provided by{' '}
                 <span className="font-medium text-gray-700">{listing.listingOffice}</span>{' '}
                 &middot; MLS#{' '}
                 <span className="font-medium text-gray-700">{listing.mlsNumber}</span>
