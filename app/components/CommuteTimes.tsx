@@ -27,13 +27,13 @@ const branchColors: Record<string, string> = {
 };
 
 const branchIcons: Record<string, string> = {
-  Navy: "\u2693",
-  "Air Force": "\u2708\uFE0F",
-  Army: "\u2B50",
-  Marines: "\uD83E\uDE96",
-  "Coast Guard": "\u26F5",
-  Joint: "\uD83C\uDFDB\uFE0F",
-  DoD: "\uD83D\uDEE1\uFE0F",
+  Navy: "⚓",
+  "Air Force": "✈️",
+  Army: "⭐",
+  Marines: "🪖",
+  "Coast Guard": "⛵",
+  Joint: "🏛️",
+  DoD: "🛡️",
 };
 
 export default function CommuteTimes({ lat, lng }: CommuteTimesProps) {
@@ -48,7 +48,7 @@ export default function CommuteTimes({ lat, lng }: CommuteTimesProps) {
         setLoading(true);
         setError(null);
         const resp = await fetch(
-          \`/api/drive-times?lat=\${lat}&lng=\${lng}&count=10\`
+          `/api/drive-times?lat=${lat}&lng=${lng}&count=10`
         );
         if (!resp.ok) throw new Error("Failed to fetch drive times");
         const data = await resp.json();
@@ -88,7 +88,7 @@ export default function CommuteTimes({ lat, lng }: CommuteTimesProps) {
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-lg">{"\uD83C\uDFDB\uFE0F"}</span>
+        <span className="text-lg">{"🏛️"}</span>
         <h3 className="text-lg font-semibold text-gray-900">
           Military Base Commute Times
         </h3>
@@ -105,16 +105,16 @@ export default function CommuteTimes({ lat, lng }: CommuteTimesProps) {
           >
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <span className="text-xl flex-shrink-0">
-                {branchIcons[base.branch] || "\uD83C\uDFDB\uFE0F"}
+                {branchIcons[base.branch] || "🏛️"}
               </span>
               <div className="min-w-0">
                 <div className="font-medium text-gray-900 text-sm truncate">
                   {base.shortName}
                 </div>
                 <span
-                  className={\`inline-block text-xs px-2 py-0.5 rounded-full mt-0.5 \${
+                  className={`inline-block text-xs px-2 py-0.5 rounded-full mt-0.5 ${
                     branchColors[base.branch] || "bg-gray-100 text-gray-800"
-                  }\`}
+                  }`}
                 >
                   {base.branch}
                 </span>
@@ -125,13 +125,13 @@ export default function CommuteTimes({ lat, lng }: CommuteTimesProps) {
               <div className="text-right">
                 <div className="text-sm font-semibold text-blue-600">
                   {base.driveMinutes > 0
-                    ? \`\${base.driveMinutes} min\`
+                    ? `${base.driveMinutes} min`
                     : "N/A"}
                 </div>
                 <div className="text-xs text-gray-500">
                   {base.driveMiles > 0
-                    ? \`\${base.driveMiles} mi\`
-                    : \`~\${base.straightLineMiles} mi\`}
+                    ? `${base.driveMiles} mi`
+                    : `~${base.straightLineMiles} mi`}
                 </div>
               </div>
             </div>
@@ -146,7 +146,7 @@ export default function CommuteTimes({ lat, lng }: CommuteTimesProps) {
         >
           {showAll
             ? "Show fewer bases"
-            : \`Show all \${results.length} nearby bases\`}
+            : `Show all ${results.length} nearby bases`}
         </button>
       )}
 
