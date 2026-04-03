@@ -130,12 +130,12 @@ function TourModal({
         action_type: 'tour_request',
         mls_number: listing.mlsNumber || listing.id.toString(),
         metadata: {
-          name: tourName,
-          email: tourEmail,
-          phone: tourPhone,
-          date: tourDate,
-          time: tourTime,
-          message: tourMessage,
+          name: name,
+          email: email,
+          phone: phone,
+          date: chosenDate,
+          time: selectedTime,
+          tour_type: tourType,
           listing_address: listing.address + ', ' + listing.city + ', ' + listing.state + ' ' + listing.zip,
           listing_price: listing.price,
         }
