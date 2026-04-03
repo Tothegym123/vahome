@@ -38,7 +38,7 @@ function CollapsibleSection({
         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${iconBg}`}>
           <span className="text-lg">{icon}</span>
         </div>
-        <h2 className="text-lg font-semibold text-gray-900 flex-1 text-left">{title}</h2>
+        <h2 className="text-xl font-semibold text-gray-900 flex-1 text-left">{title}</h2>
         <svg
           className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
@@ -60,8 +60,8 @@ function DetailGrid({ items }: { items: Array<{ label: string; value: string }> 
     <div className="grid grid-cols-2 gap-x-8 gap-y-3">
       {items.map((item, idx) => (
         <div key={idx}>
-          <p className="text-sm text-gray-500 mb-1">{item.label}</p>
-          <p className="text-sm font-medium text-gray-900">{item.value}</p>
+          <p className="text-base text-gray-500 mb-1">{item.label}</p>
+          <p className="text-base font-medium text-gray-900">{item.value}</p>
         </div>
       ))}
     </div>
@@ -71,8 +71,8 @@ function DetailGrid({ items }: { items: Array<{ label: string; value: string }> 
 function SchoolCard({ label, school }: { label: string; school: string }) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
-      <p className="text-xs font-semibold text-gray-500 mb-2">{label}</p>
-      <p className="text-sm font-medium text-gray-900">{school || 'N/A'}</p>
+      <p className="text-sm font-semibold text-gray-500 mb-2">{label}</p>
+      <p className="text-base font-medium text-gray-900">{school || 'N/A'}</p>
     </div>
   );
 }
@@ -463,21 +463,21 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 >
                   {isActive ? 'ACTIVE' : 'SOLD'}
                 </span>
-                <span className="text-gray-600 text-sm">
+                <span className="text-gray-600 text-base">
                   {listing.daysOnMarket} days on market
                 </span>
               </div>
-              <p className="text-3xl font-bold text-gray-900">{formatPriceFull(listing.price)}</p>
+              <p className="text-4xl font-bold text-gray-900">{formatPriceFull(listing.price)}</p>
               <FavoriteButton listingId={listing.id} listingData={listing} size="lg" />
             </div>
 
             {/* Address & MLS Info */}
             <div className="bg-white rounded-xl border border-gray-100 px-6 py-5">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">{listing.address}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{listing.address}</h1>
               <p className="text-gray-600 text-sm">
                 {listing.city}, {listing.state} {listing.zip}
               </p>
-              <p className="text-gray-500 text-xs mt-3">
+              <p className="text-gray-500 text-sm mt-3">
                 MLS# {listing.mlsNumber} &middot; {listing.subdivision} &middot; {listing.county}
               </p>
             </div>
@@ -494,8 +494,8 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                   { label: 'Garage', value: listing.garage.toString() },
                 ].map((stat, idx) => (
                   <div key={idx} className="px-4 py-4 text-center">
-                    <p className="text-xs text-gray-500 mb-1">{stat.label}</p>
-                    <p className="text-sm font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
+                    <p className="text-base font-bold text-gray-900">{stat.value}</p>
                   </div>
                 ))}
               </div>
@@ -514,7 +514,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 .map((fact, idx) => (
                   <span
                     key={idx}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-xs font-medium"
+                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"
                   >
                     {fact}
                   </span>
@@ -530,7 +530,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 icon={"\uD83D\uDCDD"}
                 iconBg="bg-blue-100"
               >
-                <p className="text-gray-700 text-sm leading-6">
+                <p className="text-gray-700 text-base leading-7">
                   {listing.remarks || listing.description || 'No description available.'}
                 </p>
               </CollapsibleSection>
@@ -612,7 +612,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 >
                   <div className="space-y-2">
                     {listing.appliancesIncluded.map((appliance, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-sm text-gray-700">
+                      <div key={idx} className="flex items-center gap-3 text-base text-gray-700">
                         <span className="text-green-600 font-bold">{"\u2713"}</span>
                         <span>{appliance}</span>
                       </div>
@@ -708,7 +708,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
             </div>
 
             {/* Footer Info */}
-            <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 text-center text-xs text-gray-500">
+            <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 text-center text-sm text-gray-500">
               <p className="mb-2">
                 Listed by:{' '}
                 <span className="font-medium text-gray-700">{listing.listingOffice}</span>{' '}
@@ -733,7 +733,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               <p className="text-4xl font-bold text-gray-900 mb-3">
                 {formatPriceFull(listing.price)}
               </p>
-              <p className="text-sm font-medium text-gray-700 mb-1">{listing.address}</p>
+              <p className="text-base font-medium text-gray-700 mb-1">{listing.address}</p>
               <p className="text-sm text-gray-600 mb-6">
                 {listing.city}, {listing.state} {listing.zip}
               </p>
@@ -760,7 +760,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
 
             {/* Quick Facts Card */}
             <div className="bg-white rounded-xl border border-gray-100 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4 text-sm">Quick Facts</h3>
+              <h3 className="font-semibold text-gray-900 mb-4 text-base">Quick Facts</h3>
               <div className="space-y-3">
                 {[
                   { label: 'Type', value: listing.type },
@@ -776,8 +776,8 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                   { label: 'Cooling', value: listing.cooling },
                 ].map((item, idx) => (
                   <div key={idx} className="flex justify-between items-center">
-                    <span className="text-xs text-gray-600">{item.label}</span>
-                    <span className="text-xs font-medium text-gray-900">{item.value}</span>
+                    <span className="text-sm text-gray-600">{item.label}</span>
+                    <span className="text-sm font-medium text-gray-900">{item.value}</span>
                   </div>
                 ))}
               </div>
