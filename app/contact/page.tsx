@@ -120,7 +120,6 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">(757) 777-7577</div>
                     <div className="text-sm text-gray-500">Call or text anytime</div>
                   </div>
                 </div>
