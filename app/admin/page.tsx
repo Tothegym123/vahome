@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '../lib/supabase/client'
+import NeighborhoodToursTab from './NeighborhoodToursTab'
 
 type Lead = {
   id: string
@@ -36,7 +37,7 @@ export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState<'leads' | 'tours' | 'activity'>('leads')
+  const [activeTab, setActiveTab] = useState<'leads' | 'tours' | 'activity' | 'neighborhood_tours'>('leads')
   const [leads, setLeads] = useState<Lead[]>([])
   const [tours, setTours] = useState<TourRequest[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
@@ -285,6 +286,7 @@ export default function AdminDashboard() {
               { key: 'leads' as const, label: 'All Leads', count: leads.length },
               { key: 'tours' as const, label: 'Tour Requests', count: tours.length },
               { key: 'activity' as const, label: 'Activity Log', count: activities.length },
+          { key: 'neighborhood_tours' as const, label: 'Neighborhood Tours', count: 0 },
             ]).map(tab => (
               <button
                 key={tab.key}
@@ -454,7 +456,13 @@ export default function AdminDashboard() {
               )}
 
               {/* Activity Log Tab */}
-              {activeTab === 'activity' && (
+              {activeTab === 'neighborhood_tours' && (
+            <div className="p-6">
+              <NeighborhoodToursTab />
+            </div>
+          )}
+
+          {activeTab === 'activity' && (
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
