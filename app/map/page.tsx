@@ -515,7 +515,10 @@ export default function MapPage() {
                   loading="lazy"
                 />
                 <button
-                  onClick={() => setSelectedListing(null)}
+                  <div className="absolute top-2 right-10" onClick={(e) => e.stopPropagation()}>
+                  <FavoriteButton listingId={selectedListing.id} listingData={selectedListing} size="sm" />
+                </div>
+                <button onClick={() => setSelectedListing(null)}
                   className="absolute top-2 right-2 bg-white rounded-full w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-800 shadow"
                 >
                   &times;
@@ -558,12 +561,17 @@ export default function MapPage() {
                 onMouseEnter={() => setHoveredId(l.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
+                <div className="relative flex-shrink-0">
                 <img
                   src={l.img}
                   alt={getFullAddress(l)}
-                  className="w-28 h-20 rounded-lg object-cover flex-shrink-0"
+                  className="w-28 h-20 rounded-lg object-cover"
                   loading="lazy"
                 />
+                <div className="absolute top-1 right-1" onClick={(e) => e.stopPropagation()}>
+                  <FavoriteButton listingId={l.id} listingData={l} size="sm" />
+                </div>
+              </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start">
                     <div className="text-lg font-black text-gray-900">{formatPriceFull(l.price)}</div>
@@ -624,7 +632,12 @@ export default function MapPage() {
                 className="flex gap-3 p-3 border-b border-gray-100"
                 onClick={() => flyToListing(l)}
               >
-                <img src={l.img} alt={getFullAddress(l)} className="w-24 h-18 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+                <div className="relative flex-shrink-0">
+                <img src={l.img} alt={getFullAddress(l)} className="w-24 h-18 rounded-lg object-cover" loading="lazy" />
+                <div className="absolute top-1 right-1" onClick={(e) => e.stopPropagation()}>
+                  <FavoriteButton listingId={l.id} listingData={l} size="sm" />
+                </div>
+              </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-base font-black text-gray-900">{formatPriceFull(l.price)}</div>
                   <div className="text-xs text-gray-500">{l.beds} bd | {l.baths} ba | {l.sqft.toLocaleString()} sqft</div>
