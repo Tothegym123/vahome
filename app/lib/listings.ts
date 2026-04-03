@@ -415,6 +415,15 @@ export const videoMarkers: {
   },
 ];
 
+// Lookup functions (used by detail page and static generation)
+export function getListingById(id: number): Listing | undefined {
+  return sampleListings.find((listing) => listing.id === id);
+}
+
+export function getListings(): Listing[] {
+  return sampleListings;
+}
+
 // Helper functions
 export function formatPrice(price: number): string {
   if (price >= 1000000) {
