@@ -280,17 +280,18 @@ export default function MapPage() {
         updateVisibleListings()
       })
 
-      // ---- Video markers (HTML markers — only 5, so DOM is fine) ----
-      videoMarkers.forEach(v => {
-        const el = document.createElement('div')
-        el.className = 'map-video-marker'
-        el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>'
-        el.onclick = () => setActiveVideo(v)
-        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
-          .setLngLat([v.lng, v.lat])
-          .addTo(map)
-        videoMarkersRef.current.push(marker)
-      })
+      // VIDEO MARKERS TEMPORARILY DISABLED - will add back later
+      //       // ---- Video markers (HTML markers — only 5, so DOM is fine) ----
+      //       videoMarkers.forEach(v => {
+      //         const el = document.createElement('div')
+      //         el.className = 'map-video-marker'
+      //         el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>'
+      //         el.onclick = () => setActiveVideo(v)
+      //         const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+      //           .setLngLat([v.lng, v.lat])
+      //           .addTo(map)
+      //         videoMarkersRef.current.push(marker)
+      //       })
     }
 
     initMap()
