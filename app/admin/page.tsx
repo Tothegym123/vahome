@@ -286,7 +286,7 @@ export default function AdminDashboard() {
               { key: 'leads' as const, label: 'All Leads', count: leads.length },
               { key: 'tours' as const, label: 'Tour Requests', count: tours.length },
               { key: 'activity' as const, label: 'Activity Log', count: activities.length },
-          { key: 'neighborhood_tours' as const, label: 'Neighborhood Tours', count: 0 },
+          { key: 'neighborhood_tours' as const, label: 'Video Links', count: 0 },
             ]).map(tab => (
               <button
                 key={tab.key}
