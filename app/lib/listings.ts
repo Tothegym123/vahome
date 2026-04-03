@@ -399,7 +399,8 @@ export interface VideoMarker {
   lat: number;
   lng: number;
   title: string;
-  videoUrl: string;
+  videoId: string;
+  description: string;
 }
 
 // Video markers for neighborhood tour locations
@@ -408,31 +409,36 @@ export const videoMarkers: VideoMarker[] = [
     lat: 36.85,
     lng: -76.05,
     title: 'Virginia Beach Oceanfront Tour',
-    videoUrl: 'https://www.youtube.com/watch?v=example1',
+    videoId: 'example1',
+    description: 'Explore the Virginia Beach Oceanfront boardwalk and resort area.',
   },
   {
     lat: 36.85,
     lng: -76.29,
     title: 'Norfolk Downtown Living',
-    videoUrl: 'https://www.youtube.com/watch?v=example2',
+    videoId: 'example2',
+    description: 'Discover the charm of the Ghent neighborhood in Norfolk.',
   },
   {
     lat: 36.77,
     lng: -76.24,
     title: 'Chesapeake Great Bridge',
-    videoUrl: 'https://www.youtube.com/watch?v=example3',
+    videoId: 'example3',
+    description: 'Tour the growing communities of Chesapeake, Virginia.',
   },
   {
     lat: 36.73,
     lng: -76.58,
     title: 'Suffolk Harbour View',
-    videoUrl: 'https://www.youtube.com/watch?v=example4',
+    videoId: 'example4',
+    description: 'See what downtown Suffolk has to offer families and professionals.',
   },
   {
     lat: 37.03,
     lng: -76.35,
     title: 'Hampton Phoebus Waterfront',
-    videoUrl: 'https://www.youtube.com/watch?v=example5',
+    videoId: 'example5',
+    description: 'Explore the vibrant Hampton waterfront and historic district.',
   },
 ];
 
