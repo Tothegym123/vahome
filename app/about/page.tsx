@@ -51,14 +51,7 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* Brokerage */}
-        <div className="bg-navy-900 rounded-2xl p-10 text-center text-white">
-          <h3 className="text-xl font-bold mb-2">Proudly Affiliated With</h3>
-          <div className="text-3xl font-black text-primary-400 mb-4">LPT Realty</div>
-          <p className="text-gray-400 text-sm max-w-lg mx-auto">
-            249 Central Park Ave Ste 300, Virginia Beach, VA 23462
-          </p>
-        </div>
+        
       </div>
     </div>
   )
