@@ -11,6 +11,7 @@ const navLinks = [
   { label: 'Blog', href: '/blog' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
+  { label: 'Military Resources', href: '/military-resources' },
 ]
 
 export default function Header() {
@@ -36,7 +37,7 @@ export default function Header() {
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} className="px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 hover:text-primary-500 transition-colors">{link.label}</Link>
+              <Link key={link.label} href={link.href} className="px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 hover:text-primary-500 transition-colors">{link.label}</Link>
             ))}
           </nav>
           <div className="hidden md:flex items-center gap-4">
