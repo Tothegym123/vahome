@@ -849,9 +849,6 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 Request Info
               </button>
               <p className="text-sm text-gray-600">
-                or call{' '}
-                <a href="tel:7577777577" className="font-semibold text-gray-900 hover:text-blue-600">
-                  (757) 777-7577
                 </a>
               </p>
             </div>
