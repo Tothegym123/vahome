@@ -1,28 +1,6 @@
 import SearchBar from './components/SearchBar'
-import TestimonialCard from './components/TestimonialCard'
 import AreaCard from './components/AreaCard'
 import Link from 'next/link'
-
-const testimonials = [
-  {
-    name: 'Foxrain M.',
-    text: 'The VaHome team helped my wife and I find a lovely home in Virginia. We moved from Washington state, so we were feeling overwhelmed with picking the right area. They were both super friendly and helpful throughout the entire process.',
-    rating: 5,
-    date: 'May 2025',
-  },
-  {
-    name: 'Kim D.',
-    text: 'The VaHome team was incredible! This was our first time purchasing a home, and I knew very little on how the process worked. Thanks to him, the process was painless. He has a lot of experience with general contracting too.',
-    rating: 5,
-    date: 'Jul 2020',
-  },
-  {
-    name: 'Verified Client',
-    text: 'He would meet us at anytime, day or night to check out a house. We dragged him to a lot of houses and he never once acted frustrated. He wasn\'t pushy and only cared about us buying a home we loved.',
-    rating: 5,
-    date: 'Mar 2024',
-  },
-]
 
 const areas = [
   { name: 'Virginia Beach', image: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=600&h=450&fit=crop', listingCount: 2400, href: '/listings?area=virginia-beach' },
@@ -65,11 +43,7 @@ export default function HomePage() {
               <div className="text-2xl font-bold text-white">5,000+</div>
               <div>Active Listings</div>
             </div>
-            <div className="w-px h-10 bg-white/20" />
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">11</div>
-              <div>5-Star Reviews</div>
-            </div>
+            
             <div className="w-px h-10 bg-white/20" />
             <div className="text-center">
               <div className="text-2xl font-bold text-white">10+</div>
@@ -107,7 +81,7 @@ export default function HomePage() {
               Why Work With Us
             </h2>
             <p className="text-gray-500 text-lg">
-              The VaHome Team — your local Hampton Roads real estate experts.
+              The VaHome Team â your local Hampton Roads real estate experts.
             </p>
           </div>
 
@@ -134,8 +108,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">5-Star Service</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Every client gets our full attention. 11 five-star reviews and counting â your satisfaction is guaranteed.
-              </p>
+                Every client gets our full attention and we are committed to helping you find the best deal.</p>
             </div>
 
             {/* Card 3 */}
@@ -154,30 +127,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ========== TESTIMONIALS ========== */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-              What Our Clients Say
-            </h2>
-            <div className="flex items-center justify-center gap-2 text-yellow-400">
-              {[...Array(5)].map((_, i) => (
-                <svg key={i} className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-              <span className="text-gray-500 text-sm ml-2">5.0 from 11 reviews</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <TestimonialCard key={i} {...t} />
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* ========== CTA SECTION ========== */}
       <section className="py-20 px-4 bg-primary-500">
