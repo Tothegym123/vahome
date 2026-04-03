@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
+import FavoriteButton from '../../../components/FavoriteButton'
+import { createClient } from '../../../lib/supabase/client'
 import Image from 'next/image';
 
 interface PropertyDetailClientProps {
@@ -121,7 +123,26 @@ function TourModal({
 
   const chosenDate = allDays[page * daysPerPage + selectedDay];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    try {
+      const supabase = createClient()
+      await supabase.from('search_activity').insert({
+        action_type: 'tour_request',
+        mls_number: listing.mlsNumber || listing.id.toString(),
+        metadata: {
+          name: tourName,
+          email: tourEmail,
+          phone: tourPhone,
+          date: tourDate,
+          time: tourTime,
+          message: tourMessage,
+          listing_address: listing.address + ', ' + listing.city + ', ' + listing.state + ' ' + listing.zip,
+          listing_price: listing.price,
+        }
+      })
+    } catch (err) {
+      console.error('Error saving tour request:', err)
+    }
     setStep('done');
   };
 
@@ -447,6 +468,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 </span>
               </div>
               <p className="text-3xl font-bold text-gray-900">{formatPriceFull(listing.price)}</p>
+              <FavoriteButton listingId={listing.id} listingData={listing} size="lg" />
             </div>
 
             {/* Address & MLS Info */}
