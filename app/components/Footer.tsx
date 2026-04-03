@@ -77,6 +77,31 @@ export default function Footer() {
             <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Terms of Service</Link>
           </div>
         </div>
+
+        {/* REIN MLS Disclaimer */}
+        <div className="mt-8 pt-6 border-t border-gray-800">
+          <p className="text-xs text-gray-500 leading-relaxed">
+            &copy; 2026 REIN, Inc. All Rights Reserved. Information deemed reliable but not guaranteed.
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed mt-3">
+            The listings data displayed on this website is provided in part by the Real Estate Information Network, Inc. (REIN) and is authorized for display by participating Broker Members of REIN. REIN&rsquo;s listings are based upon data submitted by its Broker Members, and REIN makes no representation or warranty regarding the accuracy of the data. All users of REIN&rsquo;s listings database should confirm the accuracy of the listing information directly with the listing agent.
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed mt-3">
+            REIN&rsquo;s listings data and information are protected under federal copyright laws. Federal law prohibits, among other acts, the unauthorized copying, reproduction, redistribution, or creation of derivative works from any part of copyrighted material, including certain compilations of data and information. COPYRIGHT VIOLATORS MAY BE SUBJECT TO SEVERE FINES AND PENALTIES UNDER FEDERAL LAW.
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed mt-3">
+            REIN updates its listings on a daily basis. Data last updated: 04/03/2026.
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed mt-3">
+            This website does not include all properties available for sale at this time.
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed mt-3">
+            Some or all of the listings (or listings data) represented on this website may have been enhanced with data not provided by REIN. Such enhancements include, but are not limited to, a Mortgage Calculator. The source of these enhancements is: Vahome Info LLC.
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed mt-3">
+            IDX information is provided exclusively for consumers&rsquo; personal, non-commercial use and may not be used for any purpose other than to identify prospective properties consumers may be interested in purchasing.
+          </p>
+        </div>
       </div>
     </footer>
   )
