@@ -116,6 +116,9 @@ export default function PrivacyPolicyPage() {
               <li>OpenAI</li>
               <li>Twilio / Vonage / Bandwidth</li>
               <li>Home Junction / ATTOM Data</li>
+              <li>GitHub</li>
+              <li>Vercel</li>
+              <li>Supabase</li>
             </ul>
           </section>
 
