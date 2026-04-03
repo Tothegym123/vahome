@@ -90,7 +90,7 @@ export default function Footer() {
             REIN&rsquo;s listings data and information are protected under federal copyright laws. Federal law prohibits, among other acts, the unauthorized copying, reproduction, redistribution, or creation of derivative works from any part of copyrighted material, including certain compilations of data and information. COPYRIGHT VIOLATORS MAY BE SUBJECT TO SEVERE FINES AND PENALTIES UNDER FEDERAL LAW.
           </p>
           <p className="text-xs text-gray-500 leading-relaxed mt-3">
-            REIN updates its listings on a daily basis. Data last updated: 04/03/2026.
+            REIN updates its listings on a daily basis. Data last updated: {new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}.
           </p>
           <p className="text-xs text-gray-500 leading-relaxed mt-3">
             This website does not include all properties available for sale at this time.
