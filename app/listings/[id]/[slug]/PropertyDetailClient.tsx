@@ -161,13 +161,13 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
         </div>
 
         {/* Status pills */}
-        <div className="flex-1 grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {statuses.map((s) => {
             const isCurrent = normalizedStatus === s.label.toLowerCase();
             return (
               <div
                 key={s.label}
-                className={"px-3 py-2.5 rounded-lg text-center text-sm font-semibold border transition-all " + (isCurrent ? s.bgActive + " " + s.textActive + " " + s.borderActive + " ring-2 " + s.ring + " shadow-sm" : s.bg + " " + s.text + " " + s.border + " opacity-50")}
+                className={"px-2 py-1 rounded-md text-center text-xs font-semibold border transition-all " + (isCurrent ? s.bgActive + " " + s.textActive + " " + s.borderActive + " ring-2 " + s.ring + " shadow-sm" : s.bg + " " + s.text + " " + s.border + " opacity-50")}
               >
                 {s.label}
               </div>
@@ -560,7 +560,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
             </div>
 
             {/* Price Bar */}
-                          <div className="bg-white rounded-xl border border-gray-100 px-6 py-4 mb-2">
+                          <div className="bg-white rounded-xl border border-gray-100 px-6 py-3 mb-2">
                 <ListingStatusTracker status={listing.status} daysOnMarket={listing.daysOnMarket} />
               </div>
 <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 flex items-center justify-between">
