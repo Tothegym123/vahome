@@ -17,10 +17,13 @@ export interface Listing {
   zip: string;
   neighborhood: string;
   photos: string[];
+  img: string;
   status: string;
   propertyType: string;
+  type: string;
   yearBuilt: number;
   lotSqft: number;
+  lotSize: string;
   garage: number;
   description: string;
   // REIN MLS Extended Fields
@@ -82,10 +85,13 @@ export const sampleListings: Listing[] = [
       'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80',
       'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80',
     ],
+    img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80',
     status: 'Active',
     propertyType: 'Detached',
+    type: 'Single Family',
     yearBuilt: 1988,
     lotSqft: 8276,
+    lotSize: '8,276 sqft',
     garage: 2,
     description: 'Beautiful 4-bedroom Colonial in the sought-after Ocean Lakes community. Features an updated kitchen, hardwood floors throughout the main level, and a spacious backyard perfect for entertaining.',
     mlsNumber: '10626717',
@@ -144,10 +150,12 @@ export const sampleListings: Listing[] = [
       'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
       'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
     ],
-    status: 'Active',
-    propertyType: 'Attached/Townhouse',
+    img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
+    status: 'Active',*    propertyType: 'Attached/Townhouse',
+    type: 'Townhouse',
     yearBuilt: 1995,
     lotSqft: 3200,
+    lotSize: '3,200 sqft',
     garage: 1,
     description: 'Well-maintained 3-bedroom townhouse in Parkside Green. Open floor plan with vaulted ceilings, updated bathrooms, and a private patio. Convenient location near shopping and dining.',
     mlsNumber: '10625012',
@@ -206,10 +214,13 @@ export const sampleListings: Listing[] = [
       'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80',
       'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800&q=80',
     ],
+    img: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80',
     status: 'Active',
     propertyType: 'Detached',
+    type: 'Single Family',
     yearBuilt: 1990,
     lotSqft: 9583,
+    lotSize: '9,583 sqft',
     garage: 2,
     description: 'Spacious 4-bedroom Traditional in Whitehurst Landing with a large corner lot. Updated kitchen, new HVAC, and a finished bonus room over the garage. Great schools and easy access to I-264.',
     mlsNumber: '10625273',
@@ -268,10 +279,13 @@ export const sampleListings: Listing[] = [
       'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&q=80',
       'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80',
     ],
+    img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&q=80',
     status: 'Active',
     propertyType: 'Detached',
+    type: 'Single Family',
     yearBuilt: 2004,
     lotSqft: 14375,
+    lotSize: '14,375 sqft',
     garage: 2,
     description: 'Generous 2,500 sqft Traditional on a large lot in Applewood Farms, Suffolk. Open concept main floor, formal dining, and a spacious primary suite. Quiet cul-de-sac location with mature landscaping.',
     mlsNumber: '10624845',
@@ -330,10 +344,13 @@ export const sampleListings: Listing[] = [
       'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
       'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80',
     ],
+    img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
     status: 'Active',
     propertyType: 'Detached',
+    type: 'Single Family',
     yearBuilt: 1951,
     lotSqft: 6534,
+    lotSize: '6,534 sqft',
     garage: 0,
     description: 'Charming 3-bedroom Cape Cod in the Bayview Beach neighborhood of Norfolk. Renovated kitchen and baths, refinished hardwood floors, and a detached workshop. Walk to the Chesapeake Bay beach.',
     mlsNumber: '10627278',
