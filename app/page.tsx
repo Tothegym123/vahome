@@ -196,10 +196,8 @@ export default function HomePage() {
               Schedule a Consultation
             </Link>
             <a
-              href="tel:+17577777577"
               className="px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors border border-white/20 text-base"
             >
-              Call (757) 777-7577
             </a>
           </div>
         </div>
