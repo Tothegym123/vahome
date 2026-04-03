@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
 import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
-import Image from 'next/image';
 import CommuteTimes from '../../../components/CommuteTimes';
+import PhotoGallery from '../../../components/PhotoGallery';
 
 interface PropertyDetailClientProps {
   listing: Listing;
@@ -184,7 +184,7 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
     </div>
   );
 }
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Tour Scheduling Modal ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
+/* ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Tour Scheduling Modal ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ */
 
 function getUpcomingDays(count: number): Array<{ date: Date; dayName: string; monthDay: string }> {
   const days = [];
@@ -466,15 +466,11 @@ function TourModal({
   );
 }
 
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Main Component ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
+/* ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Main Component ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ */
 
 export default function PropertyDetailClient({ listing }: PropertyDetailClientProps) {
-  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [showTourModal, setShowTourModal] = useState(false);
-
-  const photos = listing.photos && listing.photos.length > 0 ? listing.photos : [listing.img];
-  const mainPhoto = photos[0];
-  const thumbnailPhotos = photos.slice(1, 5);
+    const photos = listing.photos && listing.photos.length > 0 ? listing.photos : [listing.img];
   const pricePerSqft = listing.sqft > 0 ? Math.round(listing.price / listing.sqft) : 0;
   const isActive = listing.status?.toLowerCase() === 'active';
 
@@ -512,55 +508,9 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
           {/* Main Column */}
           <div className="space-y-3">
             {/* Photo Gallery */}
-            <div className="bg-white rounded-xl overflow-hidden border border-gray-100">
-              <div
-                className="grid gap-2 p-2"
-                style={{ gridTemplateColumns: '2fr 1fr', gridTemplateRows: '200px 200px' }}
-              >
-                {/* Main Image */}
-                <div className="relative row-span-2 bg-gray-200 rounded-lg overflow-hidden">
-                  <Image
-                    src={mainPhoto}
-                    alt={listing.address}
-                    fill
-                    className="object-cover"
-                    priority
-                    onError={(e) => {
-                      const img = e.target as HTMLImageElement;
-                      img.src =
-                        'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%239ca3af%22%3ENo Image%3C/text%3E%3C/svg%3E';
-                    }}
-                  />
-                  <div className="absolute top-3 left-3 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-medium">
-                    {photos.length} Photos
-                  </div>
-                </div>
+          <PhotoGallery photos={photos} address={listing.address} />
 
-                {/* Thumbnail Grid */}
-                <div className="col-span-1 grid grid-cols-2 gap-2">
-                  {thumbnailPhotos.map((photo, idx) => (
-                    <div
-                      key={idx}
-                      className="relative bg-gray-200 rounded-lg overflow-hidden aspect-square cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      <Image
-                        src={photo}
-                        alt={`${listing.address} - Photo ${idx + 2}`}
-                        fill
-                        className="object-cover"
-                        onError={(e) => {
-                          const img = e.target as HTMLImageElement;
-                          img.src =
-                            'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/%3E%3C/svg%3E';
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Price Bar */}
+          {/* Price Bar */}
                           <div className="bg-white rounded-xl border border-gray-100 px-6 py-3 mb-2">
                 <ListingStatusTracker status={listing.status} daysOnMarket={listing.daysOnMarket} />
               </div>
