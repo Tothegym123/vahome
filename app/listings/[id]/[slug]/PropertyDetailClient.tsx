@@ -5,6 +5,7 @@ import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../
 import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
 import Image from 'next/image';
+import CommuteTimes from '../../../components/CommuteTimes';
 
 interface PropertyDetailClientProps {
   listing: Listing;
@@ -183,7 +184,7 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
     </div>
   );
 }
-/* ââ Tour Scheduling Modal ââ */
+/* Ã¢ÂÂÃ¢ÂÂ Tour Scheduling Modal Ã¢ÂÂÃ¢ÂÂ */
 
 function getUpcomingDays(count: number): Array<{ date: Date; dayName: string; monthDay: string }> {
   const days = [];
@@ -465,7 +466,7 @@ function TourModal({
   );
 }
 
-/* ââ Main Component ââ */
+/* Ã¢ÂÂÃ¢ÂÂ Main Component Ã¢ÂÂÃ¢ÂÂ */
 
 export default function PropertyDetailClient({ listing }: PropertyDetailClientProps) {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
@@ -803,6 +804,17 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                   ]}
                 />
               </CollapsibleSection>
+
+                {/* Military Base Commute Times */}
+                <CollapsibleSection
+                  id="commute-times"
+                  title="Military Base Commute Times"
+                  icon={"\uD83C\uDFDB\uFE0F"}
+                  iconBg="bg-indigo-50"
+                  defaultOpen={true}
+                >
+                  <CommuteTimes lat={listing.lat} lng={listing.lng} />
+                </CollapsibleSection>
             </div>
 
             {/* Footer Info */}
