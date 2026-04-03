@@ -41,7 +41,6 @@ export default function Header() {
             ))}
           </nav>
           <div className="hidden md:flex items-center gap-4">
-            <a href="tel:+17577777577" className="text-sm font-medium text-gray-600 hover:text-primary-500 transition-colors">(757) 777-7577</a>
             {loading ? (
               <div className="w-20 h-10 bg-gray-100 rounded-lg animate-pulse" />
             ) : user ? (
@@ -90,7 +89,6 @@ export default function Header() {
               <Link key={link.label} href={link.href} className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-primary-500 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>{link.label}</Link>
             ))}
             <div className="mt-4 px-4 space-y-3">
-              <a href="tel:+17577777577" className="block text-center py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg">(757) 777-7577</a>
               {user ? (
                 <>
                   <Link href="/dashboard/favorites" className="block text-center py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Saved Homes</Link>
