@@ -848,9 +848,6 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
               >
                 Request Info
               </button>
-              <p className="text-sm text-gray-600">
-                </a>
-              </p>
             </div>
 
             {/* Quick Facts Card */}
