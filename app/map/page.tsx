@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { sampleListings, videoMarkers, formatPrice, formatPriceFull, getFullAddress, getListingUrl, listingsToGeoJSON } from '../lib/listings'
 import type { Listing, VideoMarker as VideoMarkerType } from '../lib/listings'
+import FavoriteButton from '../components/FavoriteButton'
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 
@@ -515,10 +516,7 @@ export default function MapPage() {
                   loading="lazy"
                 />
                 <button
-                  <<div className="absolute top-2 right-10" onClick={(e) => e.stopPropagation()}>
-                  <FavoriteButton listingId={selectedListing.id} listingData={selectedListing} size="sm" />
-                </div>
-                <button onClick={() => setSelectedListing(null)}
+                  onClick={() => setSelectedListing(null)}
                   className="absolute top-2 right-2 bg-white rounded-full w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-800 shadow"
                 >
                   &times;
@@ -562,12 +560,7 @@ export default function MapPage() {
                 onMouseLeave={() => setHoveredId(null)}
               >
                 <div className="relative flex-shrink-0">
-                <img
-                  src={l.img}
-                  alt={getFullAddress(l)}
-                  className="w-28 h-20 rounded-lg object-cover"
-                  loading="lazy"
-                />
+                <img src={l.img} alt={getFullAddress(l)} className="w-28 h-20 rounded-lg object-cover" loading="lazy" />
                 <div className="absolute top-1 right-1" onClick={(e) => e.stopPropagation()}>
                   <FavoriteButton listingId={l.id} listingData={l} size="sm" />
                 </div>
