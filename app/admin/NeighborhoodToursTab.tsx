@@ -4,14 +4,31 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { createClient } from '../lib/supabase/client'
 
-type NeighborhoodTour = {
+type VideoLink = {
   id: string
   title: string
   description: string | null
   youtube_url: string
   lat: number
   lng: number
+  category: string
   created_at: string
+}
+
+const CATEGORY_OPTIONS = [
+  { value: 'neighborhood_tour', label: 'Neighborhood Tour', color: '#e74c3c' },
+  { value: 'outdoor_space_tour', label: 'Outdoor Space Tour', color: '#2ecc71' },
+  { value: 'entertainment', label: 'Entertainment', color: '#3498db' },
+]
+
+function getCategoryColor(category: string): string {
+  const found = CATEGORY_OPTIONS.find(c => c.value === category)
+  return found ? found.color : '#e74c3c'
+}
+
+function getCategoryLabel(category: string): string {
+  const found = CATEGORY_OPTIONS.find(c => c.value === category)
+  return found ? found.label : 'Neighborhood Tour'
 }
 
 export default function NeighborhoodToursTab() {
@@ -19,8 +36,9 @@ export default function NeighborhoodToursTab() {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
   const markerRef = useRef<any>(null)
+  const tourMarkersRef = useRef<any[]>([])
 
-  const [tours, setTours] = useState<NeighborhoodTour[]>([])
+  const [tours, setTours] = useState<VideoLink[]>([])
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [mapLoaded, setMapLoaded] = useState(false)
@@ -29,331 +47,383 @@ export default function NeighborhoodToursTab() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [youtubeUrl, setYoutubeUrl] = useState('')
+  const [category, setCategory] = useState('neighborhood_tour')
   const [pinLat, setPinLat] = useState<number | null>(null)
   const [pinLng, setPinLng] = useState<number | null>(null)
-
-  // Edit mode
   const [editingId, setEditingId] = useState<string | null>(null)
 
-  // Fetch tours from Supabase
   const fetchTours = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('neighborhood_tours')
-      .select('*')
-      .order('created_at', { ascending: false })
-    if (data) setTours(data)
-    if (error) console.error('Error fetching tours:', error)
-    setLoading(false)
-  }, [])
+    try {
+      const { data, error } = await supabase
+        .from('neighborhood_tours')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      setTours(data || [])
+    } catch (err) {
+      console.error('Error fetching video links:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase])
 
+  // Initialize map
   useEffect(() => {
-    fetchTours()
-  }, [fetchTours])
-
-  // Initialize Mapbox map
-  useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return
-
-    let cancelled = false
-
+    if (mapRef.current) return
     const initMap = async () => {
       const mapboxgl = (await import('mapbox-gl')).default
-
-      if (cancelled || !mapContainerRef.current) return
-
       mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 
       const map = new mapboxgl.Map({
-        container: mapContainerRef.current,
+        container: mapContainerRef.current!,
         style: 'mapbox://styles/mapbox/streets-v12',
         center: [-76.15, 36.85],
-        zoom: 10
+        zoom: 11,
       })
 
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
 
       map.on('load', () => {
-        if (!cancelled) setMapLoaded(true)
+        mapRef.current = map
+        setMapLoaded(true)
       })
 
-      // Click to drop pin
       map.on('click', (e: any) => {
-        const { lng, lat } = e.lngLat
+        const lat = e.lngLat.lat
+        const lng = e.lngLat.lng
+        setPinLat(lat)
+        setPinLng(lng)
 
-        setPinLat(Math.round(lat * 1000000) / 1000000)
-        setPinLng(Math.round(lng * 1000000) / 1000000)
-
-        // Remove existing marker
+        // Remove old draggable marker
         if (markerRef.current) {
           markerRef.current.remove()
         }
 
-        // Create new draggable marker
-        const marker = new mapboxgl.Marker({
-          color: '#EF4444',
-          draggable: true
-        })
+        // Get current category color for the marker
+        const catSelect = document.getElementById('category-select') as HTMLSelectElement
+        const currentCat = catSelect ? catSelect.value : 'neighborhood_tour'
+        const markerColor = getCategoryColor(currentCat)
+
+        const marker = new mapboxgl.Marker({ draggable: true, color: markerColor })
           .setLngLat([lng, lat])
           .addTo(map)
 
-        // Update coordinates on drag
         marker.on('dragend', () => {
-          const pos = marker.getLngLat()
-          setPinLat(Math.round(pos.lat * 1000000) / 1000000)
-          setPinLng(Math.round(pos.lng * 1000000) / 1000000)
+          const lngLat = marker.getLngLat()
+          setPinLat(lngLat.lat)
+          setPinLng(lngLat.lng)
         })
 
         markerRef.current = marker
       })
-
-      mapRef.current = map
     }
-
     initMap()
-
-    return () => {
-      cancelled = true
-      if (markerRef.current) markerRef.current.remove()
-      if (mapRef.current) {
-        mapRef.current.remove()
-        mapRef.current = null
-      }
-    }
   }, [])
 
-  // Extract YouTube video ID from URL
-  const getYoutubeId = (url: string): string | null => {
-    const patterns = [
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/,
-      /youtube\.com\/shorts\/([^&\s?]+)/
-    ]
-    for (const pattern of patterns) {
-      const match = url.match(pattern)
-      if (match) return match[1]
+  // Display saved tour markers on map
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current) return
+
+    const loadMarkers = async () => {
+      const mapboxgl = (await import('mapbox-gl')).default
+
+      // Clear old markers
+      tourMarkersRef.current.forEach(m => m.remove())
+      tourMarkersRef.current = []
+
+      tours.forEach(tour => {
+        const color = getCategoryColor(tour.category || 'neighborhood_tour')
+        const marker = new mapboxgl.Marker({ color })
+          .setLngLat([tour.lng, tour.lat])
+          .setPopup(
+            new mapboxgl.Popup({ offset: 25 }).setHTML(
+              `<strong>${tour.title}</strong><br/><span style="font-size:11px;color:#666">${getCategoryLabel(tour.category || 'neighborhood_tour')}</span><br/>${tour.description || ''}`
+            )
+          )
+          .addTo(mapRef.current)
+        tourMarkersRef.current.push(marker)
+      })
     }
-    return null
+    loadMarkers()
+  }, [tours, mapLoaded])
+
+  // Fetch tours on mount
+  useEffect(() => {
+    fetchTours()
+  }, [fetchTours])
+
+  const getYoutubeId = (url: string): string | null => {
+    const match = url.match(
+      /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    )
+    return match ? match[1] : null
   }
 
-  // Save tour
   const handleSave = async () => {
-    if (!title.trim() || !youtubeUrl.trim() || pinLat === null || pinLng === null) {
-      alert('Please fill in the title, YouTube URL, and drop a pin on the map.')
+    if (!title || !youtubeUrl || pinLat === null || pinLng === null) {
+      alert('Please fill in title, YouTube URL, and drop a pin on the map.')
       return
     }
-
-    const videoId = getYoutubeId(youtubeUrl)
-    if (!videoId) {
-      alert('Please enter a valid YouTube URL.')
+    if (!getYoutubeId(youtubeUrl)) {
+      alert('Invalid YouTube URL. Please paste a valid YouTube link.')
       return
     }
 
     setSaving(true)
-
-    if (editingId) {
-      // Update existing
-      const { error } = await supabase
-        .from('neighborhood_tours')
-        .update({
-          title: title.trim(),
-          description: description.trim() || null,
-          youtube_url: youtubeUrl.trim(),
-          lat: pinLat,
-          lng: pinLng
-        })
-        .eq('id', editingId)
-
-      if (error) {
-        alert('Error updating tour: ' + error.message)
+    try {
+      if (editingId) {
+        const { error } = await supabase
+          .from('neighborhood_tours')
+          .update({
+            title,
+            description: description || null,
+            youtube_url: youtubeUrl,
+            lat: pinLat,
+            lng: pinLng,
+            category,
+          })
+          .eq('id', editingId)
+        if (error) throw error
       } else {
-        setEditingId(null)
+        const { error } = await supabase
+          .from('neighborhood_tours')
+          .insert({
+            title,
+            description: description || null,
+            youtube_url: youtubeUrl,
+            lat: pinLat,
+            lng: pinLng,
+            category,
+          })
+        if (error) throw error
       }
-    } else {
-      // Insert new
+
+      // Reset form
+      setTitle('')
+      setDescription('')
+      setYoutubeUrl('')
+      setCategory('neighborhood_tour')
+      setPinLat(null)
+      setPinLng(null)
+      setEditingId(null)
+      if (markerRef.current) {
+        markerRef.current.remove()
+        markerRef.current = null
+      }
+
+      await fetchTours()
+    } catch (err) {
+      console.error('Error saving video link:', err)
+      alert('Failed to save. Check console for details.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this video link?')) return
+    try {
       const { error } = await supabase
         .from('neighborhood_tours')
-        .insert({
-          title: title.trim(),
-          description: description.trim() || null,
-          youtube_url: youtubeUrl.trim(),
-          lat: pinLat,
-          lng: pinLng
-        })
-
-      if (error) {
-        alert('Error saving tour: ' + error.message)
-      }
-    }
-
-    // Reset form
-    setTitle('')
-    setDescription('')
-    setYoutubeUrl('')
-    setPinLat(null)
-    setPinLng(null)
-    if (markerRef.current) {
-      markerRef.current.remove()
-      markerRef.current = null
-    }
-
-    setSaving(false)
-    fetchTours()
-  }
-
-  // Delete tour
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this neighborhood tour?')) return
-
-    const { error } = await supabase
-      .from('neighborhood_tours')
-      .delete()
-      .eq('id', id)
-
-    if (error) {
-      alert('Error deleting tour: ' + error.message)
-    } else {
-      fetchTours()
+        .delete()
+        .eq('id', id)
+      if (error) throw error
+      await fetchTours()
+    } catch (err) {
+      console.error('Error deleting video link:', err)
     }
   }
 
-  // Edit tour - populate form
-  const handleEdit = async (tour: NeighborhoodTour) => {
-    setEditingId(tour.id)
+  const handleEdit = async (tour: VideoLink) => {
     setTitle(tour.title)
     setDescription(tour.description || '')
     setYoutubeUrl(tour.youtube_url)
+    setCategory(tour.category || 'neighborhood_tour')
     setPinLat(tour.lat)
     setPinLng(tour.lng)
+    setEditingId(tour.id)
 
-    // Place marker on map
     if (mapRef.current) {
       const mapboxgl = (await import('mapbox-gl')).default
 
-      if (markerRef.current) markerRef.current.remove()
+      if (markerRef.current) {
+        markerRef.current.remove()
+      }
 
-      const marker = new mapboxgl.Marker({
-        color: '#EF4444',
-        draggable: true
-      })
+      const markerColor = getCategoryColor(tour.category || 'neighborhood_tour')
+      const marker = new mapboxgl.Marker({ draggable: true, color: markerColor })
         .setLngLat([tour.lng, tour.lat])
         .addTo(mapRef.current)
 
       marker.on('dragend', () => {
-        const pos = marker.getLngLat()
-        setPinLat(Math.round(pos.lat * 1000000) / 1000000)
-        setPinLng(Math.round(pos.lng * 1000000) / 1000000)
+        const lngLat = marker.getLngLat()
+        setPinLat(lngLat.lat)
+        setPinLng(lngLat.lng)
       })
 
       markerRef.current = marker
-      mapRef.current.flyTo({ center: [tour.lng, tour.lat], zoom: 13 })
+      mapRef.current.flyTo({ center: [tour.lng, tour.lat], zoom: 14 })
     }
   }
 
-  // Cancel edit
-  const handleCancel = () => {
-    setEditingId(null)
-    setTitle('')
-    setDescription('')
-    setYoutubeUrl('')
-    setPinLat(null)
-    setPinLng(null)
-    if (markerRef.current) {
+  // Update marker color when category changes
+  const handleCategoryChange = async (newCategory: string) => {
+    setCategory(newCategory)
+    if (markerRef.current && pinLat !== null && pinLng !== null && mapRef.current) {
+      const mapboxgl = (await import('mapbox-gl')).default
+      const lngLat = markerRef.current.getLngLat()
       markerRef.current.remove()
-      markerRef.current = null
+
+      const markerColor = getCategoryColor(newCategory)
+      const marker = new mapboxgl.Marker({ draggable: true, color: markerColor })
+        .setLngLat([lngLat.lng, lngLat.lat])
+        .addTo(mapRef.current)
+
+      marker.on('dragend', () => {
+        const ll = marker.getLngLat()
+        setPinLat(ll.lat)
+        setPinLng(ll.lng)
+      })
+
+      markerRef.current = marker
     }
   }
 
   return (
-    <div className="space-y-6">
-      {/* Map + Form Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>
+        Video Links
+      </h2>
+      <p style={{ color: '#666', marginBottom: '1.5rem' }}>
+        Click the map to drop a pin, fill in the details, select a category, and save.
+      </p>
+
+      {/* Map + Form */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
         {/* Map */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 mb-2">
-            Click the map to drop a pin
-          </h3>
           <div
             ref={mapContainerRef}
-            className="w-full rounded-lg border border-gray-300 overflow-hidden"
-            style={{ height: '400px' }}
+            style={{ width: '100%', height: '400px', borderRadius: '8px', border: '1px solid #e2e8f0' }}
           />
-          {pinLat !== null && pinLng !== null && (
-            <p className="mt-2 text-xs text-gray-500">
-              Pin: {pinLat}, {pinLng}
-              <span className="ml-2 text-blue-600">(drag to adjust)</span>
+          {pinLat && pinLng && (
+            <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#666' }}>
+              Pin: {pinLat.toFixed(5)}, {pinLng.toFixed(5)}
             </p>
           )}
+          {/* Legend */}
+          <div style={{ marginTop: '0.75rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {CATEGORY_OPTIONS.map(opt => (
+              <div key={opt.value} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: opt.color, display: 'inline-block' }} />
+                {opt.label}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Form */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700">
-            {editingId ? 'Edit Neighborhood Tour' : 'Add Neighborhood Tour'}
-          </h3>
-
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Neighborhood Title *
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.25rem', fontSize: '0.9rem' }}>
+              Title *
             </label>
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Virginia Beach Oceanfront"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={e => setTitle(e.target.value)}
+              placeholder="e.g. Great Neck Area Tour"
+              style={{
+                width: '100%', padding: '0.5rem', border: '1px solid #d1d5db',
+                borderRadius: '6px', fontSize: '0.9rem',
+              }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              YouTube Video URL *
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.25rem', fontSize: '0.9rem' }}>
+              Category *
+            </label>
+            <select
+              id="category-select"
+              value={category}
+              onChange={e => handleCategoryChange(e.target.value)}
+              style={{
+                width: '100%', padding: '0.5rem', border: '1px solid #d1d5db',
+                borderRadius: '6px', fontSize: '0.9rem', backgroundColor: '#fff',
+              }}
+            >
+              {CATEGORY_OPTIONS.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.25rem', fontSize: '0.9rem' }}>
+              YouTube URL *
             </label>
             <input
               type="text"
               value={youtubeUrl}
-              onChange={(e) => setYoutubeUrl(e.target.value)}
+              onChange={e => setYoutubeUrl(e.target.value)}
               placeholder="https://www.youtube.com/watch?v=..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              style={{
+                width: '100%', padding: '0.5rem', border: '1px solid #d1d5db',
+                borderRadius: '6px', fontSize: '0.9rem',
+              }}
             />
-            {youtubeUrl && getYoutubeId(youtubeUrl) && (
-              <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
-                <iframe
-                  width="100%"
-                  height="200"
-                  src={`https://www.youtube.com/embed/${getYoutubeId(youtubeUrl)}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Description (optional)
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.25rem', fontSize: '0.9rem' }}>
+              Description
             </label>
             <textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="A short description of this neighborhood..."
+              onChange={e => setDescription(e.target.value)}
+              placeholder="Optional description..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              style={{
+                width: '100%', padding: '0.5rem', border: '1px solid #d1d5db',
+                borderRadius: '6px', fontSize: '0.9rem', resize: 'vertical',
+              }}
             />
           </div>
 
-          <div className="flex gap-3">
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button
               onClick={handleSave}
-              disabled={saving || !title.trim() || !youtubeUrl.trim() || pinLat === null}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              disabled={saving}
+              style={{
+                padding: '0.6rem 1.5rem', backgroundColor: '#2563eb', color: '#fff',
+                border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer',
+                opacity: saving ? 0.6 : 1, fontSize: '0.9rem',
+              }}
             >
-              {saving ? 'Saving...' : editingId ? 'Update Tour' : 'Save Tour'}
+              {saving ? 'Saving...' : editingId ? 'Update Video Link' : 'Save Video Link'}
             </button>
             {editingId && (
               <button
-                onClick={handleCancel}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
+                onClick={() => {
+                  setEditingId(null)
+                  setTitle('')
+                  setDescription('')
+                  setYoutubeUrl('')
+                  setCategory('neighborhood_tour')
+                  setPinLat(null)
+                  setPinLng(null)
+                  if (markerRef.current) {
+                    markerRef.current.remove()
+                    markerRef.current = null
+                  }
+                }}
+                style={{
+                  padding: '0.6rem 1.5rem', backgroundColor: '#6b7280', color: '#fff',
+                  border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer',
+                  fontSize: '0.9rem',
+                }}
               >
                 Cancel
               </button>
@@ -362,68 +432,87 @@ export default function NeighborhoodToursTab() {
         </div>
       </div>
 
-      {/* Existing Tours List */}
-      <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">
-          Saved Neighborhood Tours ({tours.length})
-        </h3>
+      {/* Saved Video Links */}
+      <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '1rem' }}>
+        Saved Video Links {tours.length > 0 && `(${tours.length})`}
+      </h3>
 
-        {loading ? (
-          <p className="text-sm text-gray-500">Loading...</p>
-        ) : tours.length === 0 ? (
-          <p className="text-sm text-gray-500">
-            No neighborhood tours yet. Drop a pin on the map and add a YouTube video to get started.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tours.map((tour) => {
-              const videoId = getYoutubeId(tour.youtube_url)
-              return (
-                <div
-                  key={tour.id}
-                  className="border border-gray-200 rounded-lg overflow-hidden bg-white hover:shadow-md transition-shadow"
-                >
-                  {videoId && (
-                    <div className="aspect-video">
-                      <iframe
-                        width="100%"
-                        height="100%"
-                        src={`https://www.youtube.com/embed/${videoId}`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    </div>
-                  )}
-                  <div className="p-3">
-                    <h4 className="font-semibold text-sm text-gray-900">{tour.title}</h4>
-                    {tour.description && (
-                      <p className="text-xs text-gray-500 mt-1">{tour.description}</p>
-                    )}
-                    <p className="text-xs text-gray-400 mt-1">
-                      {tour.lat.toFixed(4)}, {tour.lng.toFixed(4)}
+      {loading ? (
+        <p>Loading...</p>
+      ) : tours.length === 0 ? (
+        <p style={{ color: '#999' }}>No video links yet. Drop a pin and add one above.</p>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
+          {tours.map(tour => {
+            const videoId = getYoutubeId(tour.youtube_url)
+            const catColor = getCategoryColor(tour.category || 'neighborhood_tour')
+            const catLabel = getCategoryLabel(tour.category || 'neighborhood_tour')
+            return (
+              <div
+                key={tour.id}
+                style={{
+                  border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden',
+                  backgroundColor: '#fff',
+                }}
+              >
+                {videoId && (
+                  <iframe
+                    width="100%"
+                    height="180"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ display: 'block' }}
+                  />
+                )}
+                <div style={{ padding: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                    <span style={{
+                      display: 'inline-block', width: '10px', height: '10px',
+                      borderRadius: '50%', backgroundColor: catColor,
+                    }} />
+                    <span style={{ fontSize: '0.75rem', color: '#666', fontWeight: 500 }}>
+                      {catLabel}
+                    </span>
+                  </div>
+                  <h4 style={{ fontWeight: 600, marginBottom: '0.25rem' }}>{tour.title}</h4>
+                  {tour.description && (
+                    <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>
+                      {tour.description}
                     </p>
-                    <div className="flex gap-2 mt-2">
-                      <button
-                        onClick={() => handleEdit(tour)}
-                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(tour.id)}
-                        className="text-xs text-red-600 hover:text-red-800 font-medium"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                  )}
+                  <p style={{ fontSize: '0.75rem', color: '#999', marginBottom: '0.5rem' }}>
+                    {tour.lat.toFixed(4)}, {tour.lng.toFixed(4)}
+                  </p>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      onClick={() => handleEdit(tour)}
+                      style={{
+                        padding: '0.3rem 0.75rem', backgroundColor: '#f3f4f6',
+                        border: '1px solid #d1d5db', borderRadius: '4px',
+                        fontSize: '0.8rem', cursor: 'pointer',
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(tour.id)}
+                      style={{
+                        padding: '0.3rem 0.75rem', backgroundColor: '#fef2f2',
+                        border: '1px solid #fecaca', borderRadius: '4px',
+                        fontSize: '0.8rem', cursor: 'pointer', color: '#dc2626',
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
