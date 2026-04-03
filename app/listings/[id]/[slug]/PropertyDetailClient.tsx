@@ -77,6 +77,112 @@ function SchoolCard({ label, school }: { label: string; school: string }) {
   );
 }
 
+
+/* -- Listing Status Tracker -- */
+
+function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOnMarket: number }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const statuses = [
+    {
+      label: 'Active',
+      bg: 'bg-green-100',
+      bgActive: 'bg-green-300',
+      text: 'text-green-600',
+      textActive: 'text-green-900',
+      border: 'border-green-200',
+      borderActive: 'border-green-500',
+      ring: 'ring-green-300',
+      desc: 'The home is available with no accepted contracts',
+    },
+    {
+      label: 'Contingent',
+      bg: 'bg-yellow-50',
+      bgActive: 'bg-yellow-200',
+      text: 'text-yellow-600',
+      textActive: 'text-yellow-900',
+      border: 'border-yellow-200',
+      borderActive: 'border-yellow-500',
+      ring: 'ring-yellow-300',
+      desc: 'Under contract with conditions (inspection, financing, etc.) and may return to market',
+    },
+    {
+      label: 'Pending',
+      bg: 'bg-orange-50',
+      bgActive: 'bg-orange-200',
+      text: 'text-orange-600',
+      textActive: 'text-orange-900',
+      border: 'border-orange-200',
+      borderActive: 'border-orange-500',
+      ring: 'ring-orange-300',
+      desc: 'All contingencies removed; the sale is very likely to close',
+    },
+    {
+      label: 'Sold',
+      bg: 'bg-red-50',
+      bgActive: 'bg-red-200',
+      text: 'text-red-600',
+      textActive: 'text-red-900',
+      border: 'border-red-200',
+      borderActive: 'border-red-500',
+      ring: 'ring-red-300',
+      desc: 'The transaction has been completed',
+    },
+  ];
+
+  const normalizedStatus = status.toLowerCase().trim();
+  return (
+    <div className="w-full">
+      <div className="flex items-center gap-2">
+        {/* Info tooltip trigger */}
+        <div className="relative flex-shrink-0">
+          <button
+            onClick={() => setShowTooltip(!showTooltip)}
+            onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
+            className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-600 flex items-center justify-center text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+            aria-label="Status definitions"
+            title="Click for status definitions"
+          >
+            ?
+          </button>
+          {showTooltip && (
+            <div className="absolute left-0 top-8 z-50 w-80 bg-white rounded-xl shadow-xl border border-gray-200 p-4 text-left">
+              <p className="text-sm font-semibold text-gray-800 mb-3">Listing Status Guide</p>
+              {statuses.map((s) => (
+                <div key={s.label} className="mb-2.5 last:mb-0">
+                  <span className={"inline-block px-2 py-0.5 rounded text-xs font-semibold mr-2 " + s.bgActive + " " + s.textActive}>
+                    {s.label}
+                  </span>
+                  <span className="text-xs text-gray-600 leading-relaxed">{s.desc}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Status pills */}
+        <div className="flex-1 grid grid-cols-4 gap-2">
+          {statuses.map((s) => {
+            const isCurrent = normalizedStatus === s.label.toLowerCase();
+            return (
+              <div
+                key={s.label}
+                className={"px-3 py-2.5 rounded-lg text-center text-sm font-semibold border transition-all " + (isCurrent ? s.bgActive + " " + s.textActive + " " + s.borderActive + " ring-2 " + s.ring + " shadow-sm" : s.bg + " " + s.text + " " + s.border + " opacity-50")}
+              >
+                {s.label}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Days on Market */}
+      <p className="text-center text-sm text-gray-500 mt-2">
+        {daysOnMarket} days on market
+      </p>
+    </div>
+  );
+}
 /* ── Tour Scheduling Modal ── */
 
 function getUpcomingDays(count: number): Array<{ date: Date; dayName: string; monthDay: string }> {
@@ -454,19 +560,11 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
             </div>
 
             {/* Price Bar */}
-            <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}
-                >
-                  {isActive ? 'ACTIVE' : 'SOLD'}
-                </span>
-                <span className="text-gray-600 text-lg">
-                  {listing.daysOnMarket} days on market
-                </span>
+                          <div className="bg-white rounded-xl border border-gray-100 px-6 py-4 mb-2">
+                <ListingStatusTracker status={listing.status} daysOnMarket={listing.daysOnMarket} />
               </div>
+<div className="bg-white rounded-xl border border-gray-100 px-6 py-5 flex items-center justify-between">
+              
               <p className="text-5xl font-bold text-gray-900">{formatPriceFull(listing.price)}</p>
               <FavoriteButton listingId={listing.id} listingData={listing} size="lg" />
             </div>
