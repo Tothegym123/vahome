@@ -26,7 +26,7 @@ function CollapsibleSection({
   icon,
   iconBg,
   children,
-  defaultOpen = true,
+  defaultOpen = false,
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -34,12 +34,12 @@ function CollapsibleSection({
     <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-5 flex items-center gap-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
+        className="w-full px-5 py-3 flex items-center gap-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
       >
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${iconBg}`}>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${iconBg}`}>
           <span className="text-lg">{icon}</span>
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900 flex-1 text-left">{title}</h2>
+        <h2 className="text-lg font-semibold text-gray-900 flex-1 text-left">{title}</h2>
         <svg
           className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
@@ -51,18 +51,18 @@ function CollapsibleSection({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {isOpen && <div className="px-6 py-5">{children}</div>}
+      {isOpen && <div className="px-5 py-3">{children}</div>}
     </div>
   );
 }
 
 function DetailGrid({ items }: { items: Array<{ label: string; value: string }> }) {
   return (
-    <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+    <div className="grid grid-cols-2 gap-x-6 gap-y-2">
       {items.map((item, idx) => (
         <div key={idx}>
-          <p className="text-lg text-gray-500 mb-1">{item.label}</p>
-          <p className="text-lg font-medium text-gray-900">{item.value}</p>
+          <p className="text-sm text-gray-500 mb-0.5">{item.label}</p>
+          <p className="text-base font-medium text-gray-900">{item.value}</p>
         </div>
       ))}
     </div>
@@ -184,7 +184,7 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
     </div>
   );
 }
-/* Ã¢ÂÂÃ¢ÂÂ Tour Scheduling Modal Ã¢ÂÂÃ¢ÂÂ */
+/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Tour Scheduling Modal ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
 
 function getUpcomingDays(count: number): Array<{ date: Date; dayName: string; monthDay: string }> {
   const days = [];
@@ -466,7 +466,7 @@ function TourModal({
   );
 }
 
-/* Ã¢ÂÂÃ¢ÂÂ Main Component Ã¢ÂÂÃ¢ÂÂ */
+/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Main Component ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
 
 export default function PropertyDetailClient({ listing }: PropertyDetailClientProps) {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
@@ -507,10 +507,10 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
           {/* Main Column */}
-          <div className="space-y-6">
+          <div className="space-y-3">
             {/* Photo Gallery */}
             <div className="bg-white rounded-xl overflow-hidden border border-gray-100">
               <div
@@ -628,7 +628,8 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 title="Description"
                 icon={"\uD83D\uDCDD"}
                 iconBg="bg-blue-100"
-              >
+              
+                  defaultOpen={true}>
                 <p className="text-gray-700 text-lg leading-8">
                   {listing.remarks || listing.description || 'No description available.'}
                 </p>
@@ -640,7 +641,8 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 title="Property Details"
                 icon={"\uD83C\uDFE0"}
                 iconBg="bg-green-100"
-              >
+              
+                  defaultOpen={true}>
                 <DetailGrid
                   items={[
                     { label: 'Property Type', value: listing.propertyType },
