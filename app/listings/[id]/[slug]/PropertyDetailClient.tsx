@@ -494,8 +494,8 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                   { label: 'Garage', value: listing.garage.toString() },
                 ].map((stat, idx) => (
                   <div key={idx} className="px-4 py-4 text-center">
-                    <p className="text-base text-gray-500 mb-1">{stat.label}</p>
-                    <p className="text-lg font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-lg text-gray-500 mb-1">{stat.label}</p>
+                    <p className="text-xl font-bold text-gray-900">{stat.value}</p>
                   </div>
                 ))}
               </div>
