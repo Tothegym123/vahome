@@ -73,7 +73,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} VaHome.com. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacy Policy</Link>
+            <Link href="/privacy" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacy Policy</Link>
             <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Terms of Service</Link>
           </div>
         </div>
