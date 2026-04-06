@@ -45,7 +45,7 @@ const neighborhoods = [
   { name: 'Norfolk', count: 487, from: '$195K', img: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&q=80' },
   { name: 'Newport News', count: 394, from: '$180K', img: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600&q=80' },
   { name: 'Hampton', count: 289, from: '$165K', img: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80' },
-  { name: 'Suffolk', count: 204, from: '$230K', img: 'https://images.unsplash.com/photo-1600573472556-e636c2acda9e?w=600&q=80' },
+  { name: 'Suffolk', count: 204, from: '$230K', img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80' },
 ]
 
 const bases = [
@@ -75,7 +75,15 @@ const militaryBasesList = [
 
 export default function HomeClient() {
   const { user, profile, setShowAuthModal, setAuthView, theme, setTheme } = useAuth()
-  const [mode, setMode] = useState<'civilian' | 'military'>('civilian')
+  const [mode, setMode] = useState<'civilian' | 'military'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('vahome-mode')
+        if (stored === 'military') return 'military'
+      } catch {}
+    }
+    return 'civilian'
+  })
   const [flash, setFlash] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const isMil = mode === 'military'
@@ -108,22 +116,34 @@ export default function HomeClient() {
     } catch {}
   }, [])
 
-  // Scroll reveal
+  // Scroll reveal - re-observe on mode change, immediately reveal visible elements
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry, i) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => entry.target.classList.add('in'), i * 80)
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
     const els = wrapperRef.current?.querySelectorAll('.fade')
-    els?.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
+    if (!els) return
+
+    // Reset all fade elements first
+    els.forEach((el) => el.classList.remove('in'))
+
+    // Small delay to allow CSS reset, then set up observer
+    const raf = requestAnimationFrame(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add('in'), i * 80)
+              observer.unobserve(entry.target)
+            }
+          })
+        },
+        { threshold: 0.05, rootMargin: '50px' }
+      )
+      els.forEach((el) => observer.observe(el))
+      window._fadeObserver = observer
+    })
+    return () => {
+      cancelAnimationFrame(raf)
+      if (window._fadeObserver) window._fadeObserver.disconnect()
+    }
   }, [mode])
 
   const toggleMode = useCallback(() => {
