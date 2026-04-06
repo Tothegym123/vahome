@@ -321,10 +321,10 @@ export default function HomeClient() {
             </div>
 
             {/* Logged-in welcome */}
-            {isLoggedIn && user?.user_metadata?.first_name && (
+            {isLoggedIn && (user?.user_metadata?.first_name || user?.user_metadata?.full_name || user?.user_metadata?.name) && (
               <div className="fade mb-4">
                 <span className="text-sm font-medium text-secondary-themed morph">
-                  Welcome back, {user.user_metadata.first_name}! {isMil ? '\u{1F396}\uFE0F' : '\u{1F44B}'}
+                  Welcome back, {user.user_metadata.first_name || (user.user_metadata.full_name || user.user_metadata.name || "").split(" ")[0]}! {isMil ? '\u{1F396}\uFE0F' : '\u{1F44B}'}
                 </span>
               </div>
             )}
