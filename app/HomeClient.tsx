@@ -8,26 +8,26 @@ import PremiumTeaser from './components/PremiumTeaser'
 
 const civPills = ['Virginia Beach', 'Under $350K', 'Waterfront', 'New Construction', 'Open Houses']
 const milPills = [
-  { label: 'Near NAS Oceana', icon: '\u{1F396}\uFE0F' },
+  { label: 'Near Naval Air Station Oceana', icon: '\u{1F396}\uFE0F' },
   { label: 'Under BAH', icon: '\u{1F4B0}' },
   { label: 'Near Norfolk NS', icon: '\u2693' },
   { label: 'VA Loan Ready', icon: '' },
-  { label: 'Near Langley', icon: '\u2708\uFE0F' },
-  { label: 'Near Little Creek', icon: '' },
+  { label: 'Near Joint Base Langley-Eustis', icon: '\u2708\uFE0F' },
+  { label: 'Near Joint Expeditionary Base Little Creek', icon: '' },
 ]
 
 const listings = [
   {
     address: '1247 Crossbow Lane', city: 'Chesapeake', state: 'VA', zip: '23322',
     price: '$425,000', beds: 4, baths: 3, sqft: '2,480',
-    commute: '14 min to NAS Oceana',
+    commute: '14 min to Naval Air Station Oceana',
     img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80',
     badge: 'New', badgeColor: 'bg-emerald-500',
   },
   {
     address: '834 Ocean Shore Ave', city: 'Virginia Beach', state: 'VA', zip: '23451',
     price: '$389,900', beds: 3, baths: 2.5, sqft: '1,920',
-    commute: '8 min to JEB Little Creek',
+    commute: '8 min to Joint Expeditionary Base Little Creek',
     img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80',
   },
   {
@@ -50,27 +50,27 @@ const neighborhoods = [
 
 const bases = [
   { code: 'NS', name: 'Naval Station Norfolk', area: 'Norfolk', homes: '1,247' },
-  { code: 'JB', name: 'JEB Little Creek-Fort Story', area: 'Virginia Beach', homes: '893' },
-  { code: 'NO', name: 'NAS Oceana', area: 'Virginia Beach', homes: '756' },
+  { code: 'JB', name: 'Joint Expeditionary Base Little Creek-Fort Story', area: 'Virginia Beach', homes: '893' },
+  { code: 'NO', name: 'Naval Air Station Oceana', area: 'Virginia Beach', homes: '756' },
   { code: 'LE', name: 'Joint Base Langley-Eustis', area: 'Hampton', homes: '438' },
   { code: 'NN', name: 'Newport News Shipbuilding', area: 'Newport News', homes: '512' },
 ]
 
 const militaryBasesList = [
-  { name: 'Naval Station Norfolk', shortName: 'NS Norfolk', branch: 'Navy', lat: 36.9466, lng: -76.3036 },
-  { name: 'NAS Oceana', shortName: 'NAS Oceana', branch: 'Navy', lat: 36.8207, lng: -76.0331 },
-  { name: 'Dam Neck Annex', shortName: 'Dam Neck', branch: 'Navy', lat: 36.7920, lng: -75.9710 },
-  { name: 'JEB Little Creek-Fort Story', shortName: 'Little Creek', branch: 'Navy', lat: 36.9178, lng: -76.1601 },
-  { name: 'Naval Medical Center Portsmouth', shortName: 'NMCP', branch: 'Navy', lat: 36.8446, lng: -76.3039 },
-  { name: 'Norfolk Naval Shipyard', shortName: 'NNSY', branch: 'Navy', lat: 36.8271, lng: -76.2946 },
-  { name: 'NSA Hampton Roads', shortName: 'NSA HR', branch: 'Navy', lat: 36.9480, lng: -76.3350 },
-  { name: 'Naval Weapons Station Yorktown', shortName: 'NWS Yorktown', branch: 'Navy', lat: 37.2317, lng: -76.5636 },
-  { name: 'Joint Base Langley-Eustis (Langley AFB)', shortName: 'JBLE Langley', branch: 'Air Force', lat: 37.0832, lng: -76.3605 },
-  { name: 'Joint Base Langley-Eustis (Fort Eustis)', shortName: 'JBLE Ft Eustis', branch: 'Army', lat: 37.1518, lng: -76.5879 },
-  { name: 'Joint Staff J7 Suffolk', shortName: 'J7 Suffolk', branch: 'Joint', lat: 36.7282, lng: -76.5836 },
+  { name: 'Naval Station Norfolk', shortName: 'Naval Station Norfolk', branch: 'Navy', lat: 36.9466, lng: -76.3036 },
+  { name: 'Naval Air Station Oceana', shortName: 'Naval Air Station Oceana', branch: 'Navy', lat: 36.8207, lng: -76.0331 },
+  { name: 'Dam Neck Annex', shortName: 'Dam Neck Annex', branch: 'Navy', lat: 36.7920, lng: -75.9710 },
+  { name: 'Joint Expeditionary Base Little Creek-Fort Story', shortName: 'Joint Expeditionary Base Little Creek', branch: 'Navy', lat: 36.9178, lng: -76.1601 },
+  { name: 'Naval Medical Center Portsmouth', shortName: 'Naval Medical Center Portsmouth', branch: 'Navy', lat: 36.8446, lng: -76.3039 },
+  { name: 'Norfolk Naval Shipyard', shortName: 'Norfolk Naval Shipyard', branch: 'Navy', lat: 36.8271, lng: -76.2946 },
+  { name: 'Naval Support Activity Hampton Roads', shortName: 'Naval Support Activity Hampton Roads', branch: 'Navy', lat: 36.9480, lng: -76.3350 },
+  { name: 'Naval Weapons Station Yorktown', shortName: 'Naval Weapons Station Yorktown', branch: 'Navy', lat: 37.2317, lng: -76.5636 },
+  { name: 'Joint Base Langley-Eustis (Langley Air Force Base)', shortName: 'Joint Base Langley-Eustis (Langley)', branch: 'Air Force', lat: 37.0832, lng: -76.3605 },
+  { name: 'Joint Base Langley-Eustis (Fort Eustis)', shortName: 'Joint Base Langley-Eustis (Fort Eustis)', branch: 'Army', lat: 37.1518, lng: -76.5879 },
+  { name: 'Joint Staff J7 Suffolk', shortName: 'Joint Staff J7 Suffolk', branch: 'Joint', lat: 36.7282, lng: -76.5836 },
   { name: 'Camp Peary', shortName: 'Camp Peary', branch: 'DoD', lat: 37.2905, lng: -76.6158 },
-  { name: 'USCG Base Portsmouth', shortName: 'USCG Portsmouth', branch: 'Coast Guard', lat: 36.8354, lng: -76.2932 },
-  { name: 'MARFORCOM Norfolk', shortName: 'MARFORCOM', branch: 'Marines', lat: 36.9460, lng: -76.3130 },
+  { name: 'United States Coast Guard Base Portsmouth', shortName: 'Coast Guard Base Portsmouth', branch: 'Coast Guard', lat: 36.8354, lng: -76.2932 },
+  { name: 'Marine Forces Command Norfolk', shortName: 'Marine Forces Command', branch: 'Marines', lat: 36.9460, lng: -76.3130 },
 ]
 
 export default function HomeClient() {
@@ -653,7 +653,7 @@ export default function HomeClient() {
                   text: isMil ? "We PCS'd from San Diego and found our dream home in 2 weeks. The commute time feature was a game-changer." : 'Found our dream home in Chesapeake in just two weeks. The interactive map made searching so easy.',
                   role: isMil ? 'Navy Spouse \u00B7 Chesapeake' : 'First-Time Buyer \u00B7 Chesapeake' },
                 { initials: 'JD', name: 'James D.',
-                  text: isMil ? 'The base commute calculator saved us hours of research. We found a home within BAH and 12 minutes from Norfolk Naval Station.' : 'The map search is incredible. I could see every listing near the base with actual prices.',
+                  text: isMil ? 'The base commute calculator saved us hours of research. We found a home within BAH and 12 minutes from Naval Station Norfolk.' : 'The map search is incredible. I could see every listing near the base with actual prices.',
                   role: isMil ? 'Active Duty Navy \u00B7 Norfolk' : 'Homebuyer \u00B7 Norfolk' },
                 { initials: 'RL', name: 'Robert L.',
                   text: isMil ? "Third PCS and first time using VaHome. VA loan guidance was spot-on and we closed before we even arrived at Langley." : 'The neighborhood video tours helped me evaluate areas remotely. Closed on two properties within a month.',
