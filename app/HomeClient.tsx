@@ -6,6 +6,12 @@ import { useAuth } from './components/AuthProvider'
 import MortgageCalculator from './components/MortgageCalculator'
 import PremiumTeaser from './components/PremiumTeaser'
 
+declare global {
+  interface Window {
+    _fadeObserver?: IntersectionObserver;
+  }
+}
+
 const civPills = ['Virginia Beach', 'Under $350K', 'Waterfront', 'New Construction', 'Open Houses']
 const milPills = [
   { label: 'Near Naval Air Station Oceana', icon: '\u{1F396}\uFE0F' },
