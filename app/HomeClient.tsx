@@ -197,7 +197,7 @@ export default function HomeClient() {
         <div className={`mode-flash ${flash ? 'active' : ''}`} />
 
         {/* ===== HERO ===== */}
-        <section className="hero-bg morph pt-12 pb-20 relative overflow-hidden">
+        <section className="hero-bg morph pt-24 pb-20 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 relative z-10">
 
             {/* Toggle bar */}
