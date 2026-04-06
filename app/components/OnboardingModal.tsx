@@ -130,4 +130,77 @@ export default function OnboardingModal() {
               >
                 <option value="">Choose your duty station...</option>
                 {militaryBasesList.map((base) => (
-                  <option key={base.shortName} v
+                  <option key={base.shortName} value={base.shortName}>
+                    {base.name} ({base.branch})
+                  </option>
+                ))}
+              </select>
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Work Address <span className="text-gray-400">(optional)</span></label>
+                <input
+                  type="text"
+                  value={workAddress1}
+                  onChange={(e) => setWorkAddress1(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none text-sm"
+                  placeholder="e.g., 123 Main St, Norfolk, VA"
+                />
+              </div>
+            </div>
+          )}
+
+          {step === 2 && mode === 'civilian' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Work Address 1</label>
+              <input
+                type="text"
+                value={workAddress1}
+                onChange={(e) => setWorkAddress1(e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm"
+                placeholder="e.g., 123 Main St, Norfolk, VA"
+              />
+              <p className="text-xs text-gray-400 mt-2">We&apos;ll calculate drive times from listings to your workplace.</p>
+            </div>
+          )}
+
+          {/* Step 3: Second work address */}
+          {step === 3 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Work Address 2 <span className="text-gray-400">(optional)</span></label>
+              <input
+                type="text"
+                value={workAddress2}
+                onChange={(e) => setWorkAddress2(e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm"
+                placeholder="e.g., 456 Commerce Blvd, Virginia Beach, VA"
+              />
+              <p className="text-xs text-gray-400 mt-2">Add a second location if your household has two workplaces.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Navigation buttons */}
+        <div className="px-8 pb-8 flex justify-between">
+          {step > 1 ? (
+            <button onClick={() => setStep(step - 1)} className="px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors">Back</button>
+          ) : <div />}
+          {step < 3 ? (
+            <button
+              onClick={() => setStep(step + 1)}
+              className="px-8 py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={handleFinish}
+              disabled={saving}
+              className="px-8 py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Finish Setup'}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
