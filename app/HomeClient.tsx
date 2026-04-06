@@ -13,6 +13,24 @@ const milPills = [
   { label: 'Near Little Creek', icon: '' },
 ]
 
+
+const militaryBasesList = [
+  { name: "Naval Station Norfolk", shortName: "NS Norfolk", branch: "Navy", lat: 36.9466, lng: -76.3036 },
+  { name: "NAS Oceana", shortName: "NAS Oceana", branch: "Navy", lat: 36.8207, lng: -76.0331 },
+  { name: "Dam Neck Annex", shortName: "Dam Neck", branch: "Navy", lat: 36.7920, lng: -75.9710 },
+  { name: "JEB Little Creek-Fort Story", shortName: "Little Creek", branch: "Navy", lat: 36.9178, lng: -76.1601 },
+  { name: "Naval Medical Center Portsmouth", shortName: "NMCP", branch: "Navy", lat: 36.8446, lng: -76.3039 },
+  { name: "Norfolk Naval Shipyard", shortName: "NNSY", branch: "Navy", lat: 36.8271, lng: -76.2946 },
+  { name: "NSA Hampton Roads", shortName: "NSA HR", branch: "Navy", lat: 36.9480, lng: -76.3350 },
+  { name: "Naval Weapons Station Yorktown", shortName: "NWS Yorktown", branch: "Navy", lat: 37.2317, lng: -76.5636 },
+  { name: "Joint Base Langley-Eustis (Langley AFB)", shortName: "JBLE Langley", branch: "Air Force", lat: 37.0832, lng: -76.3605 },
+  { name: "Joint Base Langley-Eustis (Fort Eustis)", shortName: "JBLE Ft Eustis", branch: "Army", lat: 37.1518, lng: -76.5879 },
+  { name: "Joint Staff J7 Suffolk", shortName: "J7 Suffolk", branch: "Joint", lat: 36.7282, lng: -76.5836 },
+  { name: "Camp Peary", shortName: "Camp Peary", branch: "DoD", lat: 37.2905, lng: -76.6158 },
+  { name: "USCG Base Portsmouth", shortName: "USCG Portsmouth", branch: "Coast Guard", lat: 36.8354, lng: -76.2932 },
+  { name: "MARFORCOM Norfolk", shortName: "MARFORCOM", branch: "Marines", lat: 36.9460, lng: -76.3130 },
+]
+
 const listings = [
   {
     address: '1247 Crossbow Lane',
@@ -70,6 +88,29 @@ const bases = [
 export default function HomeClient() {
   const [mode, setMode] = useState<'civilian' | 'military'>('civilian')
   const [flash, setFlash] = useState(false)
+  const [selectedBaseIdx, setSelectedBaseIdx] = useState<number>(-1)
+
+  // Load saved base from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vahome_selected_base')
+      if (saved) {
+        const base = JSON.parse(saved)
+        const idx = militaryBasesList.findIndex(b => b.shortName === base.shortName)
+        if (idx !== -1) setSelectedBaseIdx(idx)
+      }
+    } catch {}
+  }, [])
+
+  const handleBaseSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const idx = parseInt(e.target.value)
+    setSelectedBaseIdx(idx)
+    if (idx >= 0) {
+      try { localStorage.setItem('vahome_selected_base', JSON.stringify(militaryBasesList[idx])) } catch {}
+    } else {
+      try { localStorage.removeItem('vahome_selected_base') } catch {}
+    }
+  }, [])
   const wrapperRef = useRef<HTMLDivElement>(null)
   const isMil = mode === 'military'
 
@@ -296,6 +337,40 @@ export default function HomeClient() {
               <span>{'\u26A1'} 24hr PCS Response</span>
             </div>
           </section>
+
+          {/* Base Selector */}
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <label className="text-sm font-semibold" style={{ color: '#C5A55A' }}>
+                {'🏛️'} Select Your Base:
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedBaseIdx}
+                  onChange={handleBaseSelect}
+                  className="appearance-none bg-white/10 border-2 rounded-xl px-5 py-3 pr-10 text-sm font-medium focus:outline-none focus:ring-2 cursor-pointer min-w-[280px]"
+                  style={{ borderColor: 'rgba(197,165,90,0.4)', color: '#C5A55A', background: 'rgba(197,165,90,0.08)' }}
+                >
+                  <option value={-1} style={{ color: '#333', background: '#fff' }}>Choose your duty station...</option>
+                  {militaryBasesList.map((base, i) => (
+                    <option key={i} value={i} style={{ color: '#333', background: '#fff' }}>
+                      {base.shortName} ({base.branch})
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-4 h-4" style={{ color: '#C5A55A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              {selectedBaseIdx >= 0 && (
+                <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ background: 'rgba(197,165,90,0.15)', color: '#C5A55A' }}>
+                  {'✓'} Saved - drive times will appear on listings
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* ===== FEATURED LISTINGS ===== */}
