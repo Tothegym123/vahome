@@ -16,6 +16,7 @@ const navLinks = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showBanner, setShowBanner] = useState(true)
   const { user, loading, signOut, setShowAuthModal, setAuthView, theme } = useAuth()
   const [showUserMenu, setShowUserMenu] = useState(false)
   const isDark = theme === 'dark'
@@ -78,7 +79,7 @@ export default function Header() {
                 <button onClick={handleLoginClick}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'}`}>Sign In</button>
                 <button onClick={handleRegisterClick}
-                  className="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors shadow-sm">Get Started</button>
+                  className="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors shadow-sm">Sign Up</button>
               </div>
             )}
           </div>
@@ -113,7 +114,7 @@ export default function Header() {
                   <button onClick={() => { setMobileMenuOpen(false); handleLoginClick() }}
                     className={`block w-full text-center py-2.5 text-sm font-medium border rounded-lg ${isDark ? 'text-gray-300 border-gray-700' : 'text-gray-700 border-gray-200'}`}>Sign In</button>
                   <button onClick={() => { setMobileMenuOpen(false); handleRegisterClick() }}
-                    className="block w-full text-center py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg">Get Started</button>
+                    className="block w-full text-center py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg">Sign Up</button>
                 </>
               )}
             </div>
@@ -121,5 +122,19 @@ export default function Header() {
         )}
       </div>
     </header>
+      {!user && !loading && showBanner && (
+        <div className={`fixed top-16 left-0 right-0 z-40 transition-colors duration-500 ${isDark ? 'bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 border-b border-gray-700' : 'bg-gradient-to-r from-red-50 via-white to-red-50 border-b border-red-100'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+            <p className={`text-sm flex-1 text-center ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+              <span className="font-medium">No sign-up required to browse homes.</span>
+              {' '}However, members unlock exclusive features like saved searches, instant alerts, and personalized recommendations to supercharge your home search.
+              <button onClick={handleRegisterClick} className={`ml-2 font-semibold underline underline-offset-2 ${isDark ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-700'}`}>Sign up free</button>
+            </p>
+            <button onClick={() => setShowBanner(false)} className={`flex-shrink-0 p-1 rounded-full transition-colors ${isDark ? 'text-gray-500 hover:bg-gray-700 hover:text-gray-300' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'}`} aria-label="Dismiss banner">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+        </div>
+      )}
   )
 }
