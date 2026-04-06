@@ -30,6 +30,8 @@ type AuthContextType = {
   showOnboarding: boolean
   setShowOnboarding: (show: boolean) => void
   refreshProfile: () => Promise<void>
+  theme: 'bright' | 'dark'
+  setTheme: (theme: 'bright' | 'dark') => void
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -46,6 +48,8 @@ const AuthContext = createContext<AuthContextType>({
   showOnboarding: false,
   setShowOnboarding: () => {},
   refreshProfile: async () => {},
+  theme: 'bright',
+  setTheme: () => {},
 })
 
 export const useAuth = () => useContext(AuthContext)
@@ -59,8 +63,22 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authView, setAuthView] = useState<'login' | 'register'>('login')
   const [showOnboarding, setShowOnboarding] = useState(false)
+  const [theme, setThemeState] = useState<'bright' | 'dark'>('bright')
 
   const supabase = createClient()
+
+  // Load theme from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vahome-theme')
+      if (saved === 'dark') setThemeState('dark')
+    } catch {}
+  }, [])
+
+  const setTheme = (t: 'bright' | 'dark') => {
+    setThemeState(t)
+    try { localStorage.setItem('vahome-theme', t) } catch {}
+  }
 
   const fetchProfile = async (userId: string) => {
     setProfileLoading(true)
@@ -72,7 +90,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         .single()
 
       if (error && error.code === 'PGRST116') {
-        // No profile yet - create one
         const newProfile: UserProfile = {
           mode: 'civilian',
           selected_base: null,
@@ -140,9 +157,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   return (
     <AuthContext.Provider value={{
-      user, session, loading, profile, profileLoading, signOut,
-      showAuthModal, setShowAuthModal, authView, setAuthView,
-      showOnboarding, setShowOnboarding, refreshProfile,
+      user, session, loading, profile, profileLoading,
+      signOut, showAuthModal, setShowAuthModal,
+      authView, setAuthView, showOnboarding, setShowOnboarding,
+      refreshProfile, theme, setTheme,
     }}>
       {children}
     </AuthContext.Provider>
