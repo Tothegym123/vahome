@@ -11,7 +11,7 @@ const navLinks = [
   { label: 'Blog', href: '/blog' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
-  { label: 'Military Resources', href: '/military-resources' },
+  { label: 'Military Resources', href: '/military' },
 ]
 
 export default function Header() {
@@ -25,28 +25,25 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex items-center">
-              <span className="text-2xl font-black tracking-tight">
-                <span className="text-primary-500">Va</span>
-                <span className="text-navy-800">Home</span>
-                <span className="text-gray-400 font-light">.com</span>
-              </span>
-            </div>
+        <div className="flex items-center justify-between h-16">          <Link href="/" className="flex items-center gap-2">
+            <span className="text-2xl font-black tracking-tight">
+              <span className="text-red-600">Va</span>
+              <span className="text-gray-900">Home</span>
+              <span className="text-gray-400 font-light">.com</span>
+            </span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} className="px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 hover:text-primary-500 transition-colors">{link.label}</Link>
+              <Link key={link.label} href={link.href} className="px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 hover:text-red-600 transition-colors">{link.label}</Link>
             ))}
           </nav>
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             {loading ? (
               <div className="w-20 h-10 bg-gray-100 rounded-lg animate-pulse" />
             ) : user ? (
               <div className="relative">
-                <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
                     {user.user_metadata?.first_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
                   <span className="max-w-[120px] truncate">{user.user_metadata?.first_name || user.email?.split('@')[0]}</span>
@@ -60,9 +57,8 @@ export default function Header() {
                         <p className="text-sm font-medium text-gray-900 truncate">{user.user_metadata?.first_name} {user.user_metadata?.last_name}</p>
                         <p className="text-xs text-gray-500 truncate">{user.email}</p>
                       </div>
+                      <Link href="/settings" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowUserMenu(false)}>Settings</Link>
                       <Link href="/dashboard/favorites" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowUserMenu(false)}>Saved Homes</Link>
-                      <Link href="/dashboard/searches" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowUserMenu(false)}>Saved Searches</Link>
-                      <Link href="/dashboard/profile" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowUserMenu(false)}>My Profile</Link>
                       <div className="border-t border-gray-100 mt-1 pt-1">
                         <button onClick={() => { signOut(); setShowUserMenu(false) }} className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">Sign Out</button>
                       </div>
@@ -73,7 +69,7 @@ export default function Header() {
             ) : (
               <div className="flex items-center gap-2">
                 <button onClick={handleLoginClick} className="px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">Sign In</button>
-                <button onClick={handleRegisterClick} className="px-5 py-2.5 text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors shadow-sm">Get Started</button>
+                <button onClick={handleRegisterClick} className="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors shadow-sm">Get Started</button>
               </div>
             )}
           </div>
@@ -86,18 +82,18 @@ export default function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-100 py-4">
             {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-primary-500 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>{link.label}</Link>
+              <Link key={link.label} href={link.href} className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-red-600 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>{link.label}</Link>
             ))}
             <div className="mt-4 px-4 space-y-3">
               {user ? (
                 <>
-                  <Link href="/dashboard/favorites" className="block text-center py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Saved Homes</Link>
+                  <Link href="/settings" className="block text-center py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Settings</Link>
                   <button onClick={() => { signOut(); setMobileMenuOpen(false) }} className="block w-full text-center py-2.5 text-sm font-medium text-red-600 border border-red-200 rounded-lg">Sign Out</button>
                 </>
               ) : (
                 <>
                   <button onClick={() => { setMobileMenuOpen(false); handleLoginClick() }} className="block w-full text-center py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg">Sign In</button>
-                  <button onClick={() => { setMobileMenuOpen(false); handleRegisterClick() }} className="block w-full text-center py-2.5 text-sm font-semibold text-white bg-primary-500 rounded-lg">Get Started</button>
+                  <button onClick={() => { setMobileMenuOpen(false); handleRegisterClick() }} className="block w-full text-center py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg">Get Started</button>
                 </>
               )}
             </div>

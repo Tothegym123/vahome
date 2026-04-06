@@ -69,13 +69,13 @@ export default function AuthModal() {
               {authView === 'login' ? 'Welcome Back' : 'Create Account'}
             </h2>
             <button onClick={() => setShowAuthModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
           <p className="text-sm text-gray-500">
-            {authView === 'login' ? 'Sign in to save your favorite homes and searches.' : 'Join VaHome to save listings, get alerts, and more.'}
+            {authView === 'login'
+              ? 'Sign in to unlock drive times, mortgage tools, and more.'
+              : 'Join VaHome for personalized home search tools.'}
           </p>
         </div>
         <div className="px-8 pb-8">
@@ -100,34 +100,36 @@ export default function AuthModal() {
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                  <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm" placeholder="Tom" />
+                  <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="Tom" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                  <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm" placeholder="Smith" />
+                  <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="Milan" />
                 </div>
               </div>
             )}
             <div className="mb-3">
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm" placeholder="you@example.com" />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="you@example.com" />
             </div>
             <div className="mb-3">
               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm" placeholder="At least 6 characters" />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="At least 6 characters" />
             </div>
             {authView === 'register' && (
               <div className="mb-3">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Phone <span className="text-gray-400">(optional)</span></label>
-                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm" placeholder="(757) 555-0123" />
+                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="(757) 555-0123" />
               </div>
             )}
-            <button type="submit" disabled={loading} className="w-full mt-4 px-4 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={loading} className="w-full mt-4 px-4 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {loading ? 'Please wait...' : authView === 'login' ? 'Sign In' : 'Create Account'}
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-500">
-            {authView === 'login' ? (<>New to VaHome?{' '}<button onClick={() => switchView('register')} className="text-primary-500 font-semibold hover:underline">Create an account</button></>) : (<>Already have an account?{' '}<button onClick={() => switchView('login')} className="text-primary-500 font-semibold hover:underline">Sign in</button></>)}
+            {authView === 'login'
+              ? (<>New to VaHome?{' '}<button onClick={() => switchView('register')} className="text-red-600 font-semibold hover:underline">Create an account</button></>)
+              : (<>Already have an account?{' '}<button onClick={() => switchView('login')} className="text-red-600 font-semibold hover:underline">Sign in</button></>)}
           </p>
         </div>
       </div>

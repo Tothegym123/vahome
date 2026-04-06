@@ -4,11 +4,12 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import AuthProvider from './components/AuthProvider'
 import AuthModal from './components/AuthModal'
+import OnboardingModal from './components/OnboardingModal'
 
 export const metadata: Metadata = {
   title: 'VaHome.com | Homes for Sale in Hampton Roads, Virginia Beach & Norfolk',
-  description: 'Search homes for sale in Hampton Roads, Virginia Beach, Norfolk, Chesapeake & Suffolk. Tom & Dariya Milan \u2014 your trusted local real estate experts at LPT Realty.',
-  keywords: 'homes for sale, Virginia Beach, Hampton Roads, Norfolk, Chesapeake, real estate, LPT Realty, Tom Milan',
+  description: 'Search homes for sale in Hampton Roads, Virginia Beach, Norfolk, Chesapeake & Suffolk. The VaHome Team - your trusted local real estate experts at LPT Realty.',
+  keywords: 'homes for sale, Virginia Beach, Hampton Roads, Norfolk, Chesapeake, real estate, LPT Realty',
 }
 
 export default function RootLayout({
@@ -22,6 +23,7 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           <AuthModal />
+          <OnboardingModal />
           <main>{children}</main>
           <Footer />
         </AuthProvider>

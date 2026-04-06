@@ -2,69 +2,40 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import { useAuth } from './components/AuthProvider'
+import MortgageCalculator from './components/MortgageCalculator'
+import PremiumTeaser from './components/PremiumTeaser'
 
 const civPills = ['Virginia Beach', 'Under $350K', 'Waterfront', 'New Construction', 'Open Houses']
 const milPills = [
-  { label: 'Near NAS Oceana', icon: '\uD83C\uDF96\uFE0F' },
-  { label: 'Under BAH', icon: '\uD83D\uDCB0' },
+  { label: 'Near NAS Oceana', icon: '\u{1F396}\uFE0F' },
+  { label: 'Under BAH', icon: '\u{1F4B0}' },
   { label: 'Near Norfolk NS', icon: '\u2693' },
   { label: 'VA Loan Ready', icon: '' },
   { label: 'Near Langley', icon: '\u2708\uFE0F' },
   { label: 'Near Little Creek', icon: '' },
 ]
 
-
-const militaryBasesList = [
-  { name: "Naval Station Norfolk", shortName: "NS Norfolk", branch: "Navy", lat: 36.9466, lng: -76.3036 },
-  { name: "NAS Oceana", shortName: "NAS Oceana", branch: "Navy", lat: 36.8207, lng: -76.0331 },
-  { name: "Dam Neck Annex", shortName: "Dam Neck", branch: "Navy", lat: 36.7920, lng: -75.9710 },
-  { name: "JEB Little Creek-Fort Story", shortName: "Little Creek", branch: "Navy", lat: 36.9178, lng: -76.1601 },
-  { name: "Naval Medical Center Portsmouth", shortName: "NMCP", branch: "Navy", lat: 36.8446, lng: -76.3039 },
-  { name: "Norfolk Naval Shipyard", shortName: "NNSY", branch: "Navy", lat: 36.8271, lng: -76.2946 },
-  { name: "NSA Hampton Roads", shortName: "NSA HR", branch: "Navy", lat: 36.9480, lng: -76.3350 },
-  { name: "Naval Weapons Station Yorktown", shortName: "NWS Yorktown", branch: "Navy", lat: 37.2317, lng: -76.5636 },
-  { name: "Joint Base Langley-Eustis (Langley AFB)", shortName: "JBLE Langley", branch: "Air Force", lat: 37.0832, lng: -76.3605 },
-  { name: "Joint Base Langley-Eustis (Fort Eustis)", shortName: "JBLE Ft Eustis", branch: "Army", lat: 37.1518, lng: -76.5879 },
-  { name: "Joint Staff J7 Suffolk", shortName: "J7 Suffolk", branch: "Joint", lat: 36.7282, lng: -76.5836 },
-  { name: "Camp Peary", shortName: "Camp Peary", branch: "DoD", lat: 37.2905, lng: -76.6158 },
-  { name: "USCG Base Portsmouth", shortName: "USCG Portsmouth", branch: "Coast Guard", lat: 36.8354, lng: -76.2932 },
-  { name: "MARFORCOM Norfolk", shortName: "MARFORCOM", branch: "Marines", lat: 36.9460, lng: -76.3130 },
-]
-
 const listings = [
   {
-    address: '1247 Crossbow Lane',
-    city: 'Chesapeake',
-    state: 'VA',
-    zip: '23322',
-    price: '$425,000',
-    beds: 4, baths: 3, sqft: '2,480',
+    address: '1247 Crossbow Lane', city: 'Chesapeake', state: 'VA', zip: '23322',
+    price: '$425,000', beds: 4, baths: 3, sqft: '2,480',
     commute: '14 min to NAS Oceana',
     img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80',
-    badge: 'New',
-    badgeColor: 'bg-emerald-500',
+    badge: 'New', badgeColor: 'bg-emerald-500',
   },
   {
-    address: '834 Ocean Shore Ave',
-    city: 'Virginia Beach',
-    state: 'VA',
-    zip: '23451',
-    price: '$389,900',
-    beds: 3, baths: 2.5, sqft: '1,920',
+    address: '834 Ocean Shore Ave', city: 'Virginia Beach', state: 'VA', zip: '23451',
+    price: '$389,900', beds: 3, baths: 2.5, sqft: '1,920',
     commute: '8 min to JEB Little Creek',
     img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80',
   },
   {
-    address: '2105 Harbor Point Dr',
-    city: 'Norfolk',
-    state: 'VA',
-    zip: '23518',
-    price: '$549,000',
-    beds: 5, baths: 3.5, sqft: '3,200',
+    address: '2105 Harbor Point Dr', city: 'Norfolk', state: 'VA', zip: '23518',
+    price: '$549,000', beds: 5, baths: 3.5, sqft: '3,200',
     commute: '11 min to Naval Station Norfolk',
     img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80',
-    badge: 'Hot',
-    badgeColor: 'bg-amber-500',
+    badge: 'Hot', badgeColor: 'bg-amber-500',
   },
 ]
 
@@ -85,12 +56,47 @@ const bases = [
   { code: 'NN', name: 'Newport News Shipbuilding', area: 'Newport News', homes: '512' },
 ]
 
+const militaryBasesList = [
+  { name: 'Naval Station Norfolk', shortName: 'NS Norfolk', branch: 'Navy', lat: 36.9466, lng: -76.3036 },
+  { name: 'NAS Oceana', shortName: 'NAS Oceana', branch: 'Navy', lat: 36.8207, lng: -76.0331 },
+  { name: 'Dam Neck Annex', shortName: 'Dam Neck', branch: 'Navy', lat: 36.7920, lng: -75.9710 },
+  { name: 'JEB Little Creek-Fort Story', shortName: 'Little Creek', branch: 'Navy', lat: 36.9178, lng: -76.1601 },
+  { name: 'Naval Medical Center Portsmouth', shortName: 'NMCP', branch: 'Navy', lat: 36.8446, lng: -76.3039 },
+  { name: 'Norfolk Naval Shipyard', shortName: 'NNSY', branch: 'Navy', lat: 36.8271, lng: -76.2946 },
+  { name: 'NSA Hampton Roads', shortName: 'NSA HR', branch: 'Navy', lat: 36.9480, lng: -76.3350 },
+  { name: 'Naval Weapons Station Yorktown', shortName: 'NWS Yorktown', branch: 'Navy', lat: 37.2317, lng: -76.5636 },
+  { name: 'Joint Base Langley-Eustis (Langley AFB)', shortName: 'JBLE Langley', branch: 'Air Force', lat: 37.0832, lng: -76.3605 },
+  { name: 'Joint Base Langley-Eustis (Fort Eustis)', shortName: 'JBLE Ft Eustis', branch: 'Army', lat: 37.1518, lng: -76.5879 },
+  { name: 'Joint Staff J7 Suffolk', shortName: 'J7 Suffolk', branch: 'Joint', lat: 36.7282, lng: -76.5836 },
+  { name: 'Camp Peary', shortName: 'Camp Peary', branch: 'DoD', lat: 37.2905, lng: -76.6158 },
+  { name: 'USCG Base Portsmouth', shortName: 'USCG Portsmouth', branch: 'Coast Guard', lat: 36.8354, lng: -76.2932 },
+  { name: 'MARFORCOM Norfolk', shortName: 'MARFORCOM', branch: 'Marines', lat: 36.9460, lng: -76.3130 },
+]
+
 export default function HomeClient() {
+  const { user, profile, setShowAuthModal, setAuthView } = useAuth()
   const [mode, setMode] = useState<'civilian' | 'military'>('civilian')
   const [flash, setFlash] = useState(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const isMil = mode === 'military'
+  const isLoggedIn = !!user
+
+  // Base selector state (for military mode)
   const [selectedBaseIdx, setSelectedBaseIdx] = useState<number>(-1)
 
-  // Load saved base from localStorage on mount
+  // Sync mode with profile
+  useEffect(() => {
+    if (profile?.mode) {
+      setMode(profile.mode)
+    } else {
+      try {
+        const stored = localStorage.getItem('vahome-mode')
+        if (stored === 'military') setMode('military')
+      } catch {}
+    }
+  }, [profile])
+
+  // Restore base selection
   useEffect(() => {
     try {
       const saved = localStorage.getItem('vahome_selected_base')
@@ -101,18 +107,6 @@ export default function HomeClient() {
       }
     } catch {}
   }, [])
-
-  const handleBaseSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    const idx = parseInt(e.target.value)
-    setSelectedBaseIdx(idx)
-    if (idx >= 0) {
-      try { localStorage.setItem('vahome_selected_base', JSON.stringify(militaryBasesList[idx])) } catch {}
-    } else {
-      try { localStorage.removeItem('vahome_selected_base') } catch {}
-    }
-  }, [])
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const isMil = mode === 'military'
 
   // Scroll reveal
   useEffect(() => {
@@ -132,14 +126,6 @@ export default function HomeClient() {
     return () => observer.disconnect()
   }, [mode])
 
-  // Restore preference
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('vahome-mode')
-      if (stored === 'military') setMode('military')
-    } catch {}
-  }, [])
-
   const toggleMode = useCallback(() => {
     setFlash(true)
     setTimeout(() => setFlash(false), 400)
@@ -149,6 +135,21 @@ export default function HomeClient() {
       return next
     })
   }, [])
+
+  const handleBaseSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const idx = parseInt(e.target.value)
+    setSelectedBaseIdx(idx)
+    if (idx >= 0) {
+      try { localStorage.setItem('vahome_selected_base', JSON.stringify(militaryBasesList[idx])) } catch {}
+    } else {
+      try { localStorage.removeItem('vahome_selected_base') } catch {}
+    }
+  }, [])
+
+  const handleGetStarted = () => {
+    setAuthView('register')
+    setShowAuthModal(true)
+  }
 
   return (
     <>
@@ -161,8 +162,6 @@ export default function HomeClient() {
         .card-lift:hover { transform: translateY(-6px); }
         .card-lift:hover .card-img { transform: scale(1.05); }
         .card-img { transition: transform 0.6s ease; }
-
-        /* Civilian mode */
         .civilian .hero-bg { background: linear-gradient(135deg, #fef2f2 0%, #fff 40%, #f0f4ff 100%); }
         .civilian .section-alt { background: #f9fafb; }
         .civilian .card-bg { background: #fff; border: 1px solid #f0f0f0; }
@@ -185,8 +184,6 @@ export default function HomeClient() {
         .civilian .footer-bg-c { background: #f9fafb; border-top: 1px solid #f0f0f0; }
         .civilian .input-c { color: #111; }
         .civilian .input-c::placeholder { color: #d1d5db; }
-
-        /* Military mode */
         .military { background: #091729; color: #fff; }
         .military .hero-bg { background: linear-gradient(135deg, #0B1A2B 0%, #091729 50%, #0F2235 100%); }
         .military .section-alt { background: #0F2235; }
@@ -200,7 +197,7 @@ export default function HomeClient() {
         .military .accent-bg-soft-c { background: rgba(197,165,90,0.08); }
         .military .accent-border-c { border-color: rgba(197,165,90,0.15); }
         .military .search-box-c { background: rgba(255,255,255,0.04); border: 1px solid rgba(197,165,90,0.15); }
-        .military .search-box-c:focus-within { box-shadow: 0 0 30px rgba(197,165,90,0.08); border-color: rgba(197,165,90,0.4); }
+        .military .search-box-c:focus-within { box-shadow: 0 0 30px rgba(197,165,900,0.4); }
         .military .btn-primary-c { background: #C5A55A; color: #091729; }
         .military .btn-primary-c:hover { background: #D4B96E; }
         .military .pill-c { background: rgba(197,165,90,0.08); color: #C5A55A; }
@@ -210,49 +207,37 @@ export default function HomeClient() {
         .military .footer-bg-c { background: #0B1A2B; border-top: 1px solid rgba(197,165,90,0.08); }
         .military .input-c { color: #fff; }
         .military .input-c::placeholder { color: rgba(255,255,255,0.2); }
-
-        /* Toggle */
         .toggle-track { width: 56px; height: 28px; border-radius: 999px; position: relative; cursor: pointer; transition: all 0.4s ease; }
         .civilian .toggle-track { background: #e5e7eb; }
         .military .toggle-track { background: rgba(197,165,90,0.3); }
         .toggle-thumb { width: 22px; height: 22px; border-radius: 50%; position: absolute; top: 3px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; justify-content: center; font-size: 11px; }
         .civilian .toggle-thumb { left: 3px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
         .military .toggle-thumb { left: 31px; background: #C5A55A; box-shadow: 0 2px 12px rgba(197,165,90,0.4); }
-
-        /* Military-only */
         .mil-only { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.6s ease, opacity 0.5s ease, margin 0.5s ease; margin: 0; }
         .military .mil-only { max-height: 2000px; opacity: 1; }
-
-        /* Flash */
         .mode-flash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 100; opacity: 0; transition: opacity 0.3s ease; }
         .mode-flash.active { opacity: 1; }
         .civilian .mode-flash { background: rgba(220,38,38,0.03); }
         .military .mode-flash { background: rgba(197,165,90,0.06); }
-
-        /* Commute emphasis in military */
         .military .commute-accent { color: #C5A55A; font-weight: 600; }
       `}</style>
 
       <div ref={wrapperRef} className={`mode-wrapper ${mode}`}>
-        {/* Flash overlay */}
         <div className={`mode-flash ${flash ? 'active' : ''}`} />
 
         {/* ===== HERO ===== */}
         <section className="hero-bg morph pt-24 pb-20 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 relative z-10">
-
-            {/* Toggle bar */}
             <div className="fade flex items-center justify-center gap-3 mb-8">
               <span className="text-xs font-semibold text-muted-themed morph">Civilian</span>
               <div className="toggle-track" onClick={toggleMode}>
                 <div className="toggle-thumb">
-                  <span>{isMil ? '\uD83C\uDF96\uFE0F' : '\uD83C\uDFE0'}</span>
+                  <span>{isMil ? '\u{1F396}\uFE0F' : '\u{1F3E0}'}</span>
                 </div>
               </div>
               <span className="text-xs font-semibold text-muted-themed morph">Military</span>
             </div>
 
-            {/* Military badge */}
             <div className="mil-only mb-6">
               <div className="accent-bg-soft-c morph accent-border-c morph inline-flex items-center gap-2 px-4 py-2 rounded-full border">
                 <svg className="w-4 h-4 accent-color morph" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 2l2.5 1.5L15 2v3.07l2.5 1.5L16 9.5l1.5 2.93L15 14v3l-2.5-1.5L10 17l-2.5-1.5L5 17v-3l-2.5-1.57L4 9.5 2.5 6.57 5 5.07V2l2.5 1.5L10 2z" clipRule="evenodd" /></svg>
@@ -260,7 +245,15 @@ export default function HomeClient() {
               </div>
             </div>
 
-            {/* Headline */}
+            {/* Logged-in welcome */}
+            {isLoggedIn && user?.user_metadata?.first_name && (
+              <div className="fade mb-4">
+                <span className="text-sm font-medium text-secondary-themed morph">
+                  Welcome back, {user.user_metadata.first_name}! {isMil ? '\u{1F396}\uFE0F' : '\u{1F44B}'}
+                </span>
+              </div>
+            )}
+
             <h1 className="fade font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.08] text-themed morph max-w-4xl mb-5">
               <span>{isMil ? 'Mission-ready homes in' : 'Find your perfect'}</span><br />
               <span className="accent-color morph">{isMil ? 'Hampton Roads' : 'Hampton Roads home'}</span>
@@ -272,22 +265,17 @@ export default function HomeClient() {
                 : 'Explore 2,800+ homes across Chesapeake, Virginia Beach, Norfolk & beyond with real-time MLS data and interactive maps.'}
             </p>
 
-            {/* Search */}
             <div className="fade search-box-c morph rounded-2xl p-2 max-w-2xl">
               <div className="flex items-center">
                 <div className="flex-1 flex items-center gap-3 px-5">
                   <svg className="w-5 h-5 text-muted-themed morph" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                  <input
-                    type="text"
-                    className="w-full py-3 bg-transparent input-c morph outline-none text-base"
-                    placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'City, ZIP, neighborhood...'}
-                  />
+                  <input type="text" className="w-full py-3 bg-transparent input-c morph outline-none text-base"
+                    placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'City, ZIP, neighborhood...'} />
                 </div>
                 <button className="btn-primary-c morph font-semibold px-7 py-3 rounded-xl transition text-sm shrink-0">Search</button>
               </div>
             </div>
 
-            {/* Pills */}
             <div className="fade flex flex-wrap gap-2 mt-5">
               {isMil
                 ? milPills.map((p) => (
@@ -296,13 +284,10 @@ export default function HomeClient() {
                     </span>
                   ))
                 : civPills.map((p) => (
-                    <span key={p} className="pill-c morph text-xs font-medium px-3 py-1.5 rounded-full cursor-pointer hover:opacity-70 transition">
-                      {p}
-                    </span>
+                    <span key={p} className="pill-c morph text-xs font-medium px-3 py-1.5 rounded-full cursor-pointer hover:opacity-70 transition">{p}</span>
                   ))}
             </div>
 
-            {/* Stats */}
             <div className="fade grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mt-12">
               <div className="stat-c morph rounded-xl px-4 py-3 text-center">
                 <div className="text-2xl font-bold text-themed morph">2,847</div>
@@ -328,50 +313,128 @@ export default function HomeClient() {
         <div className="mil-only">
           <section className="accent-bg-c morph py-4">
             <div className="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-center gap-8 text-sm font-semibold" style={{ color: '#091729' }}>
-              <span>{'\uD83C\uDF96\uFE0F'} VA Loan Specialists</span>
+              <span>{'\u{1F396}\uFE0F'} VA Loan Specialists</span>
               <span className="opacity-30">|</span>
-              <span>{'\uD83D\uDCCD'} 10 Base Commute Times</span>
+              <span>{'\u{1F4CD}'} 10 Base Commute Times</span>
               <span className="opacity-30">|</span>
-              <span>{'\uD83D\uDCB0'} BAH Calculator</span>
+              <span>{'\u{1F4B0}'} BAH Calculator</span>
               <span className="opacity-30">|</span>
               <span>{'\u26A1'} 24hr PCS Response</span>
             </div>
           </section>
+        </div>
 
-          {/* Base Selector */}
+        {/* ===== BASE SELECTOR (Military mode) ===== */}
+        <div className="mil-only">
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <label className="text-sm font-semibold" style={{ color: '#C5A55A' }}>
-                {'🏛️'} Select Your Base:
+                {'\u{1F3DB}\uFE0F'} Select Your Base:
               </label>
               <div className="relative">
-                <select
-                  value={selectedBaseIdx}
-                  onChange={handleBaseSelect}
+                <select value={selectedBaseIdx} onChange={handleBaseSelect}
                   className="appearance-none bg-white/10 border-2 rounded-xl px-5 py-3 pr-10 text-sm font-medium focus:outline-none focus:ring-2 cursor-pointer min-w-[280px]"
-                  style={{ borderColor: 'rgba(197,165,90,0.4)', color: '#C5A55A', background: 'rgba(197,165,90,0.08)' }}
-                >
+                  style={{ borderColor: 'rgba(197,165,90,0.4)', color: '#C5A55A', background: 'rgba(197,165,90,0.08)' }}>
                   <option value={-1} style={{ color: '#333', background: '#fff' }}>Choose your duty station...</option>
                   {militaryBasesList.map((base, i) => (
-                    <option key={i} value={i} style={{ color: '#333', background: '#fff' }}>
-                      {base.shortName} ({base.branch})
-                    </option>
+                    <option key={i} value={i} style={{ color: '#333', background: '#fff' }}>{base.shortName} ({base.branch})</option>
                   ))}
                 </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-4 h-4" style={{ color: '#C5A55A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: '#C5A55A' }} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </div>
               {selectedBaseIdx >= 0 && (
                 <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ background: 'rgba(197,165,90,0.15)', color: '#C5A55A' }}>
-                  {'✓'} Saved - drive times will appear on listings
+                  {'\u2713'} Saved - drive times will appear on listings
                 </span>
               )}
             </div>
           </div>
         </div>
+
+        {/* ===== PREMIUM: MORTGAGE CALCULATOR (logged in) or TEASER (logged out) ===== */}
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="fade">
+              <div className="text-center mb-8">
+                <span className="accent-color morph text-xs font-bold tracking-widest uppercase">Tools</span>
+                <h2 className="font-serif text-3xl text-themed morph mt-1">
+                  {isMil ? 'VA Loan Calculator' : 'Mortgage Calculator'}
+                </h2>
+              </div>
+              <div className="max-w-md mx-auto">
+                {isLoggedIn ? (
+                  <MortgageCalculator isMilitary={isMil} />
+                ) : (
+                  <PremiumTeaser
+                    title={isMil ? 'VA Loan Calculator' : 'Mortgage Calculator'}
+                    description="Sign up to calculate your monthly payment with taxes, insurance, and PMI included."
+                    icon={isMil ? '\u{1F396}\uFE0F' : '\u{1F4B0}'}
+                    isMilitary={isMil}
+                  >
+                    <MortgageCalculator isMilitary={isMil} />
+                  </PremiumTeaser>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== PREMIUM: SCHOOL INFO TEASER (logged out only) ===== */}
+        {!isLoggedIn && (
+          <section className="py-12 section-alt morph">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="fade max-w-2xl mx-auto">
+                <PremiumTeaser
+                  title="Detailed School Ratings"
+                  description="Get GreatSchools ratings, student-teacher ratios, and test scores for every listing."
+                  icon={'\u{1F3EB}'}
+                  isMilitary={isMil}
+                >
+                  <div className="p-6 space-y-4">
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-700 font-bold text-lg">9</div>
+                      <div><div className="font-semibold text-gray-900">Ocean Lakes Elementary</div><div className="text-sm text-gray-500">Rating: 9/10 &middot; 450 students</div></div>
+                    </div>
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-700 font-bold text-lg">8</div>
+                      <div><div className="font-semibold text-gray-900">Kellam Middle School</div><div className="text-sm text-gray-500">Rating: 8/10 &middot; 820 students</div></div>
+                    </div>
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-purple-700 font-bold text-lg">8</div>
+                      <div><div className="font-semibold text-gray-900">Ocean Lakes High School</div><div className="text-sm text-gray-500">Rating: 8/10 &middot; 2,100 students</div></div>
+                    </div>
+                  </div>
+                </PremiumTeaser>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ===== PREMIUM: WORK COMMUTE (logged in only, if addresses set) ===== */}
+        {isLoggedIn && profile?.work_address_1 && (
+          <section className="py-12 section-alt morph">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="fade text-center mb-8">
+                <span className="accent-color morph text-xs font-bold tracking-widest uppercase">Personalized</span>
+                <h2 className="font-serif text-3xl text-themed morph mt-1">Your Work Commutes</h2>
+                <p className="text-secondary-themed morph text-sm mt-2">Drive times from featured listings to your workplace</p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                {listings.map((l) => (
+                  <div key={l.address} className="card-bg morph rounded-xl p-4 text-center">
+                    <div className="text-sm font-semibold text-themed morph mb-1">{l.address}</div>
+                    <div className="text-xs text-muted-themed morph mb-3">{l.city}, {l.state}</div>
+                    <div className="text-3xl font-black accent-color morph">~25</div>
+                    <div className="text-xs text-secondary-themed morph">min to {profile.work_address_1?.split(',')[0]}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-center text-xs text-muted-themed morph mt-4">
+                <Link href="/settings" className="accent-color morph hover:underline">Edit work addresses in Settings</Link>
+              </p>
+            </div>
+          </section>
+        )}
 
         {/* ===== FEATURED LISTINGS ===== */}
         <section id="listings" className="py-20">
@@ -385,16 +448,13 @@ export default function HomeClient() {
               </div>
               <Link href="/map" className="accent-color morph text-sm font-semibold hover:opacity-70 transition">View all &rarr;</Link>
             </div>
-
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {listings.map((l) => (
                 <div key={l.address} className="fade card-lift card-bg morph rounded-2xl overflow-hidden">
                   <div className="relative overflow-hidden aspect-[4/3]">
                     <img src={l.img} alt={l.address} className="card-img w-full h-full object-cover" />
                     <div className="absolute top-3 left-3 accent-bg-c morph text-white text-xs font-bold px-2.5 py-1 rounded-lg">{l.price}</div>
-                    {l.badge && (
-                      <div className={`absolute top-3 right-3 ${l.badgeColor} text-white text-xs font-semibold px-2 py-0.5 rounded-full`}>{l.badge}</div>
-                    )}
+                    {l.badge && <div className={`absolute top-3 right-3 ${l.badgeColor} text-white text-xs font-semibold px-2 py-0.5 rounded-full`}>{l.badge}</div>}
                   </div>
                   <div className="p-5">
                     <h3 className="font-semibold text-themed morph">{l.address}</h3>
@@ -431,12 +491,7 @@ export default function HomeClient() {
                     <h2 className="font-serif text-3xl sm:text-4xl text-themed morph mb-5">{"PCS to Hampton Roads?"}<br />{"We've Got Your Six."}</h2>
                     <p className="text-secondary-themed morph leading-relaxed mb-8">{"Home to the world's largest naval base and 10 major military installations. We help service members find homes with VA loan guidance, BAH-friendly pricing, and real-time base commute calculations."}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-                      {[
-                        { val: '10', label: 'Bases' },
-                        { val: 'VA', label: 'Loan Experts' },
-                        { val: 'BAH', label: 'Calculator' },
-                        { val: '24h', label: 'Response' },
-                      ].map((s) => (
+                      {[{ val: '10', label: 'Bases' },{ val: 'VA', label: 'Loan Experts' },{ val: 'BAH', label: 'Calculator' },{ val: '24h', label: 'Response' }].map((s) => (
                         <div key={s.label} className="stat-c morph rounded-xl p-3 text-center">
                           <div className="text-xl font-bold accent-color morph">{s.val}</div>
                           <div className="text-[10px] text-muted-themed morph">{s.label}</div>
@@ -488,8 +543,7 @@ export default function HomeClient() {
                     : 'Our interactive map shows every active listing in Hampton Roads with real-time pricing, neighborhood boundaries, and filtering tools.'}
                 </p>
                 <div className="space-y-3 mb-8">
-                  {[
-                    'Real-time price pills on every listing',
+                  {['Real-time price pills on every listing',
                     isMil ? 'Commute times to all 10 bases' : 'Neighborhood video tours',
                     isMil ? 'Filter by BAH range & VA eligibility' : 'Draw custom search boundaries',
                   ].map((feat) => (
@@ -540,35 +594,18 @@ export default function HomeClient() {
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                {
-                  initials: 'SM',
-                  name: 'Sarah M.',
-                  text: isMil
-                    ? "We PCS'd from San Diego and found our dream home in 2 weeks. The commute time feature was a game-changer \u2014 we knew exactly how far we'd be from Little Creek."
-                    : 'Found our dream home in Chesapeake in just two weeks. The interactive map made searching so easy \u2014 we could see every listing with real prices.',
-                  role: isMil ? 'Navy Spouse \u00B7 Chesapeake' : 'First-Time Buyer \u00B7 Chesapeake',
-                },
-                {
-                  initials: 'JD',
-                  name: 'James D.',
-                  text: isMil
-                    ? 'The base commute calculator saved us hours of research. We found a home within BAH and 12 minutes from Norfolk Naval Station.'
-                    : 'The map search is incredible. I could see every listing near the base with actual prices. No other site does this for Hampton Roads.',
-                  role: isMil ? 'Active Duty Navy \u00B7 Norfolk' : 'Homebuyer \u00B7 Norfolk',
-                },
-                {
-                  initials: 'RL',
-                  name: 'Robert L.',
-                  text: isMil
-                    ? "Third PCS and first time using VaHome. VA loan guidance was spot-on and we closed before we even arrived at Langley."
-                    : 'The neighborhood video tours helped me evaluate areas remotely. Closed on two properties within a month.',
-                  role: isMil ? 'Air Force Family \u00B7 Hampton' : 'Investor \u00B7 Virginia Beach',
-                },
+                { initials: 'SM', name: 'Sarah M.',
+                  text: isMil ? "We PCS'd from San Diego and found our dream home in 2 weeks. The commute time feature was a game-changer." : 'Found our dream home in Chesapeake in just two weeks. The interactive map made searching so easy.',
+                  role: isMil ? 'Navy Spouse \u00B7 Chesapeake' : 'First-Time Buyer \u00B7 Chesapeake' },
+                { initials: 'JD', name: 'James D.',
+                  text: isMil ? 'The base commute calculator saved us hours of research. We found a home within BAH and 12 minutes from Norfolk Naval Station.' : 'The map search is incredible. I could see every listing near the base with actual prices.',
+                  role: isMil ? 'Active Duty Navy \u00B7 Norfolk' : 'Homebuyer \u00B7 Norfolk' },
+                { initials: 'RL', name: 'Robert L.',
+                  text: isMil ? "Third PCS and first time using VaHome. VA loan guidance was spot-on and we closed before we even arrived at Langley." : 'The neighborhood video tours helped me evaluate areas remotely. Closed on two properties within a month.',
+                  role: isMil ? 'Air Force Family \u00B7 Hampton' : 'Investor \u00B7 Virginia Beach' },
               ].map((t) => (
                 <div key={t.initials} className="fade card-bg morph rounded-2xl p-6">
-                  <div className="flex items-center gap-1 mb-3">
-                    <span className="text-amber-400 text-sm">{'\u2605\u2605\u2605\u2605\u2605'}</span>
-                  </div>
+                  <div className="flex items-center gap-1 mb-3"><span className="text-amber-400 text-sm">{'\u2605\u2605\u2605\u2605\u2605'}</span></div>
                   <p className="text-secondary-themed morph text-sm leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full accent-bg-soft-c morph flex items-center justify-center text-xs font-bold accent-color morph">{t.initials}</div>
@@ -591,17 +628,30 @@ export default function HomeClient() {
                 {isMil ? 'Welcome to Hampton Roads, Shipmate' : 'Ready to Find Home?'}
               </h2>
               <p className="text-white/70 text-lg mb-8">
-                {isMil
-                  ? "PCS doesn't have to be stressful. Let us handle the housing part."
-                  : "Whether you're buying your first home or investing \u2014 we're here to help."}
+                {isLoggedIn
+                  ? (isMil ? 'Your personalized military home search is ready.' : 'Your personalized home search tools are unlocked.')
+                  : (isMil ? "PCS doesn't have to be stressful. Sign up for personalized tools." : "Sign up for mortgage calculators, school data, and commute times.")}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button className="bg-white font-bold px-8 py-3.5 rounded-xl transition text-sm" style={{ color: '#111' }}>
-                  {isMil ? 'Start PCS Search' : 'Start Searching'}
-                </button>
-                <button className="bg-white/15 text-white font-bold px-8 py-3.5 rounded-xl border border-white/20 hover:bg-white/25 transition text-sm">
-                  {isMil ? 'Talk to a Military Specialist' : 'Schedule a Call'}
-                </button>
+                {isLoggedIn ? (
+                  <>
+                    <Link href="/map" className="bg-white font-bold px-8 py-3.5 rounded-xl transition text-sm" style={{ color: '#111' }}>
+                      {isMil ? 'Start PCS Search' : 'Search Homes'}
+                    </Link>
+                    <Link href="/settings" className="bg-white/15 text-white font-bold px-8 py-3.5 rounded-xl border border-white/20 hover:bg-white/25 transition text-sm">
+                      My Settings
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={handleGetStarted} className="bg-white font-bold px-8 py-3.5 rounded-xl transition text-sm" style={{ color: '#111' }}>
+                      {isMil ? 'Create Free Account' : 'Get Started Free'}
+                    </button>
+                    <button onClick={handleGetStarted} className="bg-white/15 text-white font-bold px-8 py-3.5 rounded-xl border border-white/20 hover:bg-white/25 transition text-sm">
+                      {isMil ? 'Talk to a Military Specialist' : 'Schedule a Call'}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
