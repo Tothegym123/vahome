@@ -25,6 +25,7 @@ export default function Header() {
   const handleRegisterClick = () => { setAuthView('register'); setShowAuthModal(true) }
 
   return (
+    <>
     <header className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${isDark ? 'bg-gray-900 border-b border-gray-800' : 'bg-white shadow-sm'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -122,6 +123,7 @@ export default function Header() {
         )}
       </div>
     </header>
+
       {!user && !loading && showBanner && (
         <div className={"fixed top-16 left-0 right-0 z-40 transition-colors duration-500 " + (isDark ? "bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 border-b border-gray-700" : "bg-gradient-to-r from-red-50 via-white to-red-50 border-b border-red-100")}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
@@ -136,5 +138,6 @@ export default function Header() {
           </div>
         </div>
       )}
+    </>
   )
 }
