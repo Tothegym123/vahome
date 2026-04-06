@@ -127,7 +127,7 @@ export default function Header() {
       {!user && !loading && showBanner && (
         <div className="fixed top-24 left-0 right-0 z-40 pointer-events-none">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end">
-            <div className={"pointer-events-auto max-w-lg w-full rounded-xl shadow-lg border transition-all duration-500 " + (isDark ? "bg-gray-800 border-gray-700 shadow-black/30" : "bg-white border-gray-200 shadow-lg")}>
+            <div className={"pointer-events-auto w-96 rounded-xl shadow-lg border transition-all duration-500 " + (isDark ? "bg-gray-800 border-gray-700 shadow-black/30" : "bg-white border-gray-200 shadow-lg")}>
               <div className="px-4 py-3 flex items-start justify-between gap-3">
                 <p className={"text-sm leading-relaxed " + (isDark ? "text-gray-300" : "text-gray-600")}>
                   <span className={"font-semibold " + (isDark ? "text-white" : "text-gray-900")}>No sign-up required to browse homes.</span>
