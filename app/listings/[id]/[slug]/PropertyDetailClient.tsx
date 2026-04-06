@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
 import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
@@ -184,7 +184,7 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
     </div>
   );
 }
-/* ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Tour Scheduling Modal ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ */
+/* ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Tour Scheduling Modal ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ */
 
 function getUpcomingDays(count: number): Array<{ date: Date; dayName: string; monthDay: string }> {
   const days = [];
@@ -466,10 +466,42 @@ function TourModal({
   );
 }
 
-/* ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Main Component ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ */
+/* ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Main Component ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ */
 
 export default function PropertyDetailClient({ listing }: PropertyDetailClientProps) {
   const [showTourModal, setShowTourModal] = useState(false);
+  const [selectedBase, setSelectedBase] = useState<{name: string; shortName: string; lat: number; lng: number; branch: string} | null>(null);
+  const [analyzeResult, setAnalyzeResult] = useState<{driveMinutes: number; driveMiles: number} | null>(null);
+  const [analyzeLoading, setAnalyzeLoading] = useState(false);
+  const [analyzeExpanded, setAnalyzeExpanded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vahome_selected_base');
+      if (saved) setSelectedBase(JSON.parse(saved));
+    } catch {}
+  }, []);
+
+  const handleAnalyze = useCallback(async () => {
+    if (!selectedBase) return;
+    if (analyzeResult) { setAnalyzeExpanded(prev => !prev); return; }
+    setAnalyzeLoading(true);
+    setAnalyzeExpanded(true);
+    try {
+      const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
+      const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${listing.lng},${listing.lat};${selectedBase.lng},${selectedBase.lat}?overview=false&access_token=${token}`;
+      const resp = await fetch(url);
+      const data = await resp.json();
+      if (data.routes && data.routes.length > 0) {
+        const route = data.routes[0];
+        setAnalyzeResult({
+          driveMinutes: Math.round(route.duration / 60),
+          driveMiles: Math.round(route.distance * 0.000621371 * 10) / 10,
+        });
+      }
+    } catch (err) { console.error('Analyze error:', err); }
+    finally { setAnalyzeLoading(false); }
+  }, [selectedBase, analyzeResult, listing.lat, listing.lng]);
     const photos = listing.photos && listing.photos.length > 0 ? listing.photos : [listing.img];
   const pricePerSqft = listing.sqft > 0 ? Math.round(listing.price / listing.sqft) : 0;
   const isActive = listing.status?.toLowerCase() === 'active';
@@ -514,6 +546,57 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                           <div className="bg-white rounded-xl border border-gray-100 px-6 py-3 mb-2">
                 <ListingStatusTracker status={listing.status} daysOnMarket={listing.daysOnMarket} />
               </div>
+
+            {/* Military Analyze Button */}
+            {selectedBase && (
+              <div className="bg-white rounded-xl border-2 border-red-200 overflow-hidden transition-all duration-300">
+                <button
+                  onClick={handleAnalyze}
+                  disabled={analyzeLoading}
+                  className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold py-5 px-6 text-2xl transition-colors flex items-center justify-center gap-3"
+                >
+                  {analyzeLoading ? (
+                    <>
+                      <div className="w-7 h-7 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Analyzing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                      <span>Analyze</span>
+                      {analyzeResult && (
+                        <svg className={`w-5 h-5 ml-1 transition-transform ${analyzeExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      )}
+                    </>
+                  )}
+                </button>
+                {analyzeExpanded && analyzeResult && (
+                  <div className="px-6 py-5 bg-red-50 border-t border-red-200">
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                      <span className="text-2xl">{selectedBase.branch === 'Navy' ? '\u2693' : selectedBase.branch === 'Air Force' ? '\u2708\uFE0F' : selectedBase.branch === 'Army' ? '\u2B50' : selectedBase.branch === 'Marines' ? '\uD83E\uDE96' : '\uD83C\uDFDB\uFE0F'}</span>
+                      <span className="text-lg font-bold text-gray-900">Drive to {selectedBase.shortName}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-8">
+                      <div className="text-center">
+                        <span className="text-4xl font-black text-red-600">{analyzeResult.driveMinutes}</span>
+                        <p className="text-sm text-gray-500 mt-1">minutes</p>
+                      </div>
+                      <div className="w-px h-12 bg-red-200"></div>
+                      <div className="text-center">
+                        <span className="text-4xl font-black text-gray-800">{analyzeResult.driveMiles}</span>
+                        <p className="text-sm text-gray-500 mt-1">miles</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-400 text-center mt-3">Estimated drive time via Mapbox</p>
+                  </div>
+                )}
+              </div>
+            )}
+
 <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 flex items-center justify-between">
               
               <p className="text-5xl font-bold text-gray-900">{formatPriceFull(listing.price)}</p>
