@@ -100,6 +100,11 @@ export default function WaitlistForm({ type, title }: WaitlistFormProps) {
               >
                 {submitting ? 'Submitting...' : 'Join the Waitlist'}
               </button>
+
+              <p className="text-xs text-gray-500 mt-3 leading-snug" data-tcpa="tcpa-consent-vahome">
+            By submitting this form, you consent to be contacted by the VaHome Team and Tom &amp; Dariya Milan, LPT Realty by phone, text message, and email at the contact information provided, including via automated systems, regarding real estate inquiries and listings. Message and data rates may apply. Message frequency varies. Consent is not a condition of any purchase. Reply STOP to unsubscribe at any time. See our <a href="/privacy" className="underline">Privacy Policy</a> and <a href="/terms" className="underline">Terms</a>.
+          </p>
+
             </form>
           )}
         </div>
