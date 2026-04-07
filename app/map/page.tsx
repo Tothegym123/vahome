@@ -41,8 +41,147 @@ function filterListings(listings: Listing[], filters: Filters): Listing[] {
 const priceOptions = [
   { label: 'Any', min: 0, max: 5000000 },
   { label: 'Under $300K', min: 0, max: 300000 },
-  { label: '$300KÃÂÃÂ¢ÃÂÃÂÃÂÃÂ$500K', min: 300000, max: 500000 },
-  { label: '$500KÃÂÃÂ¢ÃÂÃÂÃÂÃÂ$750K', min: 500000, max: 750000 },
+  { label: '$300KÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ$500K', min: 300000, max: 500000 },
+  { label: '$500KÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ$750K', min: 500000, max: 750000 },
+  { label: '$750K+', min: 750000, max: 5000000 },
+]
+
+const bedOptions = [
+  { label: 'Any', value: 0 },
+  { label: '2+', value: 2 },
+  { label: '3+', value: 3 },
+  { label: '4+', value: 4 },
+  { label: '5+', value: 5 },
+]
+
+export default function MapPage() {
+  const mapContainer = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<any>(null)
+  const videoMarkersRef = useRef<any[]>([])
+  const popupRef = useRef<any>(null)
+  const [visibleListings, setVisibleListings] = useState<Listing[]>(sampleListings)
+  const [hoveredId, setHoveredId] = useState<number | null>(null)
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null)
+  const [activeVideo, setActiveVideo] = useState<VideoMarkerType | null>(null)
+  const [mapLoaded, setMapLoaded] = useState(false)
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
+  const [tourPins, setTourPins] = useState<Array<{id:string,title:string,description:string,youtube_url:string,lat:number,lng:number}>>([])
+  const [userTier, setUserTier] = useState<'free' | 'paid' | null>(null)
+
+  // Filter listings based on current filters
+  const filteredListings = useMemo(() => filterListings(sampleListings, filters), [filters])
+
+  // Update visible listings based on map bounds + filters
+  const updateVisibleListings = useCallback(() => {
+    if (!mapRef.current) return
+    const bounds = mapRef.current.getBounds()
+    const visible = filteredListings.filter(l => {
+      return l.lng >= bounds.getWest() && l.lng <= bounds.getEast() &&
+        l.lat >= bounds.getSouth() && l.lat <= bounds.getNorth()
+    })
+    setVisibleListings(visible)
+  }, [filteredListings])
+
+  // Update GeoJSON source when filters change
+  useEffect(() => {
+    console.log('[tour-debug] markerEffect mapLoaded=', mapLoaded, 'tier=', userTier, 'pins=', tourPins.length); if (!mapRef.current || !mapLoaded) return
+    const source = mapRef.current.getSource('listings')
+    if (source) {
+      source.setData(listingsToGeoJSON(filteredListings))
+    }
+    updateVisibleListings()
+  }, [filteredListings, mapLoaded, updateVisibleListings])
+
+  // Fetch user tier and (if paid) load video tour pins
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (cancelled) return
+        if (!user) {
+          setUserTier(null)
+          setTourPins([])
+          return
+        }
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('tier')
+          .eq('id', user.id)
+          .single()
+        if (cancelled) return
+        const tier: 'free' | 'paid' = profile?.tier === 'paid' ? 'paid' : 'free'
+        setUserTier(tier); console.log('[tour-debug] tier=', tier)
+        if (tier === 'paid') {
+          const { data: tours } = await supabase
+            .from('neighborhood_tours')
+            .select('id,title,description,youtube_url,lat,lng')
+          if (cancelled) return
+          setTourPins((tours || []) as any); console.log('[tour-debug] tours=', tours)
+        } else {
+          setTourPins([])
+        }
+      } catch (e) {
+        console.error('tour pin fetch failed', e)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
+
+  // Render tier-gated video tour markers
+      useEffect(() => {
+        console.log('[tour-debug] renderEffect entry tier=', userTier, 'pins=', tourPins.length)
+        videoMarkersRef.current.forEach(m => m.remove())
+        videoMarkersRef.current = []
+        if (userTier !== 'paid' || tourPins.length === 0) return
+        let cancelled = false
+        const tryRender = async () => {
+          if (cancelled) return
+          const map = mapRef.current
+          if (!map || !map.loaded()) { setTimeout(tryRender, 150); return }
+          const mapboxgl = (await import('mapbox-gl')).default
+          if (cancelled || !mapRef.current) return
+          console.log('[tour-debug] rendering', tourPins.length, 'markers')
+          tourPins.forEach(pin => {
+            const el = document.createElement('div')
+            el.className = 'map-video-marker'
+            el.style.cssText = 'width:32px;height:32px;border-radius:50%;background:#dc2626;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid white'
+            el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M8 5v14l11-7z"/></svg>'
+            el.title = pin.title
+            el.onclick = () => {
+              const m = pin.youtube_url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)
+              const videoId = m ? m[1] : ''
+              setActiveVideo({ videoId, title: pin.title, description: pin.description, lat: pin.lat, lng: pin.lng } as any)
+            }
+            const marker = new mapboxgl.Marker({ element: el, anchor: 'center' }).setLngLat([pin.lng, pin.lat]).addTo(mapRef.current)
+            videoMarkersRef.current.push(marker)
+          })
+        }
+        tryRender()
+        return () => { cancelled = true }
+      }, [tourPins, userTier]): Listing[] {
+  return listings.filter(l => {
+    if (filters.type !== 'all') {
+      const t = l.type.toLowerCase()
+      if (filters.type === 'house' && !t.includes('house') && !t.includes('construction')) return false
+      if (filters.type === 'condo' && !t.includes('condo')) return false
+      if (filters.type === 'townhouse' && !t.includes('townhouse')) return false
+    }
+    if (l.price < filters.minPrice || l.price > filters.maxPrice) return false
+    if (l.beds < filters.minBeds) return false
+    return true
+  })
+}
+
+// ---- Price range options ----
+const priceOptions = [
+  { label: 'Any', min: 0, max: 5000000 },
+  { label: 'Under $300K', min: 0, max: 300000 },
+  { label: '$300KÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ$500K', min: 300000, max: 500000 },
+  { label: '$500KÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ$750K', min: 500000, max: 750000 },
   { label: '$750K+', min: 750000, max: 5000000 },
 ]
 
@@ -283,7 +422,7 @@ export default function MapPage() {
           setHoveredId(null)
         })
 
-        // ---- Click listing ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ show popup card (Zillow style) ----
+        // ---- Click listing ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ show popup card (Zillow style) ----
         const showListingPopup = (e: any) => {
           if (!e.features || e.features.length === 0) return
           const feat = e.features[0]
@@ -303,7 +442,7 @@ export default function MapPage() {
                 <div style="font-size:18px;font-weight:800;color:#111827;">${props.priceFull || props.priceLabel}</div>
                 <div style="font-size:12px;color:#6b7280;margin-top:2px;">${props.beds} bd | ${props.baths} ba | ${Number(props.sqft).toLocaleString()} sqft</div>
                 <div style="font-size:12px;color:#374151;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${props.address}</div>
-                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ</div>
+                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ</div>
               </div>
             </a>
           `
@@ -344,14 +483,14 @@ export default function MapPage() {
           map.getCanvas().style.cursor = ''
         })
 
-        // Update visible listings on map move ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ using 'idle' instead of 'moveend'
+        // Update visible listings on map move ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ using 'idle' instead of 'moveend'
         // for smoother updates, and 'idle' only fires once the map is done rendering
         map.on('idle', () => updateVisibleListings())
         updateVisibleListings()
       })
 
       // VIDEO MARKERS TEMPORARILY DISABLED - will add back later
-      //       // ---- Video markers (HTML markers ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ only 5, so DOM is fine) ----
+      //       // ---- Video markers (HTML markers ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ only 5, so DOM is fine) ----
       //       videoMarkers.forEach(v => {
       //         const el = document.createElement('div')
       //         el.className = 'map-video-marker'
