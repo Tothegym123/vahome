@@ -41,8 +41,8 @@ function filterListings(listings: Listing[], filters: Filters): Listing[] {
 const priceOptions = [
   { label: 'Any', min: 0, max: 5000000 },
   { label: 'Under $300K', min: 0, max: 300000 },
-  { label: '$300K–$500K', min: 300000, max: 500000 },
-  { label: '$500K–$750K', min: 500000, max: 750000 },
+  { label: '$300Kâ$500K', min: 300000, max: 500000 },
+  { label: '$500Kâ$750K', min: 500000, max: 750000 },
   { label: '$750K+', min: 750000, max: 5000000 },
 ]
 
@@ -86,7 +86,7 @@ export default function MapPage() {
 
   // Update GeoJSON source when filters change
   useEffect(() => {
-    if (!mapRef.current || !mapLoaded) return
+    console.log('[tour-debug] markerEffect mapLoaded=', mapLoaded, 'tier=', userTier, 'pins=', tourPins.length); if (!mapRef.current || !mapLoaded) return
     const source = mapRef.current.getSource('listings')
     if (source) {
       source.setData(listingsToGeoJSON(filteredListings))
@@ -114,13 +114,13 @@ export default function MapPage() {
           .single()
         if (cancelled) return
         const tier: 'free' | 'paid' = profile?.tier === 'paid' ? 'paid' : 'free'
-        setUserTier(tier)
+        setUserTier(tier); console.log('[tour-debug] tier=', tier)
         if (tier === 'paid') {
           const { data: tours } = await supabase
             .from('neighborhood_tours')
             .select('id,title,description,youtube_url,lat,lng')
           if (cancelled) return
-          setTourPins((tours || []) as any)
+          setTourPins((tours || []) as any); console.log('[tour-debug] tours=', tours)
         } else {
           setTourPins([])
         }
@@ -286,7 +286,7 @@ export default function MapPage() {
           setHoveredId(null)
         })
 
-        // ---- Click listing → show popup card (Zillow style) ----
+        // ---- Click listing â show popup card (Zillow style) ----
         const showListingPopup = (e: any) => {
           if (!e.features || e.features.length === 0) return
           const feat = e.features[0]
@@ -306,7 +306,7 @@ export default function MapPage() {
                 <div style="font-size:18px;font-weight:800;color:#111827;">${props.priceFull || props.priceLabel}</div>
                 <div style="font-size:12px;color:#6b7280;margin-top:2px;">${props.beds} bd | ${props.baths} ba | ${Number(props.sqft).toLocaleString()} sqft</div>
                 <div style="font-size:12px;color:#374151;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${props.address}</div>
-                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details →</div>
+                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details â</div>
               </div>
             </a>
           `
@@ -347,14 +347,14 @@ export default function MapPage() {
           map.getCanvas().style.cursor = ''
         })
 
-        // Update visible listings on map move — using 'idle' instead of 'moveend'
+        // Update visible listings on map move â using 'idle' instead of 'moveend'
         // for smoother updates, and 'idle' only fires once the map is done rendering
         map.on('idle', () => updateVisibleListings())
         updateVisibleListings()
       })
 
       // VIDEO MARKERS TEMPORARILY DISABLED - will add back later
-      //       // ---- Video markers (HTML markers — only 5, so DOM is fine) ----
+      //       // ---- Video markers (HTML markers â only 5, so DOM is fine) ----
       //       videoMarkers.forEach(v => {
       //         const el = document.createElement('div')
       //         el.className = 'map-video-marker'
