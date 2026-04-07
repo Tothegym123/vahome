@@ -41,8 +41,8 @@ function filterListings(listings: Listing[], filters: Filters): Listing[] {
 const priceOptions = [
   { label: 'Any', min: 0, max: 5000000 },
   { label: 'Under $300K', min: 0, max: 300000 },
-  { label: '$300Kâ$500K', min: 300000, max: 500000 },
-  { label: '$500Kâ$750K', min: 500000, max: 750000 },
+  { label: '$300KÃ¢ÂÂ$500K', min: 300000, max: 500000 },
+  { label: '$500KÃ¢ÂÂ$750K', min: 500000, max: 750000 },
   { label: '$750K+', min: 750000, max: 5000000 },
 ]
 
@@ -132,37 +132,40 @@ export default function MapPage() {
   }, [])
 
   // Render tier-gated video tour markers
-  useEffect(() => {
-    if (!mapRef.current || !mapLoaded) return
-    if (userTier !== 'paid' || tourPins.length === 0) {
-      videoMarkersRef.current.forEach(m => m.remove())
-      videoMarkersRef.current = []
-      return
-    }
-    let cancelled = false
-    ;(async () => {
-      const mapboxgl = (await import('mapbox-gl')).default
-      if (cancelled || !mapRef.current) return
-      videoMarkersRef.current.forEach(m => m.remove())
-      videoMarkersRef.current = []
-      tourPins.forEach(pin => {
-        const el = document.createElement('div')
-        el.className = 'map-video-marker'
-        el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>'
-        el.title = pin.title
-        el.onclick = () => {
-          const m = pin.youtube_url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)
-          const videoId = m ? m[1] : ''
-          setActiveVideo({ videoId, title: pin.title, description: pin.description, lat: pin.lat, lng: pin.lng } as any)
+      useEffect(() => {
+        if (userTier !== 'paid' || tourPins.length === 0) {
+          videoMarkersRef.current.forEach(m => m.remove())
+          videoMarkersRef.current = []
+          return
         }
-        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
-          .setLngLat([pin.lng, pin.lat])
-          .addTo(mapRef.current)
-        videoMarkersRef.current.push(marker)
-      })
-    })()
-    return () => { cancelled = true }
-  }, [mapLoaded, tourPins, userTier])
+        let cancelled = false
+        const renderMarkers = async () => {
+          const map = mapRef.current
+          if (!map) { if (!cancelled) setTimeout(renderMarkers, 100); return }
+          if (!map.loaded()) { map.once('load', () => { if (!cancelled) renderMarkers() }); return }
+          const mapboxgl = (await import('mapbox-gl')).default
+          if (cancelled || !mapRef.current) return
+          videoMarkersRef.current.forEach(m => m.remove())
+          videoMarkersRef.current = []
+          console.log('[tour-debug] rendering', tourPins.length, 'markers')
+          tourPins.forEach(pin => {
+            const el = document.createElement('div')
+            el.className = 'map-video-marker'
+            el.style.cssText = 'width:32px;height:32px;border-radius:50%;background:#dc2626;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid white'
+            el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M8 5v14l11-7z"/></svg>'
+            el.title = pin.title
+            el.onclick = () => {
+              const m = pin.youtube_url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)
+              const videoId = m ? m[1] : ''
+              setActiveVideo({ videoId, title: pin.title, description: pin.description, lat: pin.lat, lng: pin.lng } as any)
+            }
+            const marker = new mapboxgl.Marker({ element: el, anchor: 'center' }).setLngLat([pin.lng, pin.lat]).addTo(mapRef.current)
+            videoMarkersRef.current.push(marker)
+          })
+        }
+        renderMarkers()
+        return () => { cancelled = true }
+      }, [tourPins, userTier])
 
   // Initialize map
   useEffect(() => {
@@ -286,7 +289,7 @@ export default function MapPage() {
           setHoveredId(null)
         })
 
-        // ---- Click listing â show popup card (Zillow style) ----
+        // ---- Click listing Ã¢ÂÂ show popup card (Zillow style) ----
         const showListingPopup = (e: any) => {
           if (!e.features || e.features.length === 0) return
           const feat = e.features[0]
@@ -306,7 +309,7 @@ export default function MapPage() {
                 <div style="font-size:18px;font-weight:800;color:#111827;">${props.priceFull || props.priceLabel}</div>
                 <div style="font-size:12px;color:#6b7280;margin-top:2px;">${props.beds} bd | ${props.baths} ba | ${Number(props.sqft).toLocaleString()} sqft</div>
                 <div style="font-size:12px;color:#374151;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${props.address}</div>
-                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details â</div>
+                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details Ã¢ÂÂ</div>
               </div>
             </a>
           `
@@ -347,14 +350,14 @@ export default function MapPage() {
           map.getCanvas().style.cursor = ''
         })
 
-        // Update visible listings on map move â using 'idle' instead of 'moveend'
+        // Update visible listings on map move Ã¢ÂÂ using 'idle' instead of 'moveend'
         // for smoother updates, and 'idle' only fires once the map is done rendering
         map.on('idle', () => updateVisibleListings())
         updateVisibleListings()
       })
 
       // VIDEO MARKERS TEMPORARILY DISABLED - will add back later
-      //       // ---- Video markers (HTML markers â only 5, so DOM is fine) ----
+      //       // ---- Video markers (HTML markers Ã¢ÂÂ only 5, so DOM is fine) ----
       //       videoMarkers.forEach(v => {
       //         const el = document.createElement('div')
       //         el.className = 'map-video-marker'
