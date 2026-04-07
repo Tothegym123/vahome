@@ -41,8 +41,8 @@ function filterListings(listings: Listing[], filters: Filters): Listing[] {
 const priceOptions = [
   { label: 'Any', min: 0, max: 5000000 },
   { label: 'Under $300K', min: 0, max: 300000 },
-  { label: '$300KÃ¢ÂÂ$500K', min: 300000, max: 500000 },
-  { label: '$500KÃ¢ÂÂ$750K', min: 500000, max: 750000 },
+  { label: '$300KÃÂ¢ÃÂÃÂ$500K', min: 300000, max: 500000 },
+  { label: '$500KÃÂ¢ÃÂÃÂ$750K', min: 500000, max: 750000 },
   { label: '$750K+', min: 750000, max: 5000000 },
 ]
 
@@ -142,7 +142,7 @@ export default function MapPage() {
         const renderMarkers = async () => {
           const map = mapRef.current
           if (!map) { if (!cancelled) setTimeout(renderMarkers, 100); return }
-          if (!map.loaded()) { map.once('load', () => { if (!cancelled) renderMarkers() }); return }
+          if (!map.loaded()) { setTimeout(renderMarkers, 150); return }
           const mapboxgl = (await import('mapbox-gl')).default
           if (cancelled || !mapRef.current) return
           videoMarkersRef.current.forEach(m => m.remove())
@@ -289,7 +289,7 @@ export default function MapPage() {
           setHoveredId(null)
         })
 
-        // ---- Click listing Ã¢ÂÂ show popup card (Zillow style) ----
+        // ---- Click listing ÃÂ¢ÃÂÃÂ show popup card (Zillow style) ----
         const showListingPopup = (e: any) => {
           if (!e.features || e.features.length === 0) return
           const feat = e.features[0]
@@ -309,7 +309,7 @@ export default function MapPage() {
                 <div style="font-size:18px;font-weight:800;color:#111827;">${props.priceFull || props.priceLabel}</div>
                 <div style="font-size:12px;color:#6b7280;margin-top:2px;">${props.beds} bd | ${props.baths} ba | ${Number(props.sqft).toLocaleString()} sqft</div>
                 <div style="font-size:12px;color:#374151;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${props.address}</div>
-                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details Ã¢ÂÂ</div>
+                <div style="font-size:11px;color:#ef4444;font-weight:600;margin-top:6px;">View details ÃÂ¢ÃÂÃÂ</div>
               </div>
             </a>
           `
@@ -350,14 +350,14 @@ export default function MapPage() {
           map.getCanvas().style.cursor = ''
         })
 
-        // Update visible listings on map move Ã¢ÂÂ using 'idle' instead of 'moveend'
+        // Update visible listings on map move ÃÂ¢ÃÂÃÂ using 'idle' instead of 'moveend'
         // for smoother updates, and 'idle' only fires once the map is done rendering
         map.on('idle', () => updateVisibleListings())
         updateVisibleListings()
       })
 
       // VIDEO MARKERS TEMPORARILY DISABLED - will add back later
-      //       // ---- Video markers (HTML markers Ã¢ÂÂ only 5, so DOM is fine) ----
+      //       // ---- Video markers (HTML markers ÃÂ¢ÃÂÃÂ only 5, so DOM is fine) ----
       //       videoMarkers.forEach(v => {
       //         const el = document.createElement('div')
       //         el.className = 'map-video-marker'
