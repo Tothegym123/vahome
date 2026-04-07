@@ -37,10 +37,11 @@ export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState<'leads' | 'tours' | 'activity' | 'neighborhood_tours'>('leads')
+  const [activeTab, setActiveTab] = useState<'leads' | 'tours' | 'activity' | 'neighborhood_tours' | 'waitlist'>('leads')
   const [leads, setLeads] = useState<Lead[]>([])
   const [tours, setTours] = useState<TourRequest[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
+  const [waitlistRows, setWaitlistRows] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [stats, setStats] = useState({ totalLeads: 0, totalTours: 0, totalFavorites: 0, newLeadsToday: 0 })
 
@@ -75,6 +76,12 @@ export default function AdminDashboard() {
       const { data: savedListings } = await supabase
         .from('saved_listings')
         .select('*')
+
+      const { data: waitlistData } = await supabase
+        .from('waitlist')
+        .select('*')
+        .order('created_at', { ascending: false })
+      setWaitlistRows(waitlistData || [])
 
       const allTours = tourRequests?.filter(t => t.action_type === 'tour_request') || []
 
@@ -286,7 +293,8 @@ export default function AdminDashboard() {
               { key: 'leads' as const, label: 'All Leads', count: leads.length },
               { key: 'tours' as const, label: 'Tour Requests', count: tours.length },
               { key: 'activity' as const, label: 'Activity Log', count: activities.length },
-          { key: 'neighborhood_tours' as const, label: 'Video Links', count: 0 },
+          { key: 'waitlist' as const, label: 'Waitlist', count: waitlistRows.length },
+              { key: 'neighborhood_tours' as const, label: 'Video Links', count: 0 },
             ]).map(tab => (
               <button
                 key={tab.key}
@@ -502,7 +510,45 @@ export default function AdminDashboard() {
                   </table>
                 </div>
               )}
-            </>
+            
+            {/* Waitlist Tab */}
+            {activeTab === 'waitlist' && (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
+                      <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
+                      <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {waitlistRows.length === 0 ? (
+                      <tr><td colSpan={5} className="px-6 py-12 text-center text-gray-400">No waitlist submissions yet</td></tr>
+                    ) : (
+                      waitlistRows.map((row) => (
+                        <tr key={row.id} className="hover:bg-gray-50 transition">
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${row.type === 'agent' ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}`}>
+                              {row.type === 'agent' ? 'Agent' : 'Lender'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm font-medium text-gray-900">{row.name}</td>
+                          <td className="px-6 py-4 text-sm text-gray-700">{row.email}</td>
+                          <td className="px-6 py-4 text-sm text-gray-700">{row.phone || '-'}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+</>
           )}
         </div>
       </div>
