@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { sampleListings, videoMarkers, formatPrice, formatPriceFull, getFullAddress, getListingUrl, listingsToGeoJSON } from '../lib/listings'
 import type { Listing, VideoMarker as VideoMarkerType } from '../lib/listings'
 import FavoriteButton from '../components/FavoriteButton'
+import { createClient } from '../lib/supabase/client'
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 
@@ -66,6 +67,8 @@ export default function MapPage() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
+  const [tourPins, setTourPins] = useState<Array<{id:string,title:string,description:string,youtube_url:string,lat:number,lng:number}>>([])
+  const [userTier, setUserTier] = useState<'free' | 'paid' | null>(null)
 
   // Filter listings based on current filters
   const filteredListings = useMemo(() => filterListings(sampleListings, filters), [filters])
@@ -90,6 +93,76 @@ export default function MapPage() {
     }
     updateVisibleListings()
   }, [filteredListings, mapLoaded, updateVisibleListings])
+
+  // Fetch user tier and (if paid) load video tour pins
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (cancelled) return
+        if (!user) {
+          setUserTier(null)
+          setTourPins([])
+          return
+        }
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('tier')
+          .eq('id', user.id)
+          .single()
+        if (cancelled) return
+        const tier: 'free' | 'paid' = profile?.tier === 'paid' ? 'paid' : 'free'
+        setUserTier(tier)
+        if (tier === 'paid') {
+          const { data: tours } = await supabase
+            .from('neighborhood_tours')
+            .select('id,title,description,youtube_url,lat,lng')
+          if (cancelled) return
+          setTourPins((tours || []) as any)
+        } else {
+          setTourPins([])
+        }
+      } catch (e) {
+        console.error('tour pin fetch failed', e)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
+
+  // Render tier-gated video tour markers
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return
+    if (userTier !== 'paid' || tourPins.length === 0) {
+      videoMarkersRef.current.forEach(m => m.remove())
+      videoMarkersRef.current = []
+      return
+    }
+    let cancelled = false
+    ;(async () => {
+      const mapboxgl = (await import('mapbox-gl')).default
+      if (cancelled || !mapRef.current) return
+      videoMarkersRef.current.forEach(m => m.remove())
+      videoMarkersRef.current = []
+      tourPins.forEach(pin => {
+        const el = document.createElement('div')
+        el.className = 'map-video-marker'
+        el.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>'
+        el.title = pin.title
+        el.onclick = () => {
+          const m = pin.youtube_url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)
+          const videoId = m ? m[1] : ''
+          setActiveVideo({ videoId, title: pin.title, description: pin.description, lat: pin.lat, lng: pin.lng } as any)
+        }
+        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+          .setLngLat([pin.lng, pin.lat])
+          .addTo(mapRef.current)
+        videoMarkersRef.current.push(marker)
+      })
+    })()
+    return () => { cancelled = true }
+  }, [mapLoaded, tourPins, userTier])
 
   // Initialize map
   useEffect(() => {
