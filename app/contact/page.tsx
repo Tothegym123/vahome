@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '../lib/supabase/client'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -18,16 +17,20 @@ export default function ContactPage() {
     e.preventDefault()
     setSubmitting(true)
     try {
-      const supabase = createClient()
-      await supabase.from('contact_requests').insert({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
-        type: formData.type,
-        source: 'contact_page',
-        submitted_at: new Date().toISOString(),
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'contact_form',
+          source_detail: formData.type,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          lead_type: formData.type,
+        }),
       })
+      if (!res.ok) throw new Error('Submit failed')
     } catch (err) {
       console.error('Contact submit error:', err)
     } finally {
