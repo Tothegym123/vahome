@@ -34,7 +34,7 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.reinmls.com' },
       { protocol: 'https', hostname: '**.rfrein.com' },
     ],
-  },,
+  },
   experimental: {
     optimizePackageImports: ['mapbox-gl', 'lucide-react'],
   },
