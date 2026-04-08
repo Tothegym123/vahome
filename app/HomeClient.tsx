@@ -302,13 +302,13 @@ export default function HomeClient() {
         <section className="hero-bg morph pt-24 pb-20 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="fade flex items-center justify-center gap-3 mb-8">
-              <span className="text-sm font-semibold text-muted-themed morph">Civilian</span>
+              <span className="text-base font-bold text-muted-themed morph">Civilian Mode</span>
               <div className="toggle-track" onClick={toggleMode}>
                 <div className="toggle-thumb">
                   <span>{isMil ? '\u{1F396}\uFE0F' : '\u{1F3E0}'}</span>
                 </div>
               </div>
-              <span className="text-sm font-semibold text-muted-themed morph">Military</span>
+              <span className="text-base font-bold text-muted-themed morph">Military Mode</span>
               <div style={{width:1,height:20,margin:'0 8px'}} className="divider-c"></div>
               <button onClick={toggleTheme} className="theme-toggle-btn" title={theme === 'bright' ? 'Switch to dark mode' : 'Switch to bright mode'}>
                 {theme === 'bright' ? (
