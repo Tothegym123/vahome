@@ -1,10 +1,9 @@
-// cache-bust 1775655738415
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import type { Listing } from '@/app/lib/listings'
-import { listingsToGeoJSON, formatPriceFull, getListingUrl } from '@/app/lib/listings'
+import { formatPriceFull, getListingUrl } from '@/app/lib/listings'
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 
@@ -27,6 +26,8 @@ interface Props {
 export default function MapClient({ listings }: Props) {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
+  const markersRef = useRef<any[]>([])
+  const mapboxRef = useRef<any>(null)
   const [mapReady, setMapReady] = useState(false)
   const [selected, setSelected] = useState<Listing | null>(null)
   const [filters, setFilters] = useState<Filters>({
@@ -136,129 +137,45 @@ export default function MapClient({ listings }: Props) {
         try { map.triggerRepaint() } catch {}
       }, 100)
 
+      // Use DOM Markers instead of GeoJSON source (vector tile pipeline is broken in v3)
       let setupDone = false
       const doSetup = () => {
-        if (setupDone || !map.isStyleLoaded()) return
+        if (setupDone) return
         setupDone = true
-        // GeoJSON source with clustering
-        map.addSource('listings', {
-          type: 'geojson',
-          data: listingsToGeoJSON(listings),
-          cluster: true,
-          clusterMaxZoom: 13,
-          clusterRadius: 50,
-        })
-
-        // Cluster circles
-        map.addLayer({
-          id: 'clusters',
-          type: 'circle',
-          source: 'listings',
-          filter: ['has', 'point_count'],
-          paint: {
-            'circle-color': [
-              'step',
-              ['get', 'point_count'],
-              '#1a5f7a',
-              5,
-              '#0f4c75',
-              15,
-              '#003049',
-            ],
-            'circle-radius': ['step', ['get', 'point_count'], 18, 5, 24, 15, 30],
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#ffffff',
-          },
-        })
-
-        // Cluster counts
-        map.addLayer({
-          id: 'cluster-count',
-          type: 'symbol',
-          source: 'listings',
-          filter: ['has', 'point_count'],
-          layout: {
-            'text-field': '{point_count_abbreviated}',
-            'text-font': ['Noto Sans Bold'],
-            'text-size': 13,
-          },
-          paint: { 'text-color': '#ffffff' },
-        })
-
-        // Unclustered price-label symbol layer (pill background + text)
-        map.addLayer({
-          id: 'unclustered-bg',
-          type: 'circle',
-          source: 'listings',
-          filter: ['!', ['has', 'point_count']],
-          paint: {
-            'circle-color': '#ffffff',
-            'circle-radius': 22,
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#1a5f7a',
-          },
-        })
-
-        map.addLayer({
-          id: 'unclustered-label',
-          type: 'symbol',
-          source: 'listings',
-          filter: ['!', ['has', 'point_count']],
-          layout: {
-            'text-field': ['get', 'priceFormatted'],
-            'text-font': ['Noto Sans Bold'],
-            'text-size': 11,
-            'text-allow-overlap': true,
-          },
-          paint: {
-            'text-color': '#1a5f7a',
-          },
-        })
-
-        // Cluster click → zoom in
-        map.on('click', 'clusters', (e: any) => {
-          const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
-          const clusterId = features[0].properties.cluster_id
-          const source: any = map.getSource('listings')
-          source.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
-            if (err) return
-            map.easeTo({
-              center: features[0].geometry.coordinates,
-              zoom,
-            })
-          })
-        })
-
-        // Listing click → fly to + select
-        const onPointClick = (e: any) => {
-          const f = e.features && e.features[0]
-          if (!f) return
-          const id = Number(f.properties.id)
-          const listing = listings.find((l) => l.id === id)
-          if (!listing) return
-          map.flyTo({
-            center: [listing.lng, listing.lat],
-            zoom: Math.max(map.getZoom(), 14),
-            speed: 1.2,
-          })
-          setSelected(listing)
-        }
-        map.on('click', 'unclustered-label', onPointClick)
-        map.on('click', 'unclustered-bg', onPointClick)
-
-        // Cursor styling
-        ;['clusters', 'unclustered-bg', 'unclustered-label'].forEach((layer) => {
-          map.on('mouseenter', layer, () => (map.getCanvas().style.cursor = 'pointer'))
-          map.on('mouseleave', layer, () => (map.getCanvas().style.cursor = ''))
-        })
-
+        mapboxRef.current = mapboxgl
+        mapRef.current = map
+        renderMarkers(listings)
         setMapReady(true)
       }
+
+      const renderMarkers = (items: Listing[]) => {
+        // Clear existing markers
+        markersRef.current.forEach((mk) => mk.remove())
+        markersRef.current = []
+        items.forEach((l) => {
+          const el = document.createElement('button')
+          el.type = 'button'
+          el.className =
+            'vh-marker bg-white border-2 border-[#1a5f7a] text-[#1a5f7a] font-bold text-xs px-2 py-1 rounded-full shadow-md hover:bg-[#1a5f7a] hover:text-white transition-colors cursor-pointer whitespace-nowrap'
+          el.textContent = formatPriceFull(l.price)
+          el.addEventListener('click', (e) => {
+            e.stopPropagation()
+            map.flyTo({ center: [l.lng, l.lat], zoom: Math.max(map.getZoom(), 14), speed: 1.2 })
+            setSelected(l)
+          })
+          const mk = new mapboxgl.Marker({ element: el, anchor: 'center' })
+            .setLngLat([l.lng, l.lat])
+            .addTo(map)
+          markersRef.current.push(mk)
+        })
+      }
+
+      // Expose for effect below
+      ;(mapRef as any).renderMarkers = renderMarkers
 
       map.on('load', doSetup)
       map.on('styledata', doSetup)
       map.on('idle', doSetup)
-      // Also try immediately on next tick
       setTimeout(doSetup, 200)
       setTimeout(doSetup, 500)
       setTimeout(doSetup, 1000)
@@ -276,13 +193,11 @@ export default function MapClient({ listings }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Update source data when filters change
+  // Update markers when filters change
   useEffect(() => {
     if (!mapReady || !mapRef.current) return
-    const source = mapRef.current.getSource('listings')
-    if (source) {
-      source.setData(listingsToGeoJSON(filtered))
-    }
+    const rm = (mapRef as any).renderMarkers
+    if (typeof rm === 'function') rm(filtered)
   }, [filtered, mapReady])
 
   // Fly to listing when selected from sidebar
