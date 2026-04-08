@@ -156,7 +156,7 @@ export default function MapClient({ listings }: Props) {
           const el = document.createElement('button')
           el.type = 'button'
           el.className =
-            'vh-marker bg-white border-2 border-[#1a5f7a] text-[#1a5f7a] font-bold text-xs px-2 py-1 rounded-full shadow-md hover:bg-[#1a5f7a] hover:text-white transition-colors cursor-pointer whitespace-nowrap'
+            'vh-marker bg-white border border-[#1a5f7a] text-[#1a5f7a] font-semibold text-[10px] leading-none px-1.5 py-0.5 rounded-full shadow-sm hover:bg-[#1a5f7a] hover:text-white transition-colors cursor-pointer whitespace-nowrap'
           el.textContent = formatPriceFull(l.price)
           el.addEventListener('click', (e) => {
             e.stopPropagation()
