@@ -84,10 +84,19 @@ export default function MapClient({ listings }: Props) {
 
       const map: any = new mapboxgl.Map({
         container: mapContainerRef.current,
-        style: 'mapbox://styles/mapbox/light-v11',
-        bounds: HAMPTON_ROADS_BOUNDS,
-        fitBoundsOptions: { padding: 40 },
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-76.3, 36.85],
+        zoom: 9,
+        projection: 'mercator',
       })
+
+      // Force resize + fitBounds after render loop kicks in
+      setTimeout(() => {
+        try {
+          map.resize()
+          map.fitBounds(HAMPTON_ROADS_BOUNDS, { padding: 40, duration: 0 })
+        } catch {}
+      }, 100)
 
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
       map.addControl(new mapboxgl.GeolocateControl({ trackUserLocation: false }), 'top-right')
