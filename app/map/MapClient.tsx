@@ -7,8 +7,35 @@ import { formatPriceFull, getListingUrl } from '@/app/lib/listings'
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 
-// Hampton Roads static bounds [west, south, east, north]
+// Hampton Roads bounds: [west, south, east, north]
 const HAMPTON_ROADS_BOUNDS: [number, number, number, number] = [-76.85, 36.55, -76.15, 37.35]
+
+// CARTO Voyager raster tiles (known-good base map for mapbox-gl v3)
+const rasterStyle: any = {
+  version: 8,
+  sources: {
+    'carto-voyager': {
+      type: 'raster',
+      tiles: [
+        'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+        'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+        'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+        'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+      ],
+      tileSize: 256,
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    },
+  },
+  layers: [
+    {
+      id: 'carto-voyager-layer',
+      type: 'raster',
+      source: 'carto-voyager',
+      minzoom: 0,
+      maxzoom: 22,
+    },
+  ],
+}
 
 interface Filters {
   minPrice: number
@@ -23,25 +50,66 @@ interface Props {
   listings: Listing[]
 }
 
+// Short price formatter used for the pill text (e.g. $635K, $1.2M)
+function formatPriceShort(price: number): string {
+  if (price >= 1_000_000) {
+    const m = price / 1_000_000
+    return '$' + (m >= 10 ? Math.round(m) : m.toFixed(1).replace(/\.0$/, '')) + 'M'
+  }
+  if (price >= 1000) {
+    return '$' + Math.round(price / 1000) + 'K'
+  }
+  return '$' + price
+}
+
 export default function MapClient({ listings }: Props) {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
-  const markersRef = useRef<any[]>([])
   const mapboxRef = useRef<any>(null)
   const [mapReady, setMapReady] = useState(false)
   const [selected, setSelected] = useState<Listing | null>(null)
+  const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
   const [filters, setFilters] = useState<Filters>({
     minPrice: 0,
-    maxPrice: 2000000,
+    maxPrice: 10_000_000,
     beds: 0,
     baths: 0,
     city: '',
     propertyType: '',
   })
 
-  // Derived filtered listings
+  // Optional dev stress-test: ?stress=20000 generates synthetic points scattered
+  // across Hampton Roads. Used to confirm the GeoJSON + clustering pipeline can
+  // scale to the full ~17k REIN MLS feed without crashing.
+  const workingListings: Listing[] = useMemo(() => {
+    if (typeof window === 'undefined') return listings
+    const params = new URLSearchParams(window.location.search)
+    const stress = parseInt(params.get('stress') || '0', 10)
+    if (!stress || stress <= 0) return listings
+
+    const [w, s, e, n] = HAMPTON_ROADS_BOUNDS
+    const base = listings.length ? listings[0] : null
+    const synthetic: Listing[] = []
+    for (let i = 0; i < stress; i++) {
+      const lng = w + Math.random() * (e - w)
+      const lat = s + Math.random() * (n - s)
+      const price = 150_000 + Math.floor(Math.random() * 1_500_000)
+      synthetic.push({
+        ...(base as Listing),
+        id: 9_000_000 + i,
+        lat,
+        lng,
+        price,
+        address: `${i} Stress Test Way`,
+      } as Listing)
+    }
+    return [...listings, ...synthetic]
+  }, [listings])
+
+  // Filtered listings (same shape as before). These drive BOTH the map source
+  // and the sidebar card list, so the two stay perfectly in sync.
   const filtered = useMemo(() => {
-    return listings.filter((l) => {
+    return workingListings.filter((l) => {
       if (l.price < filters.minPrice) return false
       if (l.price > filters.maxPrice) return false
       if (filters.beds && l.beds < filters.beds) return false
@@ -50,139 +118,223 @@ export default function MapClient({ listings }: Props) {
       if (filters.propertyType && l.propertyType !== filters.propertyType) return false
       return true
     })
-  }, [listings, filters])
+  }, [workingListings, filters])
 
-  const cityOptions = useMemo(() => {
-    return Array.from(new Set(listings.map((l) => l.city))).sort()
-  }, [listings])
-
-  const typeOptions = useMemo(() => {
-    return Array.from(new Set(listings.map((l) => l.propertyType))).sort()
-  }, [listings])
-
-  // Initialize map once
+  // ---------------------------------------------------------------------------
+  // Initialize map once on mount
+  // ---------------------------------------------------------------------------
   useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return
-    if (!MAPBOX_TOKEN) {
-      console.error('NEXT_PUBLIC_MAPBOX_TOKEN is missing')
-      return
-    }
-
-    // Inject mapbox-gl CSS once
-    if (typeof document !== 'undefined' && !document.getElementById('mapbox-gl-css')) {
-      const link = document.createElement('link')
-      link.id = 'mapbox-gl-css'
-      link.rel = 'stylesheet'
-      link.href = 'https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css'
-      document.head.appendChild(link)
-    }
+    if (!mapContainerRef.current) return
+    if (mapRef.current) return
 
     let cancelled = false
     ;(async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mapboxgl: any = (await import('mapbox-gl')).default
-      if (cancelled || !mapContainerRef.current) return
+      const mapboxgl = (await import('mapbox-gl')).default
+      if (cancelled) return
       mapboxgl.accessToken = MAPBOX_TOKEN
+      mapboxRef.current = mapboxgl
 
-      // Use inline raster style with OSM tiles to bypass Mapbox v3 vector tile pipeline
-      const rasterStyle: any = {
-        version: 8,
-        sources: {
-          'osm-raster': {
-            type: 'raster',
-            tiles: [
-              'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-              'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-              'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-              'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-            ],
-            tileSize: 256,
-            attribution: '&copy; OpenStreetMap ÃÂ© CARTO',
-          },
-        },
-        layers: [
-          {
-            id: 'osm-tiles',
-            type: 'raster',
-            source: 'osm-raster',
-            minzoom: 0,
-            maxzoom: 19,
-          },
-        ],
-        glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
-      }
-
-      const map: any = new mapboxgl.Map({
-        container: mapContainerRef.current,
+      const map = new mapboxgl.Map({
+        container: mapContainerRef.current!,
         style: rasterStyle,
-        center: [-76.3, 36.85],
-        zoom: 9,
-        projection: 'mercator',
+        center: [-76.2, 36.85],
+        zoom: 10,
+        maxBounds: [
+          [-77.3, 36.2],
+          [-75.7, 37.7],
+        ],
       })
-
-      // Force resize + fitBounds after render loop kicks in
-      setTimeout(() => {
-        try {
-          map.resize()
-          map.fitBounds(HAMPTON_ROADS_BOUNDS, { padding: 40, duration: 0 })
-        } catch {}
-      }, 100)
-
-      map.addControl(new mapboxgl.NavigationControl(), 'top-right')
-      map.addControl(new mapboxgl.GeolocateControl({ trackUserLocation: false }), 'top-right')
-
-      // Keep render loop alive for first 3 seconds to work around v3 loop-stall
-      let repaintCount = 0
-      const repaintInterval = setInterval(() => {
-        if (repaintCount++ > 30 || cancelled) { clearInterval(repaintInterval); return }
-        try { map.triggerRepaint() } catch {}
-      }, 100)
-
-      // Use DOM Markers instead of GeoJSON source (vector tile pipeline is broken in v3)
-      let setupDone = false
-      const doSetup = () => {
-        if (setupDone) return
-        setupDone = true
-        mapboxRef.current = mapboxgl
-        mapRef.current = map
-        renderMarkers(listings)
-        setMapReady(true)
-      }
-
-      const renderMarkers = (items: Listing[]) => {
-        // Clear existing markers
-        markersRef.current.forEach((mk) => mk.remove())
-        markersRef.current = []
-        
-        items.forEach((l) => {
-          const el = document.createElement('button')
-          el.type = 'button'
-          el.className =
-            'vh-marker bg-white border border-[#1a5f7a] text-[#1a5f7a] font-semibold text-[10px] leading-none px-1.5 py-0.5 rounded-full shadow-sm hover:bg-[#1a5f7a] hover:text-white transition-colors cursor-pointer whitespace-nowrap'
-          el.textContent = formatPriceFull(l.price)
-          el.addEventListener('click', (e) => {
-            e.stopPropagation()
-            map.flyTo({ center: [l.lng, l.lat], zoom: Math.max(map.getZoom(), 14), speed: 1.2 })
-            setSelected(l)
-          })
-          const mk = new mapboxgl.Marker({ element: el, anchor: 'center' })
-            .setLngLat([l.lng, l.lat])
-            .addTo(map)
-          markersRef.current.push(mk)
-        })
-      }
-
-      // Expose for effect below
-      ;(mapRef as any).renderMarkers = renderMarkers
-
-      map.on('load', doSetup)
-      map.on('styledata', doSetup)
-      map.on('idle', doSetup)
-      setTimeout(doSetup, 200)
-      setTimeout(doSetup, 500)
-      setTimeout(doSetup, 1000)
-
       mapRef.current = map
+
+      map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
+
+      map.on('load', () => {
+        // -------------------------------------------------------------------
+        // Listings GeoJSON source with server-side (web-worker) clustering
+        // -------------------------------------------------------------------
+        map.addSource('listings', {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: [] },
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50,
+        })
+
+        // Cluster circles (visible at low zoom)
+        map.addLayer({
+          id: 'clusters',
+          type: 'circle',
+          source: 'listings',
+          filter: ['has', 'point_count'],
+          paint: {
+            'circle-color': [
+              'step',
+              ['get', 'point_count'],
+              '#3b82f6',
+              25,
+              '#2563eb',
+              100,
+              '#1d4ed8',
+            ],
+            'circle-radius': [
+              'step',
+              ['get', 'point_count'],
+              18,
+              25,
+              24,
+              100,
+              32,
+            ],
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#ffffff',
+            'circle-opacity': 0.9,
+          },
+        })
+
+        map.addLayer({
+          id: 'cluster-count',
+          type: 'symbol',
+          source: 'listings',
+          filter: ['has', 'point_count'],
+          layout: {
+            'text-field': ['get', 'point_count_abbreviated'],
+            'text-size': 13,
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          },
+          paint: {
+            'text-color': '#ffffff',
+          },
+        })
+
+        // Unclustered dot (visible when zoomed out past the pill threshold)
+        map.addLayer({
+          id: 'unclustered-dot',
+          type: 'circle',
+          source: 'listings',
+          filter: ['!', ['has', 'point_count']],
+          maxzoom: 13,
+          paint: {
+            'circle-color': '#ffffff',
+            'circle-radius': 6,
+            'circle-stroke-width': 2,
+            // NOTE: pill/dot color hook — swap these for data-driven expressions later
+            // e.g. ['case', ['==', ['get','status'],'pending'], '#eab308', '#111827']
+            'circle-stroke-color': '#111827',
+          },
+        })
+
+        // Unclustered price pills (visible when zoomed in, Zillow-style)
+        map.addLayer({
+          id: 'unclustered-pill',
+          type: 'symbol',
+          source: 'listings',
+          filter: ['!', ['has', 'point_count']],
+          minzoom: 13,
+          layout: {
+            'text-field': ['get', 'priceShort'],
+            'text-size': 12,
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-padding': 2,
+            'text-allow-overlap': false,
+            'text-ignore-placement': false,
+          },
+          paint: {
+            // NOTE: pill color hook — default is black text on the white pill background
+            // below. To color-code later (e.g. viewed=gray, pending=yellow, sold=red),
+            // replace the constant strings with ['case', ...] / ['match', ...] expressions.
+            'text-color': '#111827',
+            'text-halo-color': '#ffffff',
+            'text-halo-width': 8,
+            'text-halo-blur': 0,
+          },
+        })
+
+        // -------------------------------------------------------------------
+        // Interaction: cluster click → zoom in
+        // -------------------------------------------------------------------
+        map.on('click', 'clusters', (e: any) => {
+          const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
+          if (!features.length) return
+          const clusterId = features[0].properties.cluster_id
+          const source: any = map.getSource('listings')
+          source.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
+            if (err) return
+            map.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom + 0.2,
+            })
+          })
+        })
+        map.on('mouseenter', 'clusters', () => {
+          map.getCanvas().style.cursor = 'pointer'
+        })
+        map.on('mouseleave', 'clusters', () => {
+          map.getCanvas().style.cursor = ''
+        })
+
+        // Interaction: pill/dot click → select listing
+        const selectFromFeature = (e: any) => {
+          const f = e.features && e.features[0]
+          if (!f) return
+          const id = f.properties.id as number
+          const found = filteredRef.current.find((l) => l.id === id)
+          if (found) setSelected(found)
+        }
+        map.on('click', 'unclustered-pill', selectFromFeature)
+        map.on('click', 'unclustered-dot', selectFromFeature)
+        map.on('mouseenter', 'unclustered-pill', () => {
+          map.getCanvas().style.cursor = 'pointer'
+        })
+        map.on('mouseleave', 'unclustered-pill', () => {
+          map.getCanvas().style.cursor = ''
+        })
+        map.on('mouseenter', 'unclustered-dot', () => {
+          map.getCanvas().style.cursor = 'pointer'
+        })
+        map.on('mouseleave', 'unclustered-dot', () => {
+          map.getCanvas().style.cursor = ''
+        })
+
+        // -------------------------------------------------------------------
+        // Viewport-synced sidebar: after every pan/zoom, compute which listing
+        // features are currently rendered and push their IDs into state.
+        // -------------------------------------------------------------------
+        const syncVisible = () => {
+          const feats = map.queryRenderedFeatures({
+            layers: ['unclustered-pill', 'unclustered-dot', 'clusters'],
+          })
+          const ids = new Set<number>()
+          feats.forEach((f: any) => {
+            if (f.properties && f.properties.id != null && !f.properties.cluster) {
+              ids.add(f.properties.id as number)
+            }
+            // Expand cluster leaves for the sidebar too, so cards reflect all
+            // listings inside currently-visible clusters (capped for perf).
+            if (f.properties && f.properties.cluster) {
+              const source: any = map.getSource('listings')
+              source.getClusterLeaves(
+                f.properties.cluster_id,
+                100,
+                0,
+                (err: any, leaves: any[]) => {
+                  if (err || !leaves) return
+                  leaves.forEach((leaf) => {
+                    if (leaf.properties && leaf.properties.id != null) {
+                      ids.add(leaf.properties.id as number)
+                    }
+                  })
+                  setVisibleIds(new Set(ids))
+                }
+              )
+            }
+          })
+          setVisibleIds(ids)
+        }
+        map.on('moveend', syncVisible)
+        map.on('idle', syncVisible)
+
+        setMapReady(true)
+      })
     })()
 
     return () => {
@@ -192,238 +344,227 @@ export default function MapClient({ listings }: Props) {
         mapRef.current = null
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Update markers when filters change
+  // Keep a ref to filtered so click handlers always see the latest list
+  // without needing to re-register themselves.
+  const filteredRef = useRef<Listing[]>(filtered)
   useEffect(() => {
-    if (!mapReady || !mapRef.current) return
-    const rm = (mapRef as any).renderMarkers
-    if (typeof rm === 'function') rm(filtered)
+    filteredRef.current = filtered
+  }, [filtered])
+
+  // ---------------------------------------------------------------------------
+  // Push filtered listings into the GeoJSON source whenever they change.
+  // This is the ONLY place marker data flows into the map — no DOM markers.
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !mapReady) return
+    const source: any = map.getSource('listings')
+    if (!source) return
+
+    const features = filtered.map((l) => ({
+      type: 'Feature' as const,
+      geometry: {
+        type: 'Point' as const,
+        coordinates: [l.lng, l.lat],
+      },
+      properties: {
+        id: l.id,
+        price: l.price,
+        priceShort: formatPriceShort(l.price),
+        slug: getListingUrl(l),
+        city: l.city,
+        propertyType: l.propertyType,
+        status: l.status || 'active',
+        // Future color-coding hook — set these to real values when ready.
+        viewed: false,
+      },
+    }))
+
+    source.setData({ type: 'FeatureCollection', features })
   }, [filtered, mapReady])
 
-  // Fly to listing when selected from sidebar
-  const handleSidebarClick = (listing: Listing) => {
-    setSelected(listing)
-    if (mapRef.current) {
-      mapRef.current.flyTo({
-        center: [listing.lng, listing.lat],
-        zoom: 14,
-        speed: 1.2,
-      })
-    }
-  }
+  // Derived: cards to show in the sidebar = filtered ∩ visibleIds
+  const visibleCards = useMemo(() => {
+    if (visibleIds.size === 0) return filtered.slice(0, 50)
+    return filtered.filter((l) => visibleIds.has(l.id)).slice(0, 100)
+  }, [filtered, visibleIds])
+
+  const cities = useMemo(
+    () => Array.from(new Set(workingListings.map((l) => l.city))).sort(),
+    [workingListings]
+  )
+  const propertyTypes = useMemo(
+    () => Array.from(new Set(workingListings.map((l) => l.propertyType).filter(Boolean))).sort(),
+    [workingListings]
+  )
 
   return (
-    <div className="flex flex-col lg:flex-row h-[calc(100vh-4rem)] bg-gray-50">
-      {/* Filter + Results Sidebar */}
-      <aside className="w-full lg:w-[380px] border-r border-gray-200 bg-white overflow-y-auto">
-        <div className="p-5 border-b border-gray-200 sticky top-0 bg-white z-10">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Filter Listings</h2>
-
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Min Price</label>
-                <select
-                  value={filters.minPrice}
-                  onChange={(e) => setFilters({ ...filters, minPrice: Number(e.target.value) })}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
-                >
-                  <option value={0}>Any</option>
-                  <option value={200000}>$200K</option>
-                  <option value={300000}>$300K</option>
-                  <option value={400000}>$400K</option>
-                  <option value={500000}>$500K</option>
-                  <option value={750000}>$750K</option>
-                  <option value={1000000}>$1M</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Max Price</label>
-                <select
-                  value={filters.maxPrice}
-                  onChange={(e) => setFilters({ ...filters, maxPrice: Number(e.target.value) })}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
-                >
-                  <option value={2000000}>Any</option>
-                  <option value={300000}>$300K</option>
-                  <option value={400000}>$400K</option>
-                  <option value={500000}>$500K</option>
-                  <option value={750000}>$750K</option>
-                  <option value={1000000}>$1M</option>
-                  <option value={1500000}>$1.5M</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Beds</label>
-                <select
-                  value={filters.beds}
-                  onChange={(e) => setFilters({ ...filters, beds: Number(e.target.value) })}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
-                >
-                  <option value={0}>Any</option>
-                  <option value={1}>1+</option>
-                  <option value={2}>2+</option>
-                  <option value={3}>3+</option>
-                  <option value={4}>4+</option>
-                  <option value={5}>5+</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Baths</label>
-                <select
-                  value={filters.baths}
-                  onChange={(e) => setFilters({ ...filters, baths: Number(e.target.value) })}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
-                >
-                  <option value={0}>Any</option>
-                  <option value={1}>1+</option>
-                  <option value={2}>2+</option>
-                  <option value={3}>3+</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs text-gray-600 mb-1">City</label>
-              <select
-                value={filters.city}
-                onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
-              >
-                <option value="">All Cities</option>
-                {cityOptions.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs text-gray-600 mb-1">Property Type</label>
-              <select
-                value={filters.propertyType}
-                onChange={(e) => setFilters({ ...filters, propertyType: e.target.value })}
-                className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
-              >
-                <option value="">All Types</option>
-                {typeOptions.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              onClick={() =>
-                setFilters({
-                  minPrice: 0,
-                  maxPrice: 2000000,
-                  beds: 0,
-                  baths: 0,
-                  city: '',
-                  propertyType: '',
-                })
-              }
-              className="w-full text-xs text-gray-600 underline hover:text-gray-900"
-            >
-              Reset filters
-            </button>
-          </div>
-        </div>
-
-        <div className="p-4">
-          <div className="text-sm text-gray-600 mb-3">
-            {filtered.length} of {listings.length} listings
-          </div>
-          <div className="space-y-3">
-            {filtered.map((l) => (
-              <button
-                key={l.id}
-                onClick={() => handleSidebarClick(l)}
-                className={`w-full text-left bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow ${
-                  selected?.id === l.id ? 'border-[#1a5f7a] ring-2 ring-[#1a5f7a]/20' : 'border-gray-200'
-                }`}
-              >
-                <div className="flex gap-3 p-3">
-                  <img
-                    src={l.img}
-                    alt={l.address}
-                    className="w-24 h-20 object-cover rounded flex-shrink-0 bg-gray-100"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-gray-900">{formatPriceFull(l.price)}</div>
-                    <div className="text-xs text-gray-600 truncate">{l.address}</div>
-                    <div className="text-xs text-gray-500">
-                      {l.city}, {l.state}
-                    </div>
-                    <div className="text-xs text-gray-700 mt-1">
-                      {l.beds} bd ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {l.baths} ba ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {l.sqft.toLocaleString()} sqft
-                    </div>
-                  </div>
-                </div>
-              </button>
-            ))}
-            {filtered.length === 0 && (
-              <div className="text-sm text-gray-500 italic text-center py-8">
-                No listings match your filters.
-              </div>
-            )}
-          </div>
-        </div>
-      </aside>
+    <div className="flex h-[calc(100vh-80px)] w-full flex-col lg:flex-row">
+      {/* Filter bar */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 bg-white p-3 lg:hidden">
+        <input
+          type="number"
+          placeholder="Min $"
+          className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+          onChange={(e) =>
+            setFilters((f) => ({ ...f, minPrice: Number(e.target.value) || 0 }))
+          }
+        />
+        <input
+          type="number"
+          placeholder="Max $"
+          className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+          onChange={(e) =>
+            setFilters((f) => ({
+              ...f,
+              maxPrice: Number(e.target.value) || 10_000_000,
+            }))
+          }
+        />
+        <select
+          className="rounded border border-gray-300 px-2 py-1 text-sm"
+          onChange={(e) => setFilters((f) => ({ ...f, city: e.target.value }))}
+        >
+          <option value="">All cities</option>
+          {cities.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Map */}
-      <div className="relative flex-1">
-        <div ref={mapContainerRef} className="h-full w-full" />
+      <div className="relative h-[50vh] w-full lg:h-full lg:w-3/5">
+        <div ref={mapContainerRef} className="absolute inset-0" />
+      </div>
 
-        {/* Selected listing floating card */}
-        {selected && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-10">
-            <button
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelected(null) }}
-              className="absolute top-2 right-2 z-20 bg-white/90 hover:bg-white rounded-full w-7 h-7 flex items-center justify-center text-gray-600 shadow"
-              aria-label="Close"
+      {/* Sidebar: cards synced to visible features */}
+      <div className="h-[50vh] w-full overflow-y-auto border-l border-gray-200 bg-gray-50 lg:h-full lg:w-2/5">
+        <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-3">
+          <div className="hidden flex-wrap items-center gap-2 lg:flex">
+            <input
+              type="number"
+              placeholder="Min $"
+              className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, minPrice: Number(e.target.value) || 0 }))
+              }
+            />
+            <input
+              type="number"
+              placeholder="Max $"
+              className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+              onChange={(e) =>
+                setFilters((f) => ({
+                  ...f,
+                  maxPrice: Number(e.target.value) || 10_000_000,
+                }))
+              }
+            />
+            <select
+              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, beds: Number(e.target.value) || 0 }))
+              }
             >
-              ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
-            </button>
-            <Link href={getListingUrl(selected)} className="block hover:bg-gray-50 transition-colors cursor-pointer">
-              <img src={selected.img} alt={selected.address} className="w-full h-44 object-cover bg-gray-100" />
-              <div className="p-4">
-                <div className="flex items-baseline justify-between mb-1">
-                  <div className="text-xl font-bold text-gray-900">{formatPriceFull(selected.price)}</div>
-                  <div className="text-xs px-2 py-0.5 rounded bg-green-100 text-green-800">{selected.status}</div>
-                </div>
-                <div className="text-sm text-gray-700">{selected.address}</div>
-                <div className="text-xs text-gray-500 mb-2">
-                  {selected.city}, {selected.state} {selected.zip}
-                </div>
-                <div className="text-sm text-gray-800 mb-3">
-                  {selected.beds} bd ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {selected.baths} ba
-                  {selected.halfBaths ? ` ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ ${selected.halfBaths} half` : ''} ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {selected.sqft.toLocaleString()} sqft
-                </div>
-                <div className="block w-full text-center bg-[#1a5f7a] text-white py-2 rounded-lg font-medium text-sm">
-                  View Details
+              <option value="0">Any beds</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+              <option value="5">5+</option>
+            </select>
+            <select
+              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, baths: Number(e.target.value) || 0 }))
+              }
+            >
+              <option value="0">Any baths</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+            </select>
+            <select
+              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, city: e.target.value }))
+              }
+            >
+              <option value="">All cities</option>
+              {cities.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <select
+              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, propertyType: e.target.value }))
+              }
+            >
+              <option value="">All types</option>
+              {propertyTypes.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mt-2 text-xs text-gray-600">
+            Showing {visibleCards.length} of {filtered.length} listings in view
+          </div>
+        </div>
+
+        <div className="divide-y divide-gray-200">
+          {visibleCards.map((l) => (
+            <Link
+              key={l.id}
+              href={getListingUrl(l)}
+              className="block p-3 transition hover:bg-white"
+              onMouseEnter={() => setSelected(l)}
+            >
+              <div className="flex gap-3">
+                <div
+                  className="h-20 w-28 flex-shrink-0 rounded bg-gradient-to-br from-blue-100 to-blue-300"
+                  style={
+                    l.photos && l.photos[0]
+                      ? {
+                          backgroundImage: `url(${l.photos[0]})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                        }
+                      : undefined
+                  }
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="text-lg font-bold text-gray-900">
+                    {formatPriceFull(l.price)}
+                  </div>
+                  <div className="text-sm text-gray-700">
+                    {l.beds} bd &middot; {l.baths} ba &middot;{' '}
+                    {l.sqft?.toLocaleString()} sqft
+                  </div>
+                  <div className="truncate text-sm text-gray-600">
+                    {l.address}
+                  </div>
+                  <div className="truncate text-xs text-gray-500">
+                    {l.city}, {l.state} {l.zip}
+                  </div>
                 </div>
               </div>
             </Link>
-          </div>
-        )}
-
-        {!MAPBOX_TOKEN && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <div className="text-center p-6">
-              <div className="text-gray-900 font-semibold mb-2">Map unavailable</div>
-              <div className="text-sm text-gray-600">NEXT_PUBLIC_MAPBOX_TOKEN is not configured.</div>
+          ))}
+          {visibleCards.length === 0 && (
+            <div className="p-6 text-center text-sm text-gray-500">
+              No listings in the current view. Try zooming out or adjusting filters.
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )
