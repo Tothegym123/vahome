@@ -82,9 +82,36 @@ export default function MapClient({ listings }: Props) {
       if (cancelled || !mapContainerRef.current) return
       mapboxgl.accessToken = MAPBOX_TOKEN
 
+      // Use inline raster style with OSM tiles to bypass Mapbox v3 vector tile pipeline
+      const rasterStyle: any = {
+        version: 8,
+        sources: {
+          'osm-raster': {
+            type: 'raster',
+            tiles: [
+              'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            ],
+            tileSize: 256,
+            attribution: '&copy; OpenStreetMap contributors',
+          },
+        },
+        layers: [
+          {
+            id: 'osm-tiles',
+            type: 'raster',
+            source: 'osm-raster',
+            minzoom: 0,
+            maxzoom: 19,
+          },
+        ],
+        glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+      }
+
       const map: any = new mapboxgl.Map({
         container: mapContainerRef.current,
-        style: 'mapbox://styles/mapbox/streets-v12',
+        style: rasterStyle,
         center: [-76.3, 36.85],
         zoom: 9,
         projection: 'mercator',
@@ -141,7 +168,7 @@ export default function MapClient({ listings }: Props) {
           filter: ['has', 'point_count'],
           layout: {
             'text-field': '{point_count_abbreviated}',
-            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-font': ['Noto Sans Bold'],
             'text-size': 13,
           },
           paint: { 'text-color': '#ffffff' },
@@ -168,7 +195,7 @@ export default function MapClient({ listings }: Props) {
           filter: ['!', ['has', 'point_count']],
           layout: {
             'text-field': ['get', 'priceFormatted'],
-            'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
+            'text-font': ['Noto Sans Bold'],
             'text-size': 11,
             'text-allow-overlap': true,
           },
