@@ -77,11 +77,12 @@ export default function MapClient({ listings }: Props) {
 
     let cancelled = false
     ;(async () => {
-      const mapboxgl = (await import('mapbox-gl')).default
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mapboxgl: any = (await import('mapbox-gl')).default
       if (cancelled || !mapContainerRef.current) return
       mapboxgl.accessToken = MAPBOX_TOKEN
 
-      const map = new mapboxgl.Map({
+      const map: any = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: 'mapbox://styles/mapbox/light-v11',
         bounds: HAMPTON_ROADS_BOUNDS,
