@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const searchTabs = [
   { label: 'Buy', active: true },
@@ -9,13 +10,24 @@ const searchTabs = [
 ]
 
 export default function SearchBar() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState('Buy')
   const [query, setQuery] = useState('')
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Route to listings page with search query
-    console.log('Search:', activeTab, query)
+    const q = query.trim()
+    if (activeTab === 'Buy') {
+      if (q) {
+        router.push(`/listings?q=${encodeURIComponent(q)}`)
+      } else {
+        router.push('/map')
+      }
+    } else if (activeTab === 'Sell') {
+      router.push('/sell')
+    } else if (activeTab === 'Estimate') {
+      router.push(`/contact?intent=estimate${q ? `&address=${encodeURIComponent(q)}` : ''}`)
+    }
   }
 
   return (
@@ -25,6 +37,7 @@ export default function SearchBar() {
         {searchTabs.map((tab) => (
           <button
             key={tab.label}
+            type="button"
             onClick={() => setActiveTab(tab.label)}
             className={`px-6 py-2 rounded-t-lg text-sm font-semibold transition-all ${
               activeTab === tab.label
@@ -48,13 +61,19 @@ export default function SearchBar() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="City, Address, Zip, or Neighborhood"
+              placeholder={
+                activeTab === 'Buy'
+                  ? 'City, Address, Zip, or Neighborhood'
+                  : activeTab === 'Sell'
+                  ? 'Tell us about your home (optional)'
+                  : 'Enter your home address'
+              }
               className="w-full py-4 px-3 text-base text-gray-800 placeholder-gray-400 focus:outline-none"
             />
           </div>
           <button
             type="submit"
-            className="px-8 py-4 bg-primary-500 text-white font-semibold text-base hover:bg-primary-600 transition-colors"
+            className="bg-primary-500 hover:bg-primary-600 text-white font-semibold px-8 transition-colors"
           >
             Search
           </button>
