@@ -237,12 +237,12 @@ export default function HomeClient() {
         .military .footer-bg-c { background: #0B1A2B; border-top: 1px solid rgba(197,165,90,0.08); }
         .military .input-c { color: #fff; }
         .military .input-c::placeholder { color: rgba(255,255,255,0.2); }
-        .toggle-track { width: 56px; height: 28px; border-radius: 999px; position: relative; cursor: pointer; transition: all 0.4s ease; }
+        .toggle-track { width: 72px; height: 36px; border-radius: 999px; position: relative; cursor: pointer; transition: all 0.4s ease; }
         .civilian .toggle-track { background: #e5e7eb; }
         .military .toggle-track { background: rgba(197,165,90,0.3); }
-        .toggle-thumb { width: 22px; height: 22px; border-radius: 50%; position: absolute; top: 3px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; justify-content: center; font-size: 11px; }
-        .civilian .toggle-thumb { left: 3px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-        .military .toggle-thumb { left: 31px; background: #C5A55A; box-shadow: 0 2px 12px rgba(197,165,90,0.4); }
+        .toggle-thumb { width: 28px; height: 28px; border-radius: 50%; position: absolute; top: 4px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .civilian .toggle-thumb { left: 4px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .military .toggle-thumb { left: 40px; background: #C5A55A; box-shadow: 0 2px 12px rgba(197,165,90,0.4); }
         .mil-only { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.6s ease, opacity 0.5s ease, margin 0.5s ease; margin: 0; }
         .military .mil-only { max-height: 2000px; opacity: 1; }
         .mode-flash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 100; opacity: 0; transition: opacity 0.3s ease; }
@@ -302,13 +302,13 @@ export default function HomeClient() {
         <section className="hero-bg morph pt-24 pb-20 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="fade flex items-center justify-center gap-3 mb-8">
-              <span className="text-xs font-semibold text-muted-themed morph">Civilian</span>
+              <span className="text-sm font-semibold text-muted-themed morph">Civilian</span>
               <div className="toggle-track" onClick={toggleMode}>
                 <div className="toggle-thumb">
                   <span>{isMil ? '\u{1F396}\uFE0F' : '\u{1F3E0}'}</span>
                 </div>
               </div>
-              <span className="text-xs font-semibold text-muted-themed morph">Military</span>
+              <span className="text-sm font-semibold text-muted-themed morph">Military</span>
               <div style={{width:1,height:20,margin:'0 8px'}} className="divider-c"></div>
               <button onClick={toggleTheme} className="theme-toggle-btn" title={theme === 'bright' ? 'Switch to dark mode' : 'Switch to bright mode'}>
                 {theme === 'bright' ? (
