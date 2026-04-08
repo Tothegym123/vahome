@@ -128,7 +128,17 @@ export default function MapClient({ listings }: Props) {
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
       map.addControl(new mapboxgl.GeolocateControl({ trackUserLocation: false }), 'top-right')
 
-      map.on('load', () => {
+      // Keep render loop alive for first 3 seconds to work around v3 loop-stall
+      let repaintCount = 0
+      const repaintInterval = setInterval(() => {
+        if (repaintCount++ > 30 || cancelled) { clearInterval(repaintInterval); return }
+        try { map.triggerRepaint() } catch {}
+      }, 100)
+
+      let setupDone = false
+      const doSetup = () => {
+        if (setupDone || !map.isStyleLoaded()) return
+        setupDone = true
         // GeoJSON source with clustering
         map.addSource('listings', {
           type: 'geojson',
@@ -242,7 +252,15 @@ export default function MapClient({ listings }: Props) {
         })
 
         setMapReady(true)
-      })
+      }
+
+      map.on('load', doSetup)
+      map.on('styledata', doSetup)
+      map.on('idle', doSetup)
+      // Also try immediately on next tick
+      setTimeout(doSetup, 200)
+      setTimeout(doSetup, 500)
+      setTimeout(doSetup, 1000)
 
       mapRef.current = map
     })()
