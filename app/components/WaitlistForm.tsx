@@ -27,6 +27,18 @@ export default function WaitlistForm({ type, title }: WaitlistFormProps) {
         .insert({ type, name, email, phone })
         .select()
       if (insertError) throw insertError
+      // Fire-and-forget notification to Tom via /api/leads
+      fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: type === 'agent' ? 'waitlist_agent' : 'waitlist_lender',
+          source_detail: 'waitlist',
+          name,
+          email,
+          phone,
+        }),
+      }).catch(() => {})
       setSubmitted(true)
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.')
