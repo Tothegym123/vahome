@@ -153,7 +153,7 @@ export default function MapClient({ listings }: Props) {
         markersRef.current.forEach((mk) => mk.remove())
         markersRef.current = []
         
-        // Military bases overlay (SVG â vector layers broken in v3)
+        // Military bases overlay (SVG Ã¢ÂÂ vector layers broken in v3)
         if (!(map as any).__vhBases) {
           ;(map as any).__vhBases = true
           const container = map.getContainer() as HTMLElement
@@ -193,7 +193,7 @@ export default function MapClient({ listings }: Props) {
                     svg.appendChild(path)
                   }
                   const nm: string = (feat.properties && feat.properties.name) || ""
-                  if (nm && cn > 0 && zm >= 10) {
+                  if (nm && cn > 0) {
                     const tx = document.createElementNS('http://www.w3.org/2000/svg','text')
                     tx.setAttribute('x', String(cx/cn))
                     tx.setAttribute('y', String(cy/cn))
@@ -427,7 +427,7 @@ export default function MapClient({ listings }: Props) {
                       {l.city}, {l.state}
                     </div>
                     <div className="text-xs text-gray-700 mt-1">
-                      {l.beds} bd â¢ {l.baths} ba â¢ {l.sqft.toLocaleString()} sqft
+                      {l.beds} bd Ã¢ÂÂ¢ {l.baths} ba Ã¢ÂÂ¢ {l.sqft.toLocaleString()} sqft
                     </div>
                   </div>
                 </div>
@@ -454,7 +454,7 @@ export default function MapClient({ listings }: Props) {
               className="absolute top-2 right-2 z-20 bg-white/90 hover:bg-white rounded-full w-7 h-7 flex items-center justify-center text-gray-600 shadow"
               aria-label="Close"
             >
-              Ã
+              ÃÂ
             </button>
             <Link href={getListingUrl(selected)} className="block hover:bg-gray-50 transition-colors cursor-pointer">
               <img src={selected.img} alt={selected.address} className="w-full h-44 object-cover bg-gray-100" />
@@ -468,8 +468,8 @@ export default function MapClient({ listings }: Props) {
                   {selected.city}, {selected.state} {selected.zip}
                 </div>
                 <div className="text-sm text-gray-800 mb-3">
-                  {selected.beds} bd â¢ {selected.baths} ba
-                  {selected.halfBaths ? ` â¢ ${selected.halfBaths} half` : ''} â¢ {selected.sqft.toLocaleString()} sqft
+                  {selected.beds} bd Ã¢ÂÂ¢ {selected.baths} ba
+                  {selected.halfBaths ? ` Ã¢ÂÂ¢ ${selected.halfBaths} half` : ''} Ã¢ÂÂ¢ {selected.sqft.toLocaleString()} sqft
                 </div>
                 <div className="block w-full text-center bg-[#1a5f7a] text-white py-2 rounded-lg font-medium text-sm">
                   View Details
