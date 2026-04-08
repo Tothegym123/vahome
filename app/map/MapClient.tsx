@@ -385,33 +385,32 @@ export default function MapClient({ listings }: Props) {
         {selected && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-10">
             <button
-              onClick={() => setSelected(null)}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelected(null) }}
               className="absolute top-2 right-2 z-20 bg-white/90 hover:bg-white rounded-full w-7 h-7 flex items-center justify-center text-gray-600 shadow"
               aria-label="Close"
             >
               ×
             </button>
-            <img src={selected.img} alt={selected.address} className="w-full h-44 object-cover bg-gray-100" />
-            <div className="p-4">
-              <div className="flex items-baseline justify-between mb-1">
-                <div className="text-xl font-bold text-gray-900">{formatPriceFull(selected.price)}</div>
-                <div className="text-xs px-2 py-0.5 rounded bg-green-100 text-green-800">{selected.status}</div>
+            <Link href={getListingUrl(selected)} className="block hover:bg-gray-50 transition-colors cursor-pointer">
+              <img src={selected.img} alt={selected.address} className="w-full h-44 object-cover bg-gray-100" />
+              <div className="p-4">
+                <div className="flex items-baseline justify-between mb-1">
+                  <div className="text-xl font-bold text-gray-900">{formatPriceFull(selected.price)}</div>
+                  <div className="text-xs px-2 py-0.5 rounded bg-green-100 text-green-800">{selected.status}</div>
+                </div>
+                <div className="text-sm text-gray-700">{selected.address}</div>
+                <div className="text-xs text-gray-500 mb-2">
+                  {selected.city}, {selected.state} {selected.zip}
+                </div>
+                <div className="text-sm text-gray-800 mb-3">
+                  {selected.beds} bd • {selected.baths} ba
+                  {selected.halfBaths ? ` • ${selected.halfBaths} half` : ''} • {selected.sqft.toLocaleString()} sqft
+                </div>
+                <div className="block w-full text-center bg-[#1a5f7a] text-white py-2 rounded-lg font-medium text-sm">
+                  View Details
+                </div>
               </div>
-              <div className="text-sm text-gray-700">{selected.address}</div>
-              <div className="text-xs text-gray-500 mb-2">
-                {selected.city}, {selected.state} {selected.zip}
-              </div>
-              <div className="text-sm text-gray-800 mb-3">
-                {selected.beds} bd • {selected.baths} ba
-                {selected.halfBaths ? ` • ${selected.halfBaths} half` : ''} • {selected.sqft.toLocaleString()} sqft
-              </div>
-              <Link
-                href={getListingUrl(selected)}
-                className="block w-full text-center bg-[#1a5f7a] hover:bg-[#0f4c75] text-white py-2 rounded-lg font-medium text-sm transition-colors"
-              >
-                View Details
-              </Link>
-            </div>
+            </Link>
           </div>
         )}
 
