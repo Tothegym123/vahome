@@ -1,10 +1,15 @@
-import MapClient from './MapClient';
+// app/map/page.tsx — Server component
+import type { Metadata } from 'next'
+import MapClient from './MapClient'
+import { loadRetsListings } from '@/app/lib/rets-adapter'
 
-export const metadata = {
-  title: 'Map Search | VaHome.com',
-  description: 'Search homes for sale in Hampton Roads on an interactive map. Filter by price, beds, baths, and military base proximity.',
-};
+export const metadata: Metadata = {
+  title: 'Map Search | VaHome',
+  description:
+    'Browse Hampton Roads homes for sale on an interactive map. Filter by price, beds, baths, city and property type.',
+}
 
 export default function MapPage() {
-  return <MapClient />;
+  const listings = loadRetsListings()
+  return <MapClient listings={listings} />
 }
