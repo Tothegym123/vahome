@@ -409,7 +409,7 @@ export default function MapClient({ listings }: Props) {
 
       {/* Map */}
       <div className="relative flex-1">
-        <div ref={mapContainerRef} className="absolute inset-0" />
+        <div ref={mapContainerRef} className="h-full w-full" />
 
         {/* Selected listing floating card */}
         {selected && (
