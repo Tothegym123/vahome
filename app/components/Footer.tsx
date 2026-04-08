@@ -1,5 +1,23 @@
 import Link from 'next/link'
 
+const exploreLinks = [
+  { label: 'Buy a Home', href: '/listings' },
+  { label: 'Sell Your Home', href: '/sell' },
+  { label: 'Map Search', href: '/map' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+]
+
+const areaLinks = [
+  { label: 'Virginia Beach', href: '/listings?city=Virginia+Beach' },
+  { label: 'Norfolk', href: '/listings?city=Norfolk' },
+  { label: 'Chesapeake', href: '/listings?city=Chesapeake' },
+  { label: 'Suffolk', href: '/listings?city=Suffolk' },
+  { label: 'Hampton', href: '/listings?city=Hampton' },
+  { label: 'Newport News', href: '/listings?city=Newport+News' },
+]
+
 export default function Footer() {
   return (
     <footer className="bg-navy-900 text-gray-300">
@@ -14,7 +32,7 @@ export default function Footer() {
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">
               Your trusted real estate experts in Hampton Roads, Virginia.
-              Serving Virginia Beach, Norfolk, Chesapeake, Suffolk & beyond.
+              Serving Virginia Beach, Norfolk, Chesapeake, Suffolk &amp; beyond.
             </p>
           </div>
 
@@ -22,10 +40,10 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Explore</h3>
             <ul className="space-y-3">
-              {['Buy a Home', 'Sell Your Home', 'Blog', 'About Us', 'Contact'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">
-                    {item}
+              {exploreLinks.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm text-gray-400 hover:text-primary-400 transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -36,10 +54,10 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Areas We Serve</h3>
             <ul className="space-y-3">
-              {['Virginia Beach', 'Norfolk', 'Chesapeake', 'Suffolk', 'Hampton', 'Newport News'].map((area) => (
-                <li key={area}>
-                  <Link href="#" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">
-                    {area}
+              {areaLinks.map((area) => (
+                <li key={area.label}>
+                  <Link href={area.href} className="text-sm text-gray-400 hover:text-primary-400 transition-colors">
+                    {area.label}
                   </Link>
                 </li>
               ))}
@@ -59,9 +77,15 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-primary-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                </svg>
+                <a href="tel:+17577777577" className="hover:text-primary-400 transition-colors">(757) 777-7577</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-primary-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
-                <a href="mailto:tom@vahome.com" className="hover:text-primary-400 transition-colors">tom@vahome.com</a>
+                <a href="mailto:tom@vahomes.com" className="hover:text-primary-400 transition-colors">tom@vahomes.com</a>
               </li>
             </ul>
           </div>
@@ -90,7 +114,7 @@ export default function Footer() {
             REIN&rsquo;s listings data and information are protected under federal copyright laws. Federal law prohibits, among other acts, the unauthorized copying, reproduction, redistribution, or creation of derivative works from any part of copyrighted material, including certain compilations of data and information. COPYRIGHT VIOLATORS MAY BE SUBJECT TO SEVERE FINES AND PENALTIES UNDER FEDERAL LAW.
           </p>
           <p className="text-xs text-gray-500 leading-relaxed mt-3">
-            REIN updates its listings on a daily basis. Data last updated: {new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}.
+            REIN updates its listings on a daily basis.
           </p>
           <p className="text-xs text-gray-500 leading-relaxed mt-3">
             This website does not include all properties available for sale at this time.
