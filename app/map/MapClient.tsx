@@ -198,7 +198,6 @@ export default function MapClient({ listings }: Props) {
             }).catch(() => {})
           }
         }
-        }
         items.forEach((l) => {
           const el = document.createElement('button')
           el.type = 'button'
