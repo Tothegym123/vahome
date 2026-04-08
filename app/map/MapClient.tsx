@@ -153,11 +153,51 @@ export default function MapClient({ listings }: Props) {
         markersRef.current.forEach((mk) => mk.remove())
         markersRef.current = []
         
-        // Military bases overlay
-        if (!map.getSource('military-bases')) {
-          map.addSource('military-bases', { type: 'geojson', data: '/military-bases.geojson' })
-          map.addLayer({ id: 'military-bases-fill', type: 'fill', source: 'military-bases', paint: { 'fill-color': '#ff1a1a', 'fill-opacity': 0.2 } })
-          map.addLayer({ id: 'military-bases-outline', type: 'line', source: 'military-bases', paint: { 'line-color': '#ff0000', 'line-width': 1.5, 'line-opacity': 0.75 } })
+        // Military bases overlay (SVG — vector layers broken in v3)
+        if (!(map as any).__vhBases) {
+          ;(map as any).__vhBases = true
+          const container = map.getContainer() as HTMLElement
+          const canvasContainer = container.querySelector('.mapboxgl-canvas-container') as HTMLElement
+          if (canvasContainer) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg','svg')
+            svg.setAttribute('id','vh-base-svg')
+            svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1'
+            canvasContainer.appendChild(svg)
+            fetch('/military-bases.geojson').then(r => r.json()).then((geo: any) => {
+              const draw = () => {
+                const rect = container.getBoundingClientRect()
+                svg.setAttribute('width', String(rect.width))
+                svg.setAttribute('height', String(rect.height))
+                while (svg.firstChild) svg.removeChild(svg.firstChild)
+                for (const feat of geo.features) {
+                  const geoms = feat.geometry.type === 'MultiPolygon' ? feat.geometry.coordinates : [feat.geometry.coordinates]
+                  for (const poly of geoms) {
+                    let d = ''
+                    for (const ring of poly) {
+                      const pts = ring.map((c: number[]) => {
+                        const p = map.project({ lng: c[0], lat: c[1] } as any)
+                        return p.x + ',' + p.y
+                      })
+                      d += 'M' + pts.join('L') + 'Z '
+                    }
+                    const path = document.createElementNS('http://www.w3.org/2000/svg','path')
+                    path.setAttribute('d', d)
+                    path.setAttribute('fill', '#ff1a1a')
+                    path.setAttribute('fill-opacity', '0.25')
+                    path.setAttribute('stroke', '#ff0000')
+                    path.setAttribute('stroke-width', '1')
+                    path.setAttribute('stroke-opacity', '0.8')
+                    svg.appendChild(path)
+                  }
+                }
+              }
+              draw()
+              map.on('move', draw)
+              map.on('zoom', draw)
+              map.on('resize', draw)
+            }).catch(() => {})
+          }
+        }
         }
         items.forEach((l) => {
           const el = document.createElement('button')
