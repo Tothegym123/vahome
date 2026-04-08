@@ -97,7 +97,7 @@ export default function MapClient({ listings }: Props) {
               'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
             ],
             tileSize: 256,
-            attribution: '&copy; OpenStreetMap ÃÂ© CARTO',
+            attribution: '&copy; OpenStreetMap ÃÂÃÂ© CARTO',
           },
         },
         layers: [
@@ -154,7 +154,7 @@ export default function MapClient({ listings }: Props) {
         markersRef.current.forEach((mk) => mk.remove())
         markersRef.current = []
         
-        // Military bases overlay (SVG ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ vector layers broken in v3)
+        // Military bases overlay (SVG ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ vector layers broken in v3)
         if (!(map as any).__vhBases) {
           ;(map as any).__vhBases = true
           const container = map.getContainer() as HTMLElement
@@ -190,8 +190,8 @@ export default function MapClient({ listings }: Props) {
                     const bw = maxX - minX
                     const bh = maxY - minY
                     const est = nm.length * 0.55
-                    const fs = Math.min(14, Math.max(6, (bw * 0.9) / est))
-                    if (fs < 7 || bh < 10) continue
+                    const fs = Math.min(16, Math.max(4, (bw * 0.9) / est))
+                    // always draw label, even when small
                     const tx = document.createElementNS('http://www.w3.org/2000/svg','text')
                     tx.setAttribute('x', String(cx/cn))
                     tx.setAttribute('y', String(cy/cn))
@@ -425,7 +425,7 @@ export default function MapClient({ listings }: Props) {
                       {l.city}, {l.state}
                     </div>
                     <div className="text-xs text-gray-700 mt-1">
-                      {l.beds} bd ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {l.baths} ba ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {l.sqft.toLocaleString()} sqft
+                      {l.beds} bd ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {l.baths} ba ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {l.sqft.toLocaleString()} sqft
                     </div>
                   </div>
                 </div>
@@ -452,7 +452,7 @@ export default function MapClient({ listings }: Props) {
               className="absolute top-2 right-2 z-20 bg-white/90 hover:bg-white rounded-full w-7 h-7 flex items-center justify-center text-gray-600 shadow"
               aria-label="Close"
             >
-              ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
+              ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
             </button>
             <Link href={getListingUrl(selected)} className="block hover:bg-gray-50 transition-colors cursor-pointer">
               <img src={selected.img} alt={selected.address} className="w-full h-44 object-cover bg-gray-100" />
@@ -466,8 +466,8 @@ export default function MapClient({ listings }: Props) {
                   {selected.city}, {selected.state} {selected.zip}
                 </div>
                 <div className="text-sm text-gray-800 mb-3">
-                  {selected.beds} bd ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {selected.baths} ba
-                  {selected.halfBaths ? ` ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ ${selected.halfBaths} half` : ''} ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {selected.sqft.toLocaleString()} sqft
+                  {selected.beds} bd ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {selected.baths} ba
+                  {selected.halfBaths ? ` ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ ${selected.halfBaths} half` : ''} ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ {selected.sqft.toLocaleString()} sqft
                 </div>
                 <div className="block w-full text-center bg-[#1a5f7a] text-white py-2 rounded-lg font-medium text-sm">
                   View Details
