@@ -153,7 +153,7 @@ export default function MapClient({ listings }: Props) {
         markersRef.current.forEach((mk) => mk.remove())
         markersRef.current = []
         
-        // Military bases overlay (SVG Ã¢ÂÂ vector layers broken in v3)
+        // Military bases overlay (SVG â vector layers broken in v3)
         if (!(map as any).__vhBases) {
           ;(map as any).__vhBases = true
           const container = map.getContainer() as HTMLElement
@@ -164,52 +164,53 @@ export default function MapClient({ listings }: Props) {
             svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1'
             canvasContainer.appendChild(svg)
             fetch('/military-bases.geojson').then(r => r.json()).then((geo: any) => {
-                            const draw = () => {
-                              const rect = container.getBoundingClientRect()
-                              svg.setAttribute('width', String(rect.width))
-                              svg.setAttribute('height', String(rect.height))
-                              while (svg.firstChild) svg.removeChild(svg.firstChild)
-                              const zoom = map.getZoom()
-                              for (const feat of geo.features) {
-                                const geoms = feat.geometry.type === 'MultiPolygon' ? feat.geometry.coordinates : [feat.geometry.coordinates]
-                                let cx = 0, cy = 0, cn = 0
-                                for (const poly of geoms) {
-                                  let d = ''
-                                  for (const ring of poly) {
-                                    const pts = ring.map((c: number[]) => {
-                                      const p = map.project({ lng: c[0], lat: c[1] } as any)
-                                      cx += p.x; cy += p.y; cn++
-                                      return p.x + ',' + p.y
-                                    })
-                                    d += 'M' + pts.join('L') + 'Z '
-                                  }
-                                  const path = document.createElementNS('http://www.w3.org/2000/svg','path')
-                                  path.setAttribute('d', d)
-                                  path.setAttribute('fill', '#ff1a1a')
-                                  path.setAttribute('fill-opacity', '0.25')
-                                  path.setAttribute('stroke', '#ff0000')
-                                  path.setAttribute('stroke-width', '1')
-                                  path.setAttribute('stroke-opacity', '0.8')
-                                  svg.appendChild(path)
-                                }
-                                const nm = feat.properties && (feat.properties as any).name
-                                if (nm && cn > 0 && zoom >= 10) {
-                                  const tx = document.createElementNS('http://www.w3.org/2000/svg','text')
-                                  tx.setAttribute('x', String(cx/cn))
-                                  tx.setAttribute('y', String(cy/cn))
-                                  tx.setAttribute('text-anchor', 'middle')
-                                  tx.setAttribute('font-size', '13')
-                                  tx.setAttribute('font-weight', '800')
-                                  tx.setAttribute('font-family', 'system-ui,sans-serif')
-                                  tx.setAttribute('fill', '#000000')
-                                  tx.setAttribute('stroke', '#ffffff')
-                                  tx.setAttribute('stroke-width', '3')
-                                  tx.setAttribute('paint-order', 'stroke')
-                                  tx.textContent = nm
-                                  svg.appendChild(tx)
-                                }
-                              }
-                            }              draw()
+              const draw = () => {
+                const rect = container.getBoundingClientRect()
+                svg.setAttribute('width', String(rect.width))
+                svg.setAttribute('height', String(rect.height))
+                while (svg.firstChild) svg.removeChild(svg.firstChild)
+                const zm = map.getZoom()
+                for (const feat of geo.features as any[]) {
+                  const geoms = feat.geometry.type === 'MultiPolygon' ? feat.geometry.coordinates : [feat.geometry.coordinates]
+                  let cx = 0, cy = 0, cn = 0
+                  for (const poly of geoms) {
+                    let d = ''
+                    for (const ring of poly) {
+                      const pts = ring.map((c: number[]) => {
+                        const p = map.project({ lng: c[0], lat: c[1] } as any)
+                        cx += p.x; cy += p.y; cn++
+                        return p.x + ',' + p.y
+                      })
+                      d += 'M' + pts.join('L') + 'Z '
+                    }
+                    const path = document.createElementNS('http://www.w3.org/2000/svg','path')
+                    path.setAttribute('d', d)
+                    path.setAttribute('fill', '#ff1a1a')
+                    path.setAttribute('fill-opacity', '0.25')
+                    path.setAttribute('stroke', '#ff0000')
+                    path.setAttribute('stroke-width', '1')
+                    path.setAttribute('stroke-opacity', '0.8')
+                    svg.appendChild(path)
+                  }
+                  const nm: string = (feat.properties && feat.properties.name) || ""
+                  if (nm && cn > 0 && zm >= 10) {
+                    const tx = document.createElementNS('http://www.w3.org/2000/svg','text')
+                    tx.setAttribute('x', String(cx/cn))
+                    tx.setAttribute('y', String(cy/cn))
+                    tx.setAttribute('text-anchor', 'middle')
+                    tx.setAttribute('font-size', '13')
+                    tx.setAttribute('font-weight', '800')
+                    tx.setAttribute('font-family', 'system-ui,sans-serif')
+                    tx.setAttribute('fill', '#000000')
+                    tx.setAttribute('stroke', '#ffffff')
+                    tx.setAttribute('stroke-width', '3')
+                    tx.setAttribute('paint-order', 'stroke')
+                    tx.textContent = nm
+                    svg.appendChild(tx)
+                  }
+                }
+              }
+              draw()
               map.on('move', draw)
               map.on('zoom', draw)
               map.on('resize', draw)
@@ -426,7 +427,7 @@ export default function MapClient({ listings }: Props) {
                       {l.city}, {l.state}
                     </div>
                     <div className="text-xs text-gray-700 mt-1">
-                      {l.beds} bd Ã¢ÂÂ¢ {l.baths} ba Ã¢ÂÂ¢ {l.sqft.toLocaleString()} sqft
+                      {l.beds} bd â¢ {l.baths} ba â¢ {l.sqft.toLocaleString()} sqft
                     </div>
                   </div>
                 </div>
@@ -453,7 +454,7 @@ export default function MapClient({ listings }: Props) {
               className="absolute top-2 right-2 z-20 bg-white/90 hover:bg-white rounded-full w-7 h-7 flex items-center justify-center text-gray-600 shadow"
               aria-label="Close"
             >
-              ÃÂ
+              Ã
             </button>
             <Link href={getListingUrl(selected)} className="block hover:bg-gray-50 transition-colors cursor-pointer">
               <img src={selected.img} alt={selected.address} className="w-full h-44 object-cover bg-gray-100" />
@@ -467,8 +468,8 @@ export default function MapClient({ listings }: Props) {
                   {selected.city}, {selected.state} {selected.zip}
                 </div>
                 <div className="text-sm text-gray-800 mb-3">
-                  {selected.beds} bd Ã¢ÂÂ¢ {selected.baths} ba
-                  {selected.halfBaths ? ` Ã¢ÂÂ¢ ${selected.halfBaths} half` : ''} Ã¢ÂÂ¢ {selected.sqft.toLocaleString()} sqft
+                  {selected.beds} bd â¢ {selected.baths} ba
+                  {selected.halfBaths ? ` â¢ ${selected.halfBaths} half` : ''} â¢ {selected.sqft.toLocaleString()} sqft
                 </div>
                 <div className="block w-full text-center bg-[#1a5f7a] text-white py-2 rounded-lg font-medium text-sm">
                   View Details
