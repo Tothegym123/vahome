@@ -7,17 +7,17 @@ export default function MapPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-lg text-center">
-        <div className="text-6xl mb-6">🗺️</div>
+        <div className="text-6xl mb-6" role="img" aria-label="map">&#x1F5FA;&#xFE0F;</div>
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
           Interactive Map Search
         </h1>
         <p className="text-lg text-gray-600 mb-6">
-          We’re upgrading our map experience to Google Maps for faster, smoother
+          We are upgrading our map experience to Google Maps for faster, smoother
           home searching across Hampton Roads.
         </p>
         <p className="text-gray-500 mb-8">
           Browse thousands of listings with real-time filters, neighborhood video
-          tours, and instant property details—coming very soon.
+          tours, and instant property details &mdash; coming very soon.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
@@ -34,7 +34,7 @@ export default function MapPage() {
           </a>
         </div>
         <p className="text-sm text-gray-400 mt-10">
-          © {new Date().getFullYear()} The VaHome Team &middot; LPT Realty
+          &copy; {new Date().getFullYear()} The VaHome Team &middot; LPT Realty
         </p>
       </div>
     </div>
