@@ -141,27 +141,7 @@ export default function MapClient({ listings }: Props) {
 
       const map = new mapboxgl.Map({
         container: mapContainerRef.current!,
-        style: {
-          version: 8,
-          sources: {
-            basemap: {
-              type: 'raster',
-              tiles: [
-                'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-                'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-                'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-                'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
-              ],
-              tileSize: 256,
-              attribution: '© OpenStreetMap © CARTO'
-            }
-          },
-          layers: [
-            { id: 'bg', type: 'background', paint: { 'background-color': '#f7f7f2' } },
-            { id: 'basemap', type: 'raster', source: 'basemap' }
-          ],
-          glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
-        } as any,
+        style: 'mapbox://styles/mapbox/light-v11',
         center: [-76.2, 36.85],
         zoom: 10,
         maxBounds: [
@@ -248,7 +228,7 @@ export default function MapClient({ listings }: Props) {
           layout: {
             'text-field': ['get', 'point_count_abbreviated'],
             'text-size': 13,
-            'text-font': ['Noto Sans Bold'],
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
           },
           paint: {
             'text-color': '#ffffff',
@@ -282,7 +262,7 @@ export default function MapClient({ listings }: Props) {
           layout: {
             'text-field': ['get', 'priceShort'],
             'text-size': 12,
-            'text-font': ['Noto Sans Bold'],
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
             'text-padding': 2,
             'text-allow-overlap': true,
             'text-ignore-placement': true,
