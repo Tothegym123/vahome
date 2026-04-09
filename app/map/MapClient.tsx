@@ -86,7 +86,6 @@ export default function MapClient() {
     const mapInstance = new google.maps.Map(mapRef.current, {
       center: { lat: 36.85, lng: -76.28 },
       zoom: 10,
-      mapId: 'vahome_map',
       streetViewControl: false,
       fullscreenControl: true,
       mapTypeControl: true,
