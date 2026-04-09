@@ -414,7 +414,7 @@ export default function MapClient() {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-gray-100">
+    <div className="flex w-full overflow-hidden bg-gray-100" style={{ height: 'calc(100vh - 64px)' }}>
       {/* Map Container */}
       <div
         className={`${
@@ -613,7 +613,7 @@ export default function MapClient() {
                       <div className="flex gap-2 mt-2 text-xs text-gray-600">
                         <span>🛏️ {listing.beds}</span>
                         <span>🚿 {listing.baths}</span>
-                        <span>📐 {listing.sqft.toLocaleString()} sqft</span>
+                        <span>📐 {listing.sqft.toLocaleString()}</span>
                       </div>
                     </div>
                   ))}
