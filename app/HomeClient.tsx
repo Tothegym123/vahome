@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { useAuth } from './components/AuthProvider'
 import MortgageCalculator from './components/MortgageCalculator'
+import MapboxSearchInput from './components/MapboxSearchInput'
 import PremiumTeaser from './components/PremiumTeaser'
 
 declare global {
@@ -349,14 +350,11 @@ export default function HomeClient() {
             </p>
 
             <div className="fade search-box-c morph rounded-2xl p-2 max-w-2xl">
-              <div className="flex items-center">
-                <div className="flex-1 flex items-center gap-3 px-5">
-                  <svg className="w-5 h-5 text-muted-themed morph" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                  <input type="text" className="w-full py-3 bg-transparent input-c morph outline-none text-base"
-                    placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'City, ZIP, neighborhood...'} />
-                </div>
-                <button className="btn-primary-c morph font-semibold px-7 py-3 rounded-xl transition text-sm shrink-0">Search</button>
-              </div>
+              <MapboxSearchInput
+                placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'City, ZIP, neighborhood...'}
+                inputClassName="border-0 bg-transparent shadow-none focus:ring-0 focus:border-0"
+                onSelect={(r) => { window.location.href = `/map?lat=${r.lat}&lng=${r.lng}&q=${encodeURIComponent(r.name)}`; }}
+              />
             </div>
 
             <div className="fade flex flex-wrap gap-2 mt-5">
