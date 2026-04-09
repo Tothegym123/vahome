@@ -141,26 +141,7 @@ export default function MapClient({ listings }: Props) {
 
       const map = new mapboxgl.Map({
         container: mapContainerRef.current!,
-        style: {
-          version: 8,
-          glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
-          sources: {
-            'carto-basemap': {
-              type: 'raster',
-              tiles: [
-                'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-                'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-                'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-                'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-              ],
-              tileSize: 256,
-              attribution: '© OpenStreetMap, © CARTO',
-            },
-          },
-          layers: [
-            { id: 'carto-basemap-layer', type: 'raster', source: 'carto-basemap' },
-          ],
-        } as any,
+        style: 'mapbox://styles/mapbox/light-v11',
         center: [-76.2, 36.85],
         zoom: 10,
         maxBounds: [
@@ -172,24 +153,9 @@ export default function MapClient({ listings }: Props) {
 
       map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
 
-      map.on('style.load', () => {
-        // Strip the hosted mapbox base layers/source ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ composite TileJSON stalls in
-        // mapbox-gl v3 for us, so we render CARTO raster tiles instead.
-        try {
-          const style: any = (map as any).style
-          const ids: string[] = style && style._order ? [...style._order] : []
-          for (const id of ids) {
-            const layer = style._layers && style._layers[id]
-            if (layer && (layer.source === 'composite' || id === 'land' || id === 'background')) {
-              try { map.removeLayer(id) } catch {}
-            }
-          }
-          try { map.removeSource('composite') } catch {}
-        } catch {}
-        if (!map.getSource('carto-basemap')) map.addSource('carto-basemap', { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png','https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png','https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png'], tileSize: 256, attribution: '\u00a9 OpenStreetMap, \u00a9 CARTO' })
-        if (!map.getLayer('carto-basemap-layer')) map.addLayer({ id: 'carto-basemap-layer', type: 'raster', source: 'carto-basemap' })
-
-        // -------------------------------------------------------------------
+      map.on('load', () => {
+        // Use hosted Mapbox light-v11 (no strip needed in v3)
+// -------------------------------------------------------------------
         // FEMA National Flood Hazard Layer (NFHL) overlay ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ public ArcGIS
         // MapServer. Added here as a raster source so it's tile-based and
         // virtually free performance-wise (only in-view tiles are fetched,
