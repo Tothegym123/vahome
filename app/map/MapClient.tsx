@@ -174,6 +174,11 @@ export default function MapClient() {
 
       mapRef.current = map;
 
+      // Force a resize so Google Maps detects container dimensions
+      requestAnimationFrame(() => {
+        google.maps.event.trigger(map, 'resize');
+      });
+
       // Wait for tiles to load before fetching initial data
       google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
         if (cancelled) return;
@@ -215,9 +220,16 @@ export default function MapClient() {
       });
     };
 
-    // If Google Maps already loaded, init immediately
+    // Deferred init — gives Google Maps internals time to finish setup
+    const deferredInit = () => {
+      requestAnimationFrame(() => {
+        if (!cancelled) initMap();
+      });
+    };
+
+    // If Google Maps already loaded, init on next frame
     if (typeof google !== 'undefined' && google.maps) {
-      initMap();
+      deferredInit();
       return () => {
         cancelled = true;
       };
@@ -233,7 +245,7 @@ export default function MapClient() {
       const interval = setInterval(() => {
         if (typeof google !== 'undefined' && google.maps) {
           clearInterval(interval);
-          initMap();
+          deferredInit();
         }
       }, 100);
       return () => {
@@ -247,7 +259,7 @@ export default function MapClient() {
     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker`;
     script.async = true;
     script.defer = true;
-    script.onload = () => initMap();
+    script.onload = () => deferredInit();
     script.onerror = () => console.error('Failed to load Google Maps API');
     document.head.appendChild(script);
 
