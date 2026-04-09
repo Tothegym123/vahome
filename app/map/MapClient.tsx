@@ -11,7 +11,8 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 const HAMPTON_ROADS_BOUNDS: [number, number, number, number] = [-76.85, 36.55, -76.15, 37.35]
 
 // CARTO Voyager raster tiles (known-good base map for mapbox-gl v3)
-const rasterStyle: any = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _rasterStyle: any = {
   version: 8,
   sources: {
     'carto-voyager': {
@@ -138,7 +139,7 @@ export default function MapClient({ listings }: Props) {
 
       const map = new mapboxgl.Map({
         container: mapContainerRef.current!,
-        style: rasterStyle,
+        style: 'mapbox://styles/mapbox/light-v11',
         center: [-76.2, 36.85],
         zoom: 10,
         maxBounds: [
