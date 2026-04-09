@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
       baseName: base.name,
       shortName: base.shortName,
       branch: base.branch,
-      driveMiles: Math.round(base.distanceMiles * 1.3 * 10) / 10, // rough road factor
-      driveMinutes: Math.round(base.distanceMiles * 1.3 * 1.5), // ~40mph avg
-      straightLineMiles: Math.round(base.distanceMiles * 10) / 10,
+      driveMiles: Math.round(base.distance * 1.3 * 10) / 10, // rough road factor
+      driveMinutes: Math.round(base.distance * 1.3 * 1.5), // ~40mph avg
+      straightLineMiles: Math.round(base.distance * 10) / 10,
     }));
     return NextResponse.json({ bases: result });
   }
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
           branch: base.branch,
           driveMiles: Math.round((distanceMeters / 1609.344) * 10) / 10,
           driveMinutes: Math.round(durationSeconds / 60),
-          straightLineMiles: Math.round(base.distanceMiles * 10) / 10,
+          straightLineMiles: Math.round(base.distance * 10) / 10,
         };
       } else {
         // Fallback to straight-line estimate
@@ -75,9 +75,9 @@ export async function GET(request: NextRequest) {
           baseName: base.name,
           shortName: base.shortName,
           branch: base.branch,
-          driveMiles: Math.round(base.distanceMiles * 1.3 * 10) / 10,
-          driveMinutes: Math.round(base.distanceMiles * 1.3 * 1.5),
-          straightLineMiles: Math.round(base.distanceMiles * 10) / 10,
+          driveMiles: Math.round(base.distance * 1.3 * 10) / 10,
+          driveMinutes: Math.round(base.distance * 1.3 * 1.5),
+          straightLineMiles: Math.round(base.distance * 10) / 10,
         };
       }
     });
@@ -89,9 +89,9 @@ export async function GET(request: NextRequest) {
       baseName: base.name,
       shortName: base.shortName,
       branch: base.branch,
-      driveMiles: Math.round(base.distanceMiles * 1.3 * 10) / 10,
-      driveMinutes: Math.round(base.distanceMiles * 1.3 * 1.5),
-      straightLineMiles: Math.round(base.distanceMiles * 10) / 10,
+      driveMiles: Math.round(base.distance * 1.3 * 10) / 10,
+      driveMinutes: Math.round(base.distance * 1.3 * 1.5),
+      straightLineMiles: Math.round(base.distance * 10) / 10,
     }));
     return NextResponse.json({ bases: result });
   }
