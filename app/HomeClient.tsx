@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { useAuth } from './components/AuthProvider'
 import MortgageCalculator from './components/MortgageCalculator'
-import MapboxSearchInput from './components/MapboxSearchInput'
 import PremiumTeaser from './components/PremiumTeaser'
 
 declare global {
@@ -47,12 +46,12 @@ const listings = [
 ]
 
 const neighborhoods = [
-  { name: 'Virginia Beach', count: 842, from: '$275K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-75.978,36.8529)/-75.978,36.8529,11,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
-  { name: 'Chesapeake', count: 631, from: '$245K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.2875,36.7682)/-76.2875,36.7682,11,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
-  { name: 'Norfolk', count: 487, from: '$195K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.2859,36.8508)/-76.2859,36.8508,12,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
-  { name: 'Newport News', count: 394, from: '$180K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.473,37.0871)/-76.473,37.0871,12,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
-  { name: 'Hampton', count: 289, from: '$165K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.3452,37.0299)/-76.3452,37.0299,12,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
-  { name: 'Suffolk', count: 204, from: '$230K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.5836,36.7282)/-76.5836,36.7282,11,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
+  { name: 'Virginia Beach', count: 842, from: '$275K', img: '/images/neighborhood-placeholder.jpg' },
+  { name: 'Chesapeake', count: 631, from: '$245K', img: '/images/neighborhood-placeholder.jpg' },
+  { name: 'Norfolk', count: 487, from: '$195K', img: '/images/neighborhood-placeholder.jpg' },
+  { name: 'Newport News', count: 394, from: '$180K', img: '/images/neighborhood-placeholder.jpg' },
+  { name: 'Hampton', count: 289, from: '$165K', img: '/images/neighborhood-placeholder.jpg' },
+  { name: 'Suffolk', count: 204, from: '$230K', img: '/images/neighborhood-placeholder.jpg' },
 ]
 
 const bases = [
@@ -350,11 +349,12 @@ export default function HomeClient() {
             </p>
 
             <div className="fade search-box-c morph rounded-2xl p-2 max-w-2xl">
-              <MapboxSearchInput
-                placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'City, ZIP, neighborhood...'}
-                inputClassName="border-0 bg-transparent shadow-none focus:ring-0 focus:border-0"
-                onSelect={(r) => { window.location.href = `/map?lat=${r.lat}&lng=${r.lng}&q=${encodeURIComponent(r.name)}`; }}
-              />
+              <input
+                  type="text"
+                  placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'Search by address, city, or ZIP...'}
+                  className="border-0 bg-transparent shadow-none focus:ring-0 w-full text-lg text-white placeholder-white/70 px-4 py-3"
+                  onKeyDown={(e) => { if (e.key === 'Enter') window.location.href = '/listings'; }}
+                />
             </div>
 
             <div className="fade flex flex-wrap gap-2 mt-5">
