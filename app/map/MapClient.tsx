@@ -339,7 +339,8 @@ export default function MapClient({ listings }: Props) {
         const rebuildSource = () => {
           const source: any = map.getSource('listings')
           if (!source) return
-          const b = map.getBounds()
+          const b: any = map.getBounds()
+          if (!b) return
           const w = b.getWest()
           const s = b.getSouth()
           const e = b.getEast()
