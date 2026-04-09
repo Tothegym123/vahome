@@ -534,7 +534,7 @@ export default function MapClient() {
                   >
                     <div className="flex justify-between items-start gap-2">
                       <div className="flex-1 min-w-0">
-                         <h3 className="font-bold text-blue-600 text-sm">
+                        <h3 className="font-bold text-blue-600 text-sm">
                           {listing.priceFormatted}
                         </h3>
                         <p className="text-xs text-gray-700 mt-1 line-clamp-2">
@@ -640,56 +640,6 @@ export default function MapClient() {
             </div>
           </div>
         </>
-      )}
-
-      {/* Selected Listing Detail Popup */}
-      {selectedListing && (
-        <div
-          className="fixed bottom-4 right-4 bg-white rounded-lg shadow-2xl p-4 max-w-sm z-50"
-          style={{ display: isMobile ? 'none' : 'block' }}
-        >
-          <button
-            onClick={() => setSelectedListing(null)}
-            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-          >
-            &#x2715;
-          </button>
-          <h3 className="font-bold text-lg text-blue-600">
-            {selectedListing.priceFormatted}
-          </h3>
-          <p className="text-sm text-gray-700">
-            {selectedListing.address}
-          </p>
-          <p className="text-xs text-gray-500">
-            {selectedListing.city}, {selectedListing.state}{' '}
-            {selectedListing.zip}
-          </p>
-          <div className="flex gap-4 my-2 text-sm">
-            <span>&#x1F6CF;&#xFE0F; {selectedListing.beds} Beds</span>
-            <span>&#x1F6BF; {selectedListing.baths} Baths</span>
-            <span>
-              &#x1F4D0; {selectedListing.sqft.toLocaleString()} sqft
-            </span>
-          </div>
-          <a
-            href={`/listings/${selectedListing.id}/${selectedListing.slug}`}
-            className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-          >
-            View Details &rarr;
-        </a>
-      </div>
-      )}
-
-      {/* Loading Overlay */}
-      {loading && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg px-4 py-2 z-50">
-          <p className="text-sm text-gray-600">Loading properties...</p>
-        </div>
-      )}
-    </div>
-  );
-}
-      </>
       )}
     </div>
   );
