@@ -46,12 +46,12 @@ const listings = [
 ]
 
 const neighborhoods = [
-  { name: 'Virginia Beach', count: 842, from: '$275K', img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80' },
-  { name: 'Chesapeake', count: 631, from: '$245K', img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&q=80' },
-  { name: 'Norfolk', count: 487, from: '$195K', img: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&q=80' },
-  { name: 'Newport News', count: 394, from: '$180K', img: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600&q=80' },
-  { name: 'Hampton', count: 289, from: '$165K', img: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80' },
-  { name: 'Suffolk', count: 204, from: '$230K', img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80' },
+  { name: 'Virginia Beach', count: 842, from: '$275K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-75.978,36.8529)/-75.978,36.8529,11,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
+  { name: 'Chesapeake', count: 631, from: '$245K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.2875,36.7682)/-76.2875,36.7682,11,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
+  { name: 'Norfolk', count: 487, from: '$195K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.2859,36.8508)/-76.2859,36.8508,12,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
+  { name: 'Newport News', count: 394, from: '$180K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.473,37.0871)/-76.473,37.0871,12,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
+  { name: 'Hampton', count: 289, from: '$165K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.3452,37.0299)/-76.3452,37.0299,12,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
+  { name: 'Suffolk', count: 204, from: '$230K', img: `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-s+059669(-76.5836,36.7282)/-76.5836,36.7282,11,0/600x400@2x?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}` },
 ]
 
 const bases = [
