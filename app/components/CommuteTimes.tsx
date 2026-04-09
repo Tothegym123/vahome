@@ -151,7 +151,7 @@ export default function CommuteTimes({ lat, lng }: CommuteTimesProps) {
       )}
 
       <p className="text-xs text-gray-400 mt-2">
-        Drive times are estimates based on typical traffic conditions via Mapbox
+        Drive times are estimates based on typical traffic conditions via Google Maps
         Directions API.
       </p>
     </div>
