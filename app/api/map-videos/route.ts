@@ -26,12 +26,11 @@ export async function GET(request: NextRequest) {
     let videos: NeighborhoodTour[] = [];
 
     // Try Supabase first
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (supabaseUrl && supabaseKey) {
       try {
-        const supabase = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-        );
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
         const { data, error } = await supabase
           .from('neighborhood_tours')
@@ -58,12 +57,12 @@ export async function GET(request: NextRequest) {
           return video.lat >= sw_lat && video.lat <= ne_lat && video.lng >= sw_lng && video.lng <= ne_lng;
         })
         .map((video) => ({
-          id: video.id,
+          id: video.videoId,
           title: video.title,
-          youtube_url: video.youtubeUrl,
+          youtube_url: `https://www.youtube.com/watch?v=${video.videoId}`,
           lat: video.lat,
           lng: video.lng,
-          neighborhood: video.neighborhood,
+          neighborhood: video.description,
         }));
     }
 
