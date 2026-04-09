@@ -475,7 +475,7 @@ export function getListingUrl(listing: Listing): string {
   return `/listings/${listing.id}/${slug}`;
 }
 
-export function listingsToGeoJSON(listings: Listing[]): GeoJSON.FeatureCollection {
+export function listingsToGeoJSON(listings: Listing[]): { type: string; features: Array<{ type: string; geometry: { type: string; coordinates: [number, number] }; properties: Record<string, unknown> }> } {
   return {
     type: 'FeatureCollection',
     features: listings.map((listing) => ({
