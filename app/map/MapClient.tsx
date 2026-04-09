@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Script from 'next/script';
 
 declare const google: any;
 
@@ -155,120 +156,79 @@ export default function MapClient() {
     return `data:image/svg+xml,${encoded}`;
   };
 
-  // Load Google Maps script and initialize map - runs exactly ONCE
-  useEffect(() => {
-    let cancelled = false;
+  // Google Maps API key for Script component
+  const mapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-    const initMap = () => {
-      if (cancelled || !containerRef.current || mapRef.current) return;
-      if (typeof google === 'undefined' || !google.maps) return;
+  // Initialize the map - called by next/script onReady callback
+  const initMap = useCallback(() => {
+    if (!containerRef.current || mapRef.current) return;
+    if (typeof google === 'undefined' || !google.maps) return;
 
-      const map = new google.maps.Map(containerRef.current, {
-        zoom: 10,
-        center: { lat: 36.85, lng: -76.28 },
-        mapTypeControl: true,
-        streetViewControl: true,
-        zoomControl: true,
-        fullscreenControl: true,
-      });
+    const map = new google.maps.Map(containerRef.current, {
+      zoom: 10,
+      center: { lat: 36.85, lng: -76.28 },
+      mapTypeControl: true,
+      streetViewControl: true,
+      zoomControl: true,
+      fullscreenControl: true,
+    });
 
-      mapRef.current = map;
+    mapRef.current = map;
 
-      // Force a resize so Google Maps detects container dimensions
-      requestAnimationFrame(() => {
-        google.maps.event.trigger(map, 'resize');
-      });
+    // Force a resize so Google Maps detects container dimensions
+    requestAnimationFrame(() => {
+      google.maps.event.trigger(map, 'resize');
+    });
 
-      // Wait for tiles to load before fetching initial data
-      google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
-        if (cancelled) return;
-        const bounds = map.getBounds();
-        if (bounds) {
-          boundsRef.current = bounds;
+    // Fetch initial data using bounds once the map is idle
+    // (idle fires after initial render, more reliable than tilesloaded)
+    google.maps.event.addListenerOnce(map, 'idle', () => {
+      const bounds = map.getBounds();
+      if (bounds) {
+        boundsRef.current = bounds;
+        const mapBounds: MapBounds = {
+          sw_lat: bounds.getSouthWest().lat(),
+          sw_lng: bounds.getSouthWest().lng(),
+          ne_lat: bounds.getNorthEast().lat(),
+          ne_lng: bounds.getNorthEast().lng(),
+        };
+        if (fetchMapDataRef.current) {
+          fetchMapDataRef.current(mapBounds);
+        }
+      }
+    });
+
+    // Debounced idle listener for subsequent pan/zoom - uses ref for latest filters
+    map.addListener('idle', () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      debounceTimerRef.current = setTimeout(() => {
+        const newBounds = map.getBounds();
+        if (newBounds) {
+          boundsRef.current = newBounds;
           const mapBounds: MapBounds = {
-            sw_lat: bounds.getSouthWest().lat(),
-            sw_lng: bounds.getSouthWest().lng(),
-            ne_lat: bounds.getNorthEast().lat(),
-            ne_lng: bounds.getNorthEast().lng(),
+            sw_lat: newBounds.getSouthWest().lat(),
+            sw_lng: newBounds.getSouthWest().lng(),
+            ne_lat: newBounds.getNorthEast().lat(),
+            ne_lng: newBounds.getNorthEast().lng(),
           };
           if (fetchMapDataRef.current) {
             fetchMapDataRef.current(mapBounds);
           }
         }
-      });
+      }, 300);
+    });
+  }, []);
 
-      // Debounced idle listener - uses ref so it always has latest filters
-      map.addListener('idle', () => {
-        if (debounceTimerRef.current) {
-          clearTimeout(debounceTimerRef.current);
-        }
-        debounceTimerRef.current = setTimeout(() => {
-          const newBounds = map.getBounds();
-          if (newBounds) {
-            boundsRef.current = newBounds;
-            const mapBounds: MapBounds = {
-              sw_lat: newBounds.getSouthWest().lat(),
-              sw_lng: newBounds.getSouthWest().lng(),
-              ne_lat: newBounds.getNorthEast().lat(),
-              ne_lng: newBounds.getNorthEast().lng(),
-            };
-            if (fetchMapDataRef.current) {
-              fetchMapDataRef.current(mapBounds);
-            }
-          }
-        }, 300);
-      });
-    };
-
-    // If Google Maps already loaded and ready, init immediately
-    if (typeof google !== 'undefined' && google.maps && google.maps.Map) {
-      initMap();
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    // Check if script tag already exists (e.g. from previous mount)
-    const existingScript = document.querySelector(
-      'script[src*="maps.googleapis.com/maps/api/js"]'
-    );
-
-    if (existingScript) {
-      // Script tag exists, poll until google.maps.Map is ready
-      const interval = setInterval(() => {
-        if (typeof google !== 'undefined' && google.maps && google.maps.Map) {
-          clearInterval(interval);
-          initMap();
-        }
-      }, 100);
-      return () => {
-        cancelled = true;
-        clearInterval(interval);
-      };
-    }
-
-    // Load script fresh using Google's recommended callback approach
-    // The callback fires AFTER all internal subsystems are initialized
-    const callbackName = '__vahomeMapInit__';
-    (window as any)[callbackName] = () => {
-      if (!cancelled) initMap();
-    };
-
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker&callback=${callbackName}`;
-    script.async = true;
-    script.defer = true;
-    script.onerror = () => console.error('Failed to load Google Maps API');
-    document.head.appendChild(script);
-
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
     return () => {
-      cancelled = true;
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty deps - load script and init map exactly once
+  }, []);
 
   // Render listing markers
   useEffect(() => {
@@ -452,6 +412,13 @@ export default function MapClient() {
       className="flex w-full overflow-hidden bg-gray-100"
       style={{ height: 'calc(100vh - 64px)' }}
     >
+      {/* Load Google Maps API via next/script - onReady fires after script load AND hydration */}
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=marker`}
+        strategy="afterInteractive"
+        onReady={initMap}
+      />
+
       {/* Map Container */}
       <div
         className={`${
@@ -567,7 +534,7 @@ export default function MapClient() {
                   >
                     <div className="flex justify-between items-start gap-2">
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-blue-600 text-sm">
+                         <h3 className="font-bold text-blue-600 text-sm">
                           {listing.priceFormatted}
                         </h3>
                         <p className="text-xs text-gray-700 mt-1 line-clamp-2">
@@ -673,6 +640,56 @@ export default function MapClient() {
             </div>
           </div>
         </>
+      )}
+
+      {/* Selected Listing Detail Popup */}
+      {selectedListing && (
+        <div
+          className="fixed bottom-4 right-4 bg-white rounded-lg shadow-2xl p-4 max-w-sm z-50"
+          style={{ display: isMobile ? 'none' : 'block' }}
+        >
+          <button
+            onClick={() => setSelectedListing(null)}
+            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+          >
+            &#x2715;
+          </button>
+          <h3 className="font-bold text-lg text-blue-600">
+            {selectedListing.priceFormatted}
+          </h3>
+          <p className="text-sm text-gray-700">
+            {selectedListing.address}
+          </p>
+          <p className="text-xs text-gray-500">
+            {selectedListing.city}, {selectedListing.state}{' '}
+            {selectedListing.zip}
+          </p>
+          <div className="flex gap-4 my-2 text-sm">
+            <span>&#x1F6CF;&#xFE0F; {selectedListing.beds} Beds</span>
+            <span>&#x1F6BF; {selectedListing.baths} Baths</span>
+            <span>
+              &#x1F4D0; {selectedListing.sqft.toLocaleString()} sqft
+            </span>
+          </div>
+          <a
+            href={`/listings/${selectedListing.id}/${selectedListing.slug}`}
+            className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+          >
+            View Details &rarr;
+        </a>
+      </div>
+      )}
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg px-4 py-2 z-50">
+          <p className="text-sm text-gray-600">Loading properties...</p>
+        </div>
+      )}
+    </div>
+  );
+}
+      </>
       )}
     </div>
   );
