@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getNearestBases } from "../../lib/military-bases";
 
-// Google Maps Distance Matrix API replaces previous Mapbox Directions API
+// Google Maps Distance Matrix API for military base drive times
 const GOOGLE_MAPS_KEY = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 export async function GET(request: NextRequest) {
