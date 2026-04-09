@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sampleListings as listings, formatPrice } from '@/app/lib/listings';
+import { sampleListings as listings } from '@/app/lib/listings';
 
 export const runtime = 'nodejs';
 
