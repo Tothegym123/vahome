@@ -70,13 +70,16 @@ export default function MapClient() {
   const currentInfoWindowRef = useRef<any>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const boundsRef = useRef<any>(null);
+  const fetchMapDataRef = useRef<((bounds: MapBounds) => Promise<void>) | null>(null);
 
   const [listings, setListings] = useState<MapListing[]>([]);
   const [videos, setVideos] = useState<MapVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedListing, setSelectedListing] = useState<MapListing | null>(null);
+  const [selectedListing, setSelectedListing] = useState<MapListing | null>(
+    null
+  );
   const [filters, setFilters] = useState<FilterState>({
     type: '',
     minPrice: '',
@@ -93,131 +96,150 @@ export default function MapClient() {
   }, []);
 
   // Fetch listings and videos based on bounds and filters
-  const fetchMapData = useCallback(async (bounds: MapBounds) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        sw_lat: bounds.sw_lat.toString(),
-        sw_lng: bounds.sw_lng.toString(),
-        ne_lat: bounds.ne_lat.toString(),
-        ne_lng: bounds.ne_lng.toString(),
-        ...(filters.type && { type: filters.type }),
-        ...(filters.minPrice && { min_price: filters.minPrice }),
-        ...(filters.maxPrice && { max_price: filters.maxPrice }),
-        ...(filters.beds && { beds: filters.beds }),
-      });
+  const fetchMapData = useCallback(
+    async (bounds: MapBounds) => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams({
+          sw_lat: bounds.sw_lat.toString(),
+          sw_lng: bounds.sw_lng.toString(),
+          ne_lat: bounds.ne_lat.toString(),
+          ne_lng: bounds.ne_lng.toString(),
+          ...(filters.type && { type: filters.type }),
+          ...(filters.minPrice && { min_price: filters.minPrice }),
+          ...(filters.maxPrice && { max_price: filters.maxPrice }),
+          ...(filters.beds && { beds: filters.beds }),
+        });
 
-      const [listingsRes, videosRes] = await Promise.all([
-        fetch(`/api/map-listings?${params}`),
-        fetch(`/api/map-videos?${params}`),
-      ]);
+        const [listingsRes, videosRes] = await Promise.all([
+          fetch(`/api/map-listings?${params}`),
+          fetch(`/api/map-videos?${params}`),
+        ]);
 
-      if (!listingsRes.ok || !videosRes.ok) {
-        throw new Error('Failed to fetch map data');
+        if (!listingsRes.ok || !videosRes.ok) {
+          throw new Error('Failed to fetch map data');
+        }
+
+        const listingsJson = await listingsRes.json();
+        const videosJson = await videosRes.json();
+
+        const fetchedListings: MapListing[] =
+          listingsJson.listings || listingsJson || [];
+        const fetchedVideos: MapVideo[] =
+          videosJson.videos || videosJson || [];
+
+        setListings(fetchedListings);
+        // Only show video markers if fewer than 500 listings
+        setVideos(fetchedListings.length < 500 ? fetchedVideos : []);
+      } catch (error) {
+        console.error('Error fetching map data:', error);
+      } finally {
+        setLoading(false);
       }
+    },
+    [filters]
+  );
 
-      const listingsJson = await listingsRes.json();
-      const videosJson = await videosRes.json();
-
-      const fetchedListings: MapListing[] = listingsJson.listings || listingsJson || [];
-      const fetchedVideos: MapVideo[] = videosJson.videos || videosJson || [];
-
-      setListings(fetchedListings);
-      // Only show video markers if fewer than 500 listings
-      setVideos(fetchedListings.length < 500 ? fetchedVideos : []);
-    } catch (error) {
-      console.error('Error fetching map data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
+  // Keep a ref to the latest fetchMapData so the idle listener always uses current filters
+  useEffect(() => {
+    fetchMapDataRef.current = fetchMapData;
+  }, [fetchMapData]);
 
   // Create marker SVG icon - returns data URI
   const createMarkerIcon = (color: string, isVideo = false): string => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
       <circle cx="16" cy="16" r="12" fill="${color}" stroke="white" stroke-width="2"/>
-      ${isVideo ? '<text x="16" y="20" font-size="12" fill="white" text-anchor="middle" font-weight="bold">▶</text>' : ''}
+      ${isVideo ? '<text x="16" y="20" font-size="12" fill="white" text-anchor="middle" font-weight="bold">&#9654;</text>' : ''}
     </svg>`;
     const encoded = encodeURIComponent(svg);
     return `data:image/svg+xml,${encoded}`;
   };
 
-  // Initialize map
-  const initializeMap = useCallback(() => {
-    if (!containerRef.current || typeof google === 'undefined' || !google.maps) {
-      return;
-    }
-
-    if (mapRef.current) {
-      return; // Already initialized
-    }
-
-    const map = new google.maps.Map(containerRef.current, {
-      zoom: 10,
-      center: { lat: 36.85, lng: -76.28 },
-      mapTypeControl: true,
-      streetViewControl: true,
-      zoomControl: true,
-      fullscreenControl: true,
-    });
-
-    mapRef.current = map;
-    boundsRef.current = map.getBounds() || null;
-
-    // Fetch initial data
-    if (boundsRef.current) {
-      const bounds: MapBounds = {
-        sw_lat: boundsRef.current.getSouthWest().lat(),
-        sw_lng: boundsRef.current.getSouthWest().lng(),
-        ne_lat: boundsRef.current.getNorthEast().lat(),
-        ne_lng: boundsRef.current.getNorthEast().lng(),
-      };
-      fetchMapData(bounds);
-    }
-
-    // Handle map idle (bounds changed, zoom changed, etc.)
-    map.addListener('idle', () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-
-      debounceTimerRef.current = setTimeout(() => {
-        const newBounds = map.getBounds();
-        if (newBounds) {
-          boundsRef.current = newBounds;
-          const bounds: MapBounds = {
-            sw_lat: newBounds.getSouthWest().lat(),
-            sw_lng: newBounds.getSouthWest().lng(),
-            ne_lat: newBounds.getNorthEast().lat(),
-            ne_lng: newBounds.getNorthEast().lng(),
-          };
-          fetchMapData(bounds);
-        }
-      }, 300);
-    });
-  }, [fetchMapData]);
-
-  // Load Google Maps script with proper race condition fix
+  // Load Google Maps script and initialize map - runs exactly ONCE
   useEffect(() => {
-    // If google maps already loaded, init immediately
+    let cancelled = false;
+
+    const initMap = () => {
+      if (cancelled || !containerRef.current || mapRef.current) return;
+      if (typeof google === 'undefined' || !google.maps) return;
+
+      const map = new google.maps.Map(containerRef.current, {
+        zoom: 10,
+        center: { lat: 36.85, lng: -76.28 },
+        mapTypeControl: true,
+        streetViewControl: true,
+        zoomControl: true,
+        fullscreenControl: true,
+      });
+
+      mapRef.current = map;
+
+      // Wait for tiles to load before fetching initial data
+      google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
+        if (cancelled) return;
+        const bounds = map.getBounds();
+        if (bounds) {
+          boundsRef.current = bounds;
+          const mapBounds: MapBounds = {
+            sw_lat: bounds.getSouthWest().lat(),
+            sw_lng: bounds.getSouthWest().lng(),
+            ne_lat: bounds.getNorthEast().lat(),
+            ne_lng: bounds.getNorthEast().lng(),
+          };
+          if (fetchMapDataRef.current) {
+            fetchMapDataRef.current(mapBounds);
+          }
+        }
+      });
+
+      // Debounced idle listener - uses ref so it always has latest filters
+      map.addListener('idle', () => {
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+        debounceTimerRef.current = setTimeout(() => {
+          const newBounds = map.getBounds();
+          if (newBounds) {
+            boundsRef.current = newBounds;
+            const mapBounds: MapBounds = {
+              sw_lat: newBounds.getSouthWest().lat(),
+              sw_lng: newBounds.getSouthWest().lng(),
+              ne_lat: newBounds.getNorthEast().lat(),
+              ne_lng: newBounds.getNorthEast().lng(),
+            };
+            if (fetchMapDataRef.current) {
+              fetchMapDataRef.current(mapBounds);
+            }
+          }
+        }, 300);
+      });
+    };
+
+    // If Google Maps already loaded, init immediately
     if (typeof google !== 'undefined' && google.maps) {
-      initializeMap();
-      return;
+      initMap();
+      return () => {
+        cancelled = true;
+      };
     }
 
-    // Check if script already exists
+    // Check if script tag already exists (e.g. from previous mount)
     const existingScript = document.querySelector(
       'script[src*="maps.googleapis.com/maps/api/js"]'
     );
+
     if (existingScript) {
-      // Script exists but may not be loaded yet - poll for google.maps
+      // Script tag exists, poll until google.maps is ready
       const interval = setInterval(() => {
         if (typeof google !== 'undefined' && google.maps) {
           clearInterval(interval);
-          initializeMap();
+          initMap();
         }
       }, 100);
-      return () => clearInterval(interval);
+      return () => {
+        cancelled = true;
+        clearInterval(interval);
+      };
     }
 
     // Load script fresh
@@ -225,16 +247,18 @@ export default function MapClient() {
     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker`;
     script.async = true;
     script.defer = true;
-    script.onload = () => initializeMap();
+    script.onload = () => initMap();
     script.onerror = () => console.error('Failed to load Google Maps API');
     document.head.appendChild(script);
 
     return () => {
+      cancelled = true;
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [initializeMap]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - load script and init map exactly once
 
   // Render listing markers
   useEffect(() => {
@@ -267,11 +291,11 @@ export default function MapClient() {
             <p class="text-sm text-gray-700">${listing.address}</p>
             <p class="text-xs text-gray-600">${listing.city}, ${listing.state} ${listing.zip}</p>
             <div class="flex gap-4 my-2 text-xs">
-              <span>🛏️ ${listing.beds} Beds</span>
-              <span>🚿 ${listing.baths} Baths</span>
-              <span>📐 ${listing.sqft.toLocaleString()} sqft</span>
+              <span>&#x1F6CF;&#xFE0F; ${listing.beds} Beds</span>
+              <span>&#x1F6BF; ${listing.baths} Baths</span>
+              <span>&#x1F4D0; ${listing.sqft.toLocaleString()} sqft</span>
             </div>
-            <a href="/listings/${listing.id}/${listing.slug}" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">View Details →</a>
+            <a href="/listings/${listing.id}/${listing.slug}" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">View Details &rarr;</a>
           </div>
         `,
       });
@@ -350,7 +374,6 @@ export default function MapClient() {
       const youtubeUrl = new URL(url);
       const id = youtubeUrl.searchParams.get('v');
       if (id) return id;
-
       // Handle youtu.be short links
       if (youtubeUrl.hostname === 'youtu.be') {
         return youtubeUrl.pathname.slice(1);
@@ -408,13 +431,17 @@ export default function MapClient() {
     }
 
     setSelectedListing(listing);
+
     if (isMobile) {
       setDrawerOpen(false);
     }
   };
 
   return (
-    <div className="flex w-full overflow-hidden bg-gray-100" style={{ height: 'calc(100vh - 64px)' }}>
+    <div
+      className="flex w-full overflow-hidden bg-gray-100"
+      style={{ height: 'calc(100vh - 64px)' }}
+    >
       {/* Map Container */}
       <div
         className={`${
@@ -482,8 +509,10 @@ export default function MapClient() {
 
         {/* Badge - Listing and Video Count */}
         <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 text-sm font-semibold text-gray-800 z-10">
-          <div>📍 {listings.length} Listings</div>
-          {videos.length > 0 && <div>🎥 {videos.length} Video Tours</div>}
+          <div>&#x1F4CD; {listings.length} Listings</div>
+          {videos.length > 0 && (
+            <div>&#x1F3A5; {videos.length} Video Tours</div>
+          )}
         </div>
 
         {/* Mobile View Listings Button */}
@@ -504,7 +533,9 @@ export default function MapClient() {
             <h2 className="text-lg font-bold text-gray-900">
               Properties ({listings.length})
             </h2>
-            {loading && <p className="text-sm text-gray-500 mt-1">Loading...</p>}
+            {loading && (
+              <p className="text-sm text-gray-500 mt-1">Loading...</p>
+            )}
           </div>
 
           <div className="flex-1 overflow-y-auto">
@@ -538,15 +569,19 @@ export default function MapClient() {
                       </div>
                       <span
                         className="px-2 py-1 rounded text-xs font-semibold text-white whitespace-nowrap"
-                        style={{ backgroundColor: getStatusColor(listing.status) }}
+                        style={{
+                          backgroundColor: getStatusColor(listing.status),
+                        }}
                       >
                         {listing.status}
                       </span>
                     </div>
                     <div className="flex gap-2 mt-2 text-xs text-gray-600">
-                      <span>🛏️ {listing.beds}</span>
-                      <span>🚿 {listing.baths}</span>
-                      <span>📐 {listing.sqft.toLocaleString()}</span>
+                      <span>&#x1F6CF;&#xFE0F; {listing.beds}</span>
+                      <span>&#x1F6BF; {listing.baths}</span>
+                      <span>
+                        &#x1F4D0; {listing.sqft.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -565,12 +600,14 @@ export default function MapClient() {
           />
           <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl max-h-[80vh] overflow-y-auto z-50">
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
-              <h2 className="text-lg font-bold">Properties ({listings.length})</h2>
+              <h2 className="text-lg font-bold">
+                Properties ({listings.length})
+              </h2>
               <button
                 onClick={() => setDrawerOpen(false)}
                 className="text-gray-500 hover:text-gray-700 text-2xl"
               >
-                ✕
+                &#x2715;
               </button>
             </div>
 
@@ -605,15 +642,19 @@ export default function MapClient() {
                         </div>
                         <span
                           className="px-2 py-1 rounded text-xs font-semibold text-white whitespace-nowrap"
-                          style={{ backgroundColor: getStatusColor(listing.status) }}
+                          style={{
+                            backgroundColor: getStatusColor(listing.status),
+                          }}
                         >
                           {listing.status}
                         </span>
                       </div>
                       <div className="flex gap-2 mt-2 text-xs text-gray-600">
-                        <span>🛏️ {listing.beds}</span>
-                        <span>🚿 {listing.baths}</span>
-                        <span>📐 {listing.sqft.toLocaleString()}</span>
+                        <span>&#x1F6CF;&#xFE0F; {listing.beds}</span>
+                        <span>&#x1F6BF; {listing.baths}</span>
+                        <span>
+                          &#x1F4D0; {listing.sqft.toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   ))}
