@@ -36,7 +36,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ['mapbox-gl', 'lucide-react'],
+    optimizePackageImports: ['lucide-react'],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
