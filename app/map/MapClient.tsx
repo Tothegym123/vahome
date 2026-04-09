@@ -66,9 +66,11 @@ export default function MapClient({ listings }: Props) {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
   const mapboxRef = useRef<any>(null)
+  const rebuildSourceRef = useRef<(() => void) | null>(null)
   const [mapReady, setMapReady] = useState(false)
   const [selected, setSelected] = useState<Listing | null>(null)
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
+  const [showFlood, setShowFlood] = useState(false)
   const [filters, setFilters] = useState<Filters>({
     minPrice: 0,
     maxPrice: 10_000_000,
@@ -149,6 +151,29 @@ export default function MapClient({ listings }: Props) {
       map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
 
       map.on('load', () => {
+        // -------------------------------------------------------------------
+        // FEMA National Flood Hazard Layer (NFHL) overlay — public ArcGIS
+        // MapServer. Added here as a raster source so it's tile-based and
+        // virtually free performance-wise (only in-view tiles are fetched,
+        // nothing runs on the main thread). Toggled via the "Flood zones"
+        // button on the map. Starts hidden.
+        // -------------------------------------------------------------------
+        map.addSource('fema-nfhl', {
+          type: 'raster',
+          tiles: [
+            'https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer/tile/{z}/{y}/{x}',
+          ],
+          tileSize: 256,
+          attribution: 'Flood data &copy; FEMA NFHL',
+        })
+        map.addLayer({
+          id: 'fema-nfhl-layer',
+          type: 'raster',
+          source: 'fema-nfhl',
+          layout: { visibility: 'none' },
+          paint: { 'raster-opacity': 0.6 },
+        })
+
         // -------------------------------------------------------------------
         // Listings GeoJSON source with server-side (web-worker) clustering
         // -------------------------------------------------------------------
@@ -253,14 +278,15 @@ export default function MapClient({ listings }: Props) {
         // Interaction: cluster click → zoom in
         // -------------------------------------------------------------------
         map.on('click', 'clusters', (e: any) => {
-          const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
+          const features: any[] = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
           if (!features.length) return
-          const clusterId = features[0].properties.cluster_id
+          const f0: any = features[0]
+          const clusterId = f0.properties.cluster_id
           const source: any = map.getSource('listings')
           source.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
             if (err) return
             map.easeTo({
-              center: features[0].geometry.coordinates,
+              center: f0.geometry.coordinates,
               zoom: zoom + 0.2,
             })
           })
@@ -296,44 +322,69 @@ export default function MapClient({ listings }: Props) {
         })
 
         // -------------------------------------------------------------------
-        // Viewport-synced sidebar: after every pan/zoom, compute which listing
-        // features are currently rendered and push their IDs into state.
+        // Viewport-aware source rebuild (Zillow-style 500-dot cap).
+        //
+        // On every pan/zoom we:
+        //   1. Read the current map bounds
+        //   2. Filter the full `filtered` list down to listings inside the bbox
+        //   3. Slice to at most 500
+        //   4. Push that slice into the GeoJSON source via setData()
+        //   5. Mirror the same 500 IDs into visibleIds for the sidebar
+        //
+        // The GeoJSON source therefore NEVER contains more than 500 features at
+        // any time, matching Zillow's "500 of N" behavior exactly. Clustering
+        // still works, but only across the 500 in-view points — listings
+        // outside the viewport are not counted in clusters (same as Zillow).
         // -------------------------------------------------------------------
-        const syncVisible = () => {
-          const feats = map.queryRenderedFeatures({
-            layers: ['unclustered-pill', 'unclustered-dot', 'clusters'],
-          })
+        const rebuildSource = () => {
+          const source: any = map.getSource('listings')
+          if (!source) return
+          const b = map.getBounds()
+          const w = b.getWest()
+          const s = b.getSouth()
+          const e = b.getEast()
+          const n = b.getNorth()
+
+          const all = filteredRef.current
+          const inView: Listing[] = []
+          for (let i = 0; i < all.length; i++) {
+            const l = all[i]
+            if (l.lng >= w && l.lng <= e && l.lat >= s && l.lat <= n) {
+              inView.push(l)
+              if (inView.length >= 500) break
+            }
+          }
+
+          const features = inView.map((l) => ({
+            type: 'Feature' as const,
+            geometry: {
+              type: 'Point' as const,
+              coordinates: [l.lng, l.lat],
+            },
+            properties: {
+              id: l.id,
+              price: l.price,
+              priceShort: formatPriceShort(l.price),
+              slug: getListingUrl(l),
+              city: l.city,
+              propertyType: l.propertyType,
+              status: l.status || 'active',
+              // Future color-coding hook — set these to real values when ready.
+              viewed: false,
+            },
+          }))
+          source.setData({ type: 'FeatureCollection', features })
+
           const ids = new Set<number>()
-          feats.forEach((f: any) => {
-            if (f.properties && f.properties.id != null && !f.properties.cluster) {
-              ids.add(f.properties.id as number)
-            }
-            // Expand cluster leaves for the sidebar too, so cards reflect all
-            // listings inside currently-visible clusters (capped for perf).
-            if (f.properties && f.properties.cluster) {
-              const source: any = map.getSource('listings')
-              source.getClusterLeaves(
-                f.properties.cluster_id,
-                100,
-                0,
-                (err: any, leaves: any[]) => {
-                  if (err || !leaves) return
-                  leaves.forEach((leaf) => {
-                    if (leaf.properties && leaf.properties.id != null) {
-                      ids.add(leaf.properties.id as number)
-                    }
-                  })
-                  setVisibleIds(new Set(ids))
-                }
-              )
-            }
-          })
+          for (let i = 0; i < inView.length; i++) ids.add(inView[i].id)
           setVisibleIds(ids)
         }
-        map.on('moveend', syncVisible)
-        map.on('idle', syncVisible)
+        rebuildSourceRef.current = rebuildSource
+        map.on('moveend', rebuildSource)
 
         setMapReady(true)
+        // Initial population
+        rebuildSource()
       })
     })()
 
@@ -354,42 +405,35 @@ export default function MapClient({ listings }: Props) {
   }, [filtered])
 
   // ---------------------------------------------------------------------------
-  // Push filtered listings into the GeoJSON source whenever they change.
-  // This is the ONLY place marker data flows into the map — no DOM markers.
+  // When filters change (or the map becomes ready), rebuild the viewport-capped
+  // GeoJSON source. The rebuild function lives inside map.on('load') and is
+  // exposed via rebuildSourceRef so we can trigger it from outside.
   // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (!mapReady) return
+    rebuildSourceRef.current?.()
+  }, [filtered, mapReady])
+
+  // Toggle the FEMA flood-zone overlay on/off without touching listings.
   useEffect(() => {
     const map = mapRef.current
     if (!map || !mapReady) return
-    const source: any = map.getSource('listings')
-    if (!source) return
+    if (!map.getLayer('fema-nfhl-layer')) return
+    map.setLayoutProperty(
+      'fema-nfhl-layer',
+      'visibility',
+      showFlood ? 'visible' : 'none'
+    )
+  }, [showFlood, mapReady])
 
-    const features = filtered.map((l) => ({
-      type: 'Feature' as const,
-      geometry: {
-        type: 'Point' as const,
-        coordinates: [l.lng, l.lat],
-      },
-      properties: {
-        id: l.id,
-        price: l.price,
-        priceShort: formatPriceShort(l.price),
-        slug: getListingUrl(l),
-        city: l.city,
-        propertyType: l.propertyType,
-        status: l.status || 'active',
-        // Future color-coding hook — set these to real values when ready.
-        viewed: false,
-      },
-    }))
-
-    source.setData({ type: 'FeatureCollection', features })
-  }, [filtered, mapReady])
-
-  // Derived: cards to show in the sidebar = filtered ∩ visibleIds
-  const visibleCards = useMemo(() => {
-    if (visibleIds.size === 0) return filtered.slice(0, 50)
-    return filtered.filter((l) => visibleIds.has(l.id)).slice(0, 100)
+  // Derived: cards to show in the sidebar mirror the ≤500 features currently in
+  // the GeoJSON source. visibleIds is populated by rebuildSource() on every
+  // moveend, so this is always in lockstep with what's actually on the map.
+  const visibleInView = useMemo(() => {
+    if (visibleIds.size === 0) return [] as Listing[]
+    return filtered.filter((l) => visibleIds.has(l.id))
   }, [filtered, visibleIds])
+  const visibleCards = visibleInView
 
   const cities = useMemo(
     () => Array.from(new Set(workingListings.map((l) => l.city))).sort(),
@@ -439,6 +483,22 @@ export default function MapClient({ listings }: Props) {
       {/* Map */}
       <div className="relative h-[50vh] w-full lg:h-full lg:w-3/5">
         <div ref={mapContainerRef} className="absolute inset-0" />
+        {/* Layer toggles (top-left over the map) */}
+        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => setShowFlood((v) => !v)}
+            className={
+              'rounded-md border px-3 py-1.5 text-xs font-semibold shadow-md transition ' +
+              (showFlood
+                ? 'border-blue-600 bg-blue-600 text-white'
+                : 'border-gray-300 bg-white text-gray-800 hover:bg-gray-50')
+            }
+            title="Toggle FEMA flood hazard zones"
+          >
+            {showFlood ? '✓ Flood zones' : 'Flood zones'}
+          </button>
+        </div>
       </div>
 
       {/* Sidebar: cards synced to visible features */}
@@ -516,7 +576,10 @@ export default function MapClient({ listings }: Props) {
             </select>
           </div>
           <div className="mt-2 text-xs text-gray-600">
-            Showing {visibleCards.length} of {filtered.length} listings in view
+            Showing {visibleCards.length} of {filtered.length} listings
+            {visibleCards.length >= 500 && (
+              <span className="text-gray-400"> &middot; zoom in to see more</span>
+            )}
           </div>
         </div>
 
