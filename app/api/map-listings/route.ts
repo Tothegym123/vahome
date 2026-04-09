@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { listings, formatPriceShort } from '@/app/lib/listings';
+import { sampleListings as listings, formatPrice } from '@/app/lib/listings';
 
 export const runtime = 'nodejs';
 
@@ -14,46 +14,39 @@ function generateSlug(address: string, city: string, state: string, zip: string)
   return parts;
 }
 
+function formatPriceShort(price: number): string {
+  if (price >= 1000000) return '$' + (price / 1000000).toFixed(1) + 'M';
+  if (price >= 1000) return '$' + Math.round(price / 1000) + 'K';
+  return '$' + price;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
 
-    // Get bounds from query params
     const sw_lat = parseFloat(searchParams.get('sw_lat') || '0');
     const sw_lng = parseFloat(searchParams.get('sw_lng') || '0');
     const ne_lat = parseFloat(searchParams.get('ne_lat') || '90');
     const ne_lng = parseFloat(searchParams.get('ne_lng') || '0');
 
-    // Get filters
     const limit = parseInt(searchParams.get('limit') || '500', 10);
     const type = searchParams.get('type')?.toLowerCase() || '';
     const min_price = searchParams.get('min_price') ? parseInt(searchParams.get('min_price')!, 10) : null;
     const max_price = searchParams.get('max_price') ? parseInt(searchParams.get('max_price')!, 10) : null;
     const beds = searchParams.get('beds') ? parseInt(searchParams.get('beds')!, 10) : null;
 
-    // Filter listings by bounds and filters
     const filtered = listings.filter((listing) => {
-      // Bounding box check
       if (listing.lat < sw_lat || listing.lat > ne_lat) return false;
       if (listing.lng < sw_lng || listing.lng > ne_lng) return false;
-
-      // Type filter
       if (type && listing.propertyType.toLowerCase() !== type) return false;
-
-      // Price filters
       if (min_price !== null && listing.price < min_price) return false;
       if (max_price !== null && listing.price > max_price) return false;
-
-      // Beds filter
       if (beds !== null && listing.beds < beds) return false;
-
       return true;
     });
 
-    // Limit results
     const limited = filtered.slice(0, limit);
 
-    // Map to response format
     const response = limited.map((listing) => ({
       id: listing.id,
       address: listing.address,
