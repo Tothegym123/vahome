@@ -1,6 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+declare const google: any;
+
+// Type definitions
 interface MapListing {
   id: number;
   address: string;
@@ -35,314 +39,397 @@ interface MapBounds {
   ne_lng: number;
 }
 
-export default function MapClient() {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
-  const markersRef = useRef<Map<string, google.maps.marker.AdvancedMarkerElement | google.maps.Marker>>(new Map());
-  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+interface FilterState {
+  type: string;
+  minPrice: string;
+  maxPrice: string;
+  beds: string;
+}
 
-  const [mapsLoaded, setMapsLoaded] = useState(false);
+// Color mapping for listing status
+const getStatusColor = (status: string): string => {
+  switch (status.toLowerCase()) {
+    case 'active':
+      return '#22c55e'; // green
+    case 'pending':
+      return '#eab308'; // yellow
+    case 'sold':
+      return '#ef4444'; // red
+    default:
+      return '#6366f1'; // indigo
+  }
+};
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function MapClient() {
+  const mapRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const markersRef = useRef<Map<number, any>>(new Map());
+  const videoMarkersRef = useRef<Map<string, any>>(new Map());
+  const infoWindowsRef = useRef<Map<string, any>>(new Map());
+  const currentInfoWindowRef = useRef<any>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const boundsRef = useRef<any>(null);
+
   const [listings, setListings] = useState<MapListing[]>([]);
   const [videos, setVideos] = useState<MapVideo[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState<MapListing | null>(null);
-  const [filter, setFilter] = useState({
+  const [filters, setFilters] = useState<FilterState>({
     type: '',
     minPrice: '',
     maxPrice: '',
     beds: '',
   });
-  const [isMobile, setIsMobile] = useState(false);
-  const [showDrawer, setShowDrawer] = useState(false);
 
-  // Load Google Maps script
+  // Detect mobile
   useEffect(() => {
-    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
-      setMapsLoaded(true);
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setMapsLoaded(true);
-    document.head.appendChild(script);
-  }, []);
-
-  // Check mobile
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Initialize map
-  useEffect(() => {
-    if (!mapsLoaded || !mapRef.current) return;
-
-    const mapInstance = new google.maps.Map(mapRef.current, {
-      center: { lat: 36.85, lng: -76.28 },
-      zoom: 10,
-      streetViewControl: false,
-      fullscreenControl: true,
-      mapTypeControl: true,
-    });
-
-    mapInstanceRef.current = mapInstance;
-
-    // Debounced fetch on map idle
-    const handleIdle = () => {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = setTimeout(() => {
-        fetchListingsForBounds();
-      }, 300);
-    };
-
-    mapInstance.addListener('idle', handleIdle);
-
-    return () => {
-      google.maps.event.clearListeners(mapInstance, 'idle');
-    };
-  }, [mapsLoaded]);
-
-  // Fetch listings for current bounds
-  const fetchListingsForBounds = useCallback(async () => {
-    if (!mapInstanceRef.current) return;
-
-    const bounds = mapInstanceRef.current.getBounds();
-    if (!bounds) return;
-
-    const ne = bounds.getNorthEast();
-    const sw = bounds.getSouthWest();
-
+  // Fetch listings and videos based on bounds and filters
+  const fetchMapData = useCallback(async (bounds: MapBounds) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        sw_lat: sw.lat().toString(),
-        sw_lng: sw.lng().toString(),
-        ne_lat: ne.lat().toString(),
-        ne_lng: ne.lng().toString(),
-        limit: '500',
-        ...(filter.type && { type: filter.type }),
-        ...(filter.minPrice && { min_price: filter.minPrice }),
-        ...(filter.maxPrice && { max_price: filter.maxPrice }),
-        ...(filter.beds && { beds: filter.beds }),
+        sw_lat: bounds.sw_lat.toString(),
+        sw_lng: bounds.sw_lng.toString(),
+        ne_lat: bounds.ne_lat.toString(),
+        ne_lng: bounds.ne_lng.toString(),
+        ...(filters.type && { type: filters.type }),
+        ...(filters.minPrice && { min_price: filters.minPrice }),
+        ...(filters.maxPrice && { max_price: filters.maxPrice }),
+        ...(filters.beds && { beds: filters.beds }),
       });
 
-      const listingsRes = await fetch(`/api/map-listings?${params}`);
-      const listingsData = await listingsRes.json();
-      setListings(listingsData.listings || []);
+      const [listingsRes, videosRes] = await Promise.all([
+        fetch(`/api/map-listings?${params}`),
+        fetch(`/api/map-videos?${params}`),
+      ]);
 
-      // Fetch videos only if listings < 500
-      let fetchedVideos: MapVideo[] = [];
-      if ((listingsData.listings || []).length < 500) {
-        const videosRes = await fetch(
-          `/api/map-videos?sw_lat=${sw.lat()}&sw_lng=${sw.lng()}&ne_lat=${ne.lat()}&ne_lng=${ne.lng()}`
-        );
-        const videosData = await videosRes.json();
-        fetchedVideos = videosData.videos || [];
-        setVideos(fetchedVideos);
-      } else {
-        setVideos([]);
+      if (!listingsRes.ok || !videosRes.ok) {
+        throw new Error('Failed to fetch map data');
       }
 
-      renderMarkers(listingsData.listings || [], fetchedVideos);
+      const listingsJson = await listingsRes.json();
+      const videosJson = await videosRes.json();
+
+      const fetchedListings: MapListing[] = listingsJson.listings || listingsJson || [];
+      const fetchedVideos: MapVideo[] = videosJson.videos || videosJson || [];
+
+      setListings(fetchedListings);
+      // Only show video markers if fewer than 500 listings
+      setVideos(fetchedListings.length < 500 ? fetchedVideos : []);
     } catch (error) {
-      console.error('Failed to fetch listings:', error);
+      console.error('Error fetching map data:', error);
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filters]);
 
-  // Render markers on map
-  const renderMarkers = useCallback((mapListings: MapListing[], mapVideos: MapVideo[]) => {
-    if (!mapInstanceRef.current) return;
+  // Create marker SVG icon - returns data URI
+  const createMarkerIcon = (color: string, isVideo = false): string => {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+      <circle cx="16" cy="16" r="12" fill="${color}" stroke="white" stroke-width="2"/>
+      ${isVideo ? '<text x="16" y="20" font-size="12" fill="white" text-anchor="middle" font-weight="bold">▶</text>' : ''}
+    </svg>`;
+    const encoded = encodeURIComponent(svg);
+    return `data:image/svg+xml,${encoded}`;
+  };
 
-    // Clear old markers
-    markersRef.current.forEach((marker) => {
-      if ('map' in marker) marker.map = null;
-    });
-    markersRef.current.clear();
-
-    // Add listing markers
-    mapListings.forEach((listing) => {
-      const statusColor = getStatusColor(listing.status);
-      const markerKey = `listing-${listing.id}`;
-
-      // Try to use AdvancedMarkerElement if available
-      if (google.maps.marker?.AdvancedMarkerElement) {
-        const priceDiv = document.createElement('div');
-        const priceLabel = listing.price >= 1000000
-          ? '$' + (listing.price / 1000000).toFixed(1) + 'M'
-          : '$' + Math.round(listing.price / 1000) + 'K';
-        priceDiv.innerHTML = `
-          <div style="background-color: ${statusColor}; padding: 4px 8px; border-radius: 9999px; color: white; font-size: 12px; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.3); cursor: pointer;">
-            ${priceLabel}
-          </div>
-        `;
-
-        const marker = new google.maps.marker.AdvancedMarkerElement({
-          position: { lat: listing.lat, lng: listing.lng },
-          map: mapInstanceRef.current,
-          content: priceDiv,
-          title: listing.address,
-        });
-
-        marker.addListener('click', () => openListingInfo(listing));
-        markersRef.current.set(markerKey, marker);
-      } else {
-        // Fallback to regular marker
-        const marker = new google.maps.Marker({
-          position: { lat: listing.lat, lng: listing.lng },
-          map: mapInstanceRef.current,
-          title: listing.address,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 8,
-            fillColor: statusColor,
-            fillOpacity: 1,
-            strokeColor: '#fff',
-            strokeWeight: 2,
-          },
-        });
-
-        marker.addListener('click', () => openListingInfo(listing));
-        markersRef.current.set(markerKey, marker);
-      }
-    });
-
-    // Add video markers only if < 500 listings
-    if (mapListings.length < 500) {
-      mapVideos.forEach((video) => {
-        const videoKey = `video-${video.id}`;
-        const videoDiv = document.createElement('div');
-        videoDiv.innerHTML = `
-          <div class="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 text-white shadow-lg hover:bg-red-700 transition cursor-pointer">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
-            </svg>
-          </div>
-        `;
-
-        if (google.maps.marker?.AdvancedMarkerElement) {
-          const marker = new google.maps.marker.AdvancedMarkerElement({
-            position: { lat: video.lat, lng: video.lng },
-            map: mapInstanceRef.current,
-            content: videoDiv,
-            title: video.title,
-          });
-
-          marker.addListener('click', () => openVideoInfo(video));
-          markersRef.current.set(videoKey, marker);
-        } else {
-          const marker = new google.maps.Marker({
-            position: { lat: video.lat, lng: video.lng },
-            map: mapInstanceRef.current,
-            title: video.title,
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 8,
-              fillColor: '#dc2626',
-              fillOpacity: 1,
-              strokeColor: '#fff',
-              strokeWeight: 2,
-            },
-          });
-
-          marker.addListener('click', () => openVideoInfo(video));
-          markersRef.current.set(videoKey, marker);
-        }
-      });
+  // Initialize map
+  const initializeMap = useCallback(() => {
+    if (!containerRef.current || typeof google === 'undefined' || !google.maps) {
+      return;
     }
-  }, []);
 
-  const getStatusColor = (status: string): string => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return '#22c55e'; // green
-      case 'pending':
-        return '#eab308'; // yellow
-      case 'sold':
-        return '#ef4444'; // red
-      default:
-        return '#6366f1'; // indigo
+    if (mapRef.current) {
+      return; // Already initialized
+    }
+
+    const map = new google.maps.Map(containerRef.current, {
+      zoom: 10,
+      center: { lat: 36.85, lng: -76.28 },
+      mapTypeControl: true,
+      streetViewControl: true,
+      zoomControl: true,
+      fullscreenControl: true,
+    });
+
+    mapRef.current = map;
+    boundsRef.current = map.getBounds() || null;
+
+    // Fetch initial data
+    if (boundsRef.current) {
+      const bounds: MapBounds = {
+        sw_lat: boundsRef.current.getSouthWest().lat(),
+        sw_lng: boundsRef.current.getSouthWest().lng(),
+        ne_lat: boundsRef.current.getNorthEast().lat(),
+        ne_lng: boundsRef.current.getNorthEast().lng(),
+      };
+      fetchMapData(bounds);
+    }
+
+    // Handle map idle (bounds changed, zoom changed, etc.)
+    map.addListener('idle', () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      debounceTimerRef.current = setTimeout(() => {
+        const newBounds = map.getBounds();
+        if (newBounds) {
+          boundsRef.current = newBounds;
+          const bounds: MapBounds = {
+            sw_lat: newBounds.getSouthWest().lat(),
+            sw_lng: newBounds.getSouthWest().lng(),
+            ne_lat: newBounds.getNorthEast().lat(),
+            ne_lng: newBounds.getNorthEast().lng(),
+          };
+          fetchMapData(bounds);
+        }
+      }, 300);
+    });
+  }, [fetchMapData]);
+
+  // Load Google Maps script with proper race condition fix
+  useEffect(() => {
+    // If google maps already loaded, init immediately
+    if (typeof google !== 'undefined' && google.maps) {
+      initializeMap();
+      return;
+    }
+
+    // Check if script already exists
+    const existingScript = document.querySelector(
+      'script[src*="maps.googleapis.com/maps/api/js"]'
+    );
+    if (existingScript) {
+      // Script exists but may not be loaded yet - poll for google.maps
+      const interval = setInterval(() => {
+        if (typeof google !== 'undefined' && google.maps) {
+          clearInterval(interval);
+          initializeMap();
+        }
+      }, 100);
+      return () => clearInterval(interval);
+    }
+
+    // Load script fresh
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => initializeMap();
+    script.onerror = () => console.error('Failed to load Google Maps API');
+    document.head.appendChild(script);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [initializeMap]);
+
+  // Render listing markers
+  useEffect(() => {
+    if (!mapRef.current || typeof google === 'undefined' || !google.maps) {
+      return;
+    }
+
+    // Clear old listing markers
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current.clear();
+    infoWindowsRef.current.forEach((iw) => iw.close());
+    infoWindowsRef.current.clear();
+
+    // Create new markers for each listing
+    listings.forEach((listing) => {
+      const color = getStatusColor(listing.status);
+      const marker = new google.maps.Marker({
+        position: { lat: listing.lat, lng: listing.lng },
+        map: mapRef.current,
+        icon: createMarkerIcon(color),
+        title: listing.address,
+      });
+
+      markersRef.current.set(listing.id, marker);
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div class="w-64 p-3 font-sans">
+            <h3 class="text-lg font-bold">${listing.priceFormatted}</h3>
+            <p class="text-sm text-gray-700">${listing.address}</p>
+            <p class="text-xs text-gray-600">${listing.city}, ${listing.state} ${listing.zip}</p>
+            <div class="flex gap-4 my-2 text-xs">
+              <span>🛏️ ${listing.beds} Beds</span>
+              <span>🚿 ${listing.baths} Baths</span>
+              <span>📐 ${listing.sqft.toLocaleString()} sqft</span>
+            </div>
+            <a href="/listings/${listing.id}/${listing.slug}" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">View Details →</a>
+          </div>
+        `,
+      });
+
+      infoWindowsRef.current.set(`listing-${listing.id}`, infoWindow);
+
+      marker.addListener('click', () => {
+        if (currentInfoWindowRef.current) {
+          currentInfoWindowRef.current.close();
+        }
+        infoWindow.open(mapRef.current, marker);
+        currentInfoWindowRef.current = infoWindow;
+        setSelectedListing(listing);
+      });
+    });
+  }, [listings]);
+
+  // Render video markers
+  useEffect(() => {
+    if (!mapRef.current || typeof google === 'undefined' || !google.maps) {
+      return;
+    }
+
+    // Clear old video markers
+    videoMarkersRef.current.forEach((marker) => marker.setMap(null));
+    videoMarkersRef.current.clear();
+
+    videos.forEach((video) => {
+      const marker = new google.maps.Marker({
+        position: { lat: video.lat, lng: video.lng },
+        map: mapRef.current,
+        icon: createMarkerIcon('#dc2626', true),
+        title: video.title,
+      });
+
+      videoMarkersRef.current.set(video.id, marker);
+
+      // Extract YouTube video ID
+      const youtubeId = extractYoutubeId(video.youtube_url);
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div class="w-80 p-3 font-sans">
+            <h3 class="text-lg font-bold mb-2">${video.title}</h3>
+            <p class="text-sm text-gray-600 mb-3">${video.neighborhood}</p>
+            <div class="aspect-video">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/${youtubeId}"
+                title="${video.title}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+        `,
+      });
+
+      infoWindowsRef.current.set(`video-${video.id}`, infoWindow);
+
+      marker.addListener('click', () => {
+        if (currentInfoWindowRef.current) {
+          currentInfoWindowRef.current.close();
+        }
+        infoWindow.open(mapRef.current, marker);
+        currentInfoWindowRef.current = infoWindow;
+      });
+    });
+  }, [videos]);
+
+  // Extract YouTube video ID from various URL formats
+  const extractYoutubeId = (url: string): string => {
+    try {
+      const youtubeUrl = new URL(url);
+      const id = youtubeUrl.searchParams.get('v');
+      if (id) return id;
+
+      // Handle youtu.be short links
+      if (youtubeUrl.hostname === 'youtu.be') {
+        return youtubeUrl.pathname.slice(1);
+      }
+    } catch {
+      // Fallback regex parsing
+      const match = url.match(
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
+      );
+      if (match && match[1]) return match[1];
+    }
+    return '';
+  };
+
+  // Handle filter changes
+  const handleFilterChange = (
+    key: keyof FilterState,
+    value: string
+  ): void => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // Handle search button click
+  const handleSearch = (): void => {
+    if (mapRef.current && boundsRef.current) {
+      const bounds: MapBounds = {
+        sw_lat: boundsRef.current.getSouthWest().lat(),
+        sw_lng: boundsRef.current.getSouthWest().lng(),
+        ne_lat: boundsRef.current.getNorthEast().lat(),
+        ne_lng: boundsRef.current.getNorthEast().lng(),
+      };
+      fetchMapData(bounds);
     }
   };
 
-  const openListingInfo = (listing: MapListing) => {
+  // Handle listing card click
+  const handleListingClick = (listing: MapListing): void => {
+    if (!mapRef.current || typeof google === 'undefined' || !google.maps) {
+      return;
+    }
+
+    // Pan and zoom to listing
+    mapRef.current.panTo({ lat: listing.lat, lng: listing.lng });
+    mapRef.current.setZoom(16);
+
+    // Open info window
+    const marker = markersRef.current.get(listing.id);
+    const infoWindow = infoWindowsRef.current.get(`listing-${listing.id}`);
+    if (marker && infoWindow) {
+      if (currentInfoWindowRef.current) {
+        currentInfoWindowRef.current.close();
+      }
+      infoWindow.open(mapRef.current, marker);
+      currentInfoWindowRef.current = infoWindow;
+    }
+
     setSelectedListing(listing);
     if (isMobile) {
-      setShowDrawer(true);
-    } else {
-      const content = `
-        <div class="max-w-xs">
-          <p class="font-bold text-lg">$${listing.priceFormatted}</p>
-          <p class="text-gray-700">${listing.address}</p>
-          <p class="text-gray-600 text-sm mt-1">${listing.beds} bed &middot; ${listing.baths} bath &middot; ${listing.sqft?.toLocaleString()} sqft</p>
-          <a href="/listings/${listing.id}/${listing.slug}" class="inline-block mt-3 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">View Details</a>
-        </div>
-      `;
-
-      if (infoWindowRef.current) infoWindowRef.current.close();
-      infoWindowRef.current = new google.maps.InfoWindow({ content });
-      infoWindowRef.current.open(mapInstanceRef.current, undefined);
-      infoWindowRef.current.setPosition({ lat: listing.lat, lng: listing.lng });
+      setDrawerOpen(false);
     }
-  };
-
-  const openVideoInfo = (video: MapVideo) => {
-    const youtubeId = extractYoutubeId(video.youtube_url);
-    const content = `
-      <div class="max-w-sm">
-        <p class="font-bold text-lg">${video.title}</p>
-        <p class="text-gray-600 text-sm">${video.neighborhood}</p>
-        <iframe class="w-full h-auto mt-2 rounded" style="aspect-ratio: 16/9" src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allowfullscreen></iframe>
-      </div>
-    `;
-
-    if (infoWindowRef.current) infoWindowRef.current.close();
-    infoWindowRef.current = new google.maps.InfoWindow({ content });
-    infoWindowRef.current.open(mapInstanceRef.current, undefined);
-    infoWindowRef.current.setPosition({ lat: video.lat, lng: video.lng });
-  };
-
-  const extractYoutubeId = (url: string): string => {
-    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-    return match ? match[1] : '';
-  };
-
-  const flyToListing = (listing: MapListing) => {
-    if (!mapInstanceRef.current) return;
-    mapInstanceRef.current.panTo({ lat: listing.lat, lng: listing.lng });
-    mapInstanceRef.current.setZoom(16);
-    setSelectedListing(listing);
-    openListingInfo(listing);
-  };
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilter((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const applyFilters = () => {
-    fetchListingsForBounds();
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Left: Map (60% on desktop, full on mobile) */}
-      <div className={`${isMobile ? 'w-full' : 'w-3/5'} flex flex-col`}>
+    <div className="flex h-screen w-full overflow-hidden bg-gray-100">
+      {/* Map Container */}
+      <div
+        className={`${
+          isMobile ? 'w-full' : 'w-3/5'
+        } relative flex flex-col bg-white shadow-lg`}
+      >
         {/* Filter Bar */}
         <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center">
             <select
-              value={filter.type}
+              value={filters.type}
               onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="border border-gray-300 rounded px-3 py-2 text-sm"
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Type</option>
+              <option value="">Property Type</option>
               <option value="Single Family">Single Family</option>
               <option value="Condo">Condo</option>
               <option value="Townhouse">Townhouse</option>
@@ -352,25 +439,25 @@ export default function MapClient() {
             <input
               type="number"
               placeholder="Min Price"
-              value={filter.minPrice}
+              value={filters.minPrice}
               onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-              className="border border-gray-300 rounded px-3 py-2 text-sm"
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <input
               type="number"
               placeholder="Max Price"
-              value={filter.maxPrice}
+              value={filters.maxPrice}
               onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-              className="border border-gray-300 rounded px-3 py-2 text-sm"
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <select
-              value={filter.beds}
+              value={filters.beds}
               onChange={(e) => handleFilterChange('beds', e.target.value)}
-              className="border border-gray-300 rounded px-3 py-2 text-sm"
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Beds</option>
+              <option value="">Bedrooms</option>
               <option value="1">1+</option>
               <option value="2">2+</option>
               <option value="3">3+</option>
@@ -378,8 +465,8 @@ export default function MapClient() {
             </select>
 
             <button
-              onClick={applyFilters}
-              className="bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-blue-700"
+              onClick={handleSearch}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
               Search
             </button>
@@ -387,70 +474,79 @@ export default function MapClient() {
         </div>
 
         {/* Map */}
-        <div ref={mapRef} className="flex-1 relative">
-          {loading && (
-            <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded shadow-lg text-sm font-medium">
-              Loading listings...
-            </div>
-          )}
-          <div className="absolute bottom-4 left-4 bg-white px-4 py-2 rounded shadow-lg text-sm">
-            <p className="font-medium">{listings.length} listings</p>
-            {videos.length > 0 && <p className="text-gray-600">{videos.length} video tours</p>}
-          </div>
-          {isMobile && listings.length > 0 && (
-            <button
-              onClick={() => setShowDrawer(true)}
-              className="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-lg text-sm font-medium hover:bg-blue-700"
-            >
-              View Listings
-            </button>
-          )}
+        <div
+          ref={containerRef}
+          className="flex-1 relative"
+          style={{ minHeight: '400px' }}
+        />
+
+        {/* Badge - Listing and Video Count */}
+        <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 text-sm font-semibold text-gray-800 z-10">
+          <div>📍 {listings.length} Listings</div>
+          {videos.length > 0 && <div>🎥 {videos.length} Video Tours</div>}
         </div>
+
+        {/* Mobile View Listings Button */}
+        {isMobile && (
+          <button
+            onClick={() => setDrawerOpen(!drawerOpen)}
+            className="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition-colors font-medium z-10"
+          >
+            View Listings ({listings.length})
+          </button>
+        )}
       </div>
 
-      {/* Right: Listings panel (40% on desktop, drawer on mobile) */}
+      {/* Desktop Listings Panel */}
       {!isMobile && (
-        <div className="w-2/5 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-4">
+        <div className="w-2/5 bg-white border-l border-gray-200 flex flex-col">
+          <div className="border-b border-gray-200 p-4 bg-gray-50">
+            <h2 className="text-lg font-bold text-gray-900">
+              Properties ({listings.length})
+            </h2>
+            {loading && <p className="text-sm text-gray-500 mt-1">Loading...</p>}
+          </div>
+
+          <div className="flex-1 overflow-y-auto">
             {listings.length === 0 ? (
-              <div className="text-center text-gray-500 mt-8">
-                <p>Pan and zoom the map to see listings</p>
+              <div className="p-6 text-center text-gray-500">
+                <p>No properties found. Adjust filters or zoom out.</p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2 p-3">
                 {listings.map((listing) => (
                   <div
                     key={listing.id}
-                    onClick={() => flyToListing(listing)}
-                    className={`p-3 border rounded cursor-pointer transition ${
+                    onClick={() => handleListingClick(listing)}
+                    className={`p-3 border rounded-lg cursor-pointer transition-all hover:shadow-md ${
                       selectedListing?.id === listing.id
-                        ? 'border-blue-600 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <p className="font-bold text-lg">${listing.priceFormatted}</p>
-                    <p className="text-gray-700 text-sm mt-1">{listing.address}</p>
-                    <p className="text-gray-600 text-xs mt-1">
-                      {listing.beds} bed &middot; {listing.baths} bath &middot; {listing.sqft?.toLocaleString()} sqft
-                    </p>
-                    <div className="mt-2 flex items-center justify-between">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-blue-600 text-sm">
+                          {listing.priceFormatted}
+                        </h3>
+                        <p className="text-xs text-gray-700 mt-1 line-clamp-2">
+                          {listing.address}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {listing.city}, {listing.state} {listing.zip}
+                        </p>
+                      </div>
                       <span
-                        className={`inline-block px-2 py-1 text-xs font-semibold rounded text-white ${
-                          listing.status.toLowerCase() === 'active'
-                            ? 'bg-green-600'
-                            : listing.status.toLowerCase() === 'pending'
-                            ? 'bg-yellow-600'
-                            : 'bg-red-600'
-                        }`}
+                        className="px-2 py-1 rounded text-xs font-semibold text-white whitespace-nowrap"
+                        style={{ backgroundColor: getStatusColor(listing.status) }}
                       >
                         {listing.status}
                       </span>
-                      <a
-                        href={`/listings/${listing.id}/${listing.slug}`}
-                        className="text-blue-600 hover:underline text-sm font-medium"
-                      >
-                        Details &rarr;
-                      </a>
+                    </div>
+                    <div className="flex gap-2 mt-2 text-xs text-gray-600">
+                      <span>🛏️ {listing.beds}</span>
+                      <span>🚿 {listing.baths}</span>
+                      <span>📐 {listing.sqft.toLocaleString()}</span>
                     </div>
                   </div>
                 ))}
@@ -460,39 +556,72 @@ export default function MapClient() {
         </div>
       )}
 
-      {/* Mobile drawer */}
-      {isMobile && showDrawer && (
-        <div className="fixed inset-0 z-40 bg-black bg-opacity-50 flex flex-col-reverse">
-          <div className="bg-white rounded-t-lg max-h-96 overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-              <h3 className="font-bold">Listings ({listings.length})</h3>
+      {/* Mobile Drawer */}
+      {isMobile && drawerOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-40 z-40"
+            onClick={() => setDrawerOpen(false)}
+          />
+          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl max-h-[80vh] overflow-y-auto z-50">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+              <h2 className="text-lg font-bold">Properties ({listings.length})</h2>
               <button
-                onClick={() => setShowDrawer(false)}
-                className="text-gray-500 hover:text-gray-700"
+                onClick={() => setDrawerOpen(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
               >
-                &times;
+                ✕
               </button>
             </div>
-            <div className="p-4 space-y-3">
-              {listings.map((listing) => (
-                <div
-                  key={listing.id}
-                  onClick={() => {
-                    flyToListing(listing);
-                    setShowDrawer(false);
-                  }}
-                  className="p-3 border border-gray-200 rounded cursor-pointer hover:bg-gray-50"
-                >
-                  <p className="font-bold">${listing.priceFormatted}</p>
-                  <p className="text-gray-700 text-sm">{listing.address}</p>
-                  <p className="text-gray-600 text-xs mt-1">
-                    {listing.beds} bed &middot; {listing.baths} bath &middot; {listing.sqft?.toLocaleString()} sqft
-                  </p>
+
+            <div className="p-3">
+              {listings.length === 0 ? (
+                <div className="p-6 text-center text-gray-500">
+                  <p>No properties found.</p>
                 </div>
-              ))}
+              ) : (
+                <div className="space-y-2">
+                  {listings.map((listing) => (
+                    <div
+                      key={listing.id}
+                      onClick={() => handleListingClick(listing)}
+                      className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                        selectedListing?.id === listing.id
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-blue-600 text-sm">
+                            {listing.priceFormatted}
+                          </h3>
+                          <p className="text-xs text-gray-700 mt-1 truncate">
+                            {listing.address}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {listing.city}, {listing.state}
+                          </p>
+                        </div>
+                        <span
+                          className="px-2 py-1 rounded text-xs font-semibold text-white whitespace-nowrap"
+                          style={{ backgroundColor: getStatusColor(listing.status) }}
+                        >
+                          {listing.status}
+                        </span>
+                      </div>
+                      <div className="flex gap-2 mt-2 text-xs text-gray-600">
+                        <span>🛏️ {listing.beds}</span>
+                        <span>🚿 {listing.baths}</span>
+                        <span>📐 {listing.sqft.toLocaleString()} sqft</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
