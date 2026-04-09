@@ -220,16 +220,9 @@ export default function MapClient() {
       });
     };
 
-    // Deferred init — gives Google Maps internals time to finish setup
-    const deferredInit = () => {
-      requestAnimationFrame(() => {
-        if (!cancelled) initMap();
-      });
-    };
-
-    // If Google Maps already loaded, init on next frame
-    if (typeof google !== 'undefined' && google.maps) {
-      deferredInit();
+    // If Google Maps already loaded and ready, init immediately
+    if (typeof google !== 'undefined' && google.maps && google.maps.Map) {
+      initMap();
       return () => {
         cancelled = true;
       };
@@ -241,11 +234,11 @@ export default function MapClient() {
     );
 
     if (existingScript) {
-      // Script tag exists, poll until google.maps is ready
+      // Script tag exists, poll until google.maps.Map is ready
       const interval = setInterval(() => {
-        if (typeof google !== 'undefined' && google.maps) {
+        if (typeof google !== 'undefined' && google.maps && google.maps.Map) {
           clearInterval(interval);
-          deferredInit();
+          initMap();
         }
       }, 100);
       return () => {
@@ -254,12 +247,17 @@ export default function MapClient() {
       };
     }
 
-    // Load script fresh
+    // Load script fresh using Google's recommended callback approach
+    // The callback fires AFTER all internal subsystems are initialized
+    const callbackName = '__vahomeMapInit__';
+    (window as any)[callbackName] = () => {
+      if (!cancelled) initMap();
+    };
+
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker&callback=${callbackName}`;
     script.async = true;
     script.defer = true;
-    script.onload = () => deferredInit();
     script.onerror = () => console.error('Failed to load Google Maps API');
     document.head.appendChild(script);
 
