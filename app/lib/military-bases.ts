@@ -129,7 +129,7 @@ export function getNearestBases(
   lat: number,
   lng: number,
   count: number = 5
-): MilitaryBase[] {
+): (MilitaryBase & { distance: number })[] {
   return [...militaryBases]
     .map((base) => ({
       ...base,
