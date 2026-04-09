@@ -153,7 +153,7 @@ export default function MapClient({ listings }: Props) {
       map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
 
       map.on('style.load', () => {
-        // Strip the hosted mapbox base layers/source — composite TileJSON stalls in
+        // Strip the hosted mapbox base layers/source â composite TileJSON stalls in
         // mapbox-gl v3 for us, so we render CARTO raster tiles instead.
         try {
           const style: any = (map as any).style
@@ -170,7 +170,7 @@ export default function MapClient({ listings }: Props) {
         map.addLayer({ id: 'carto-basemap-layer', type: 'raster', source: 'carto-basemap' })
 
         // -------------------------------------------------------------------
-        // FEMA National Flood Hazard Layer (NFHL) overlay ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ public ArcGIS
+        // FEMA National Flood Hazard Layer (NFHL) overlay ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ public ArcGIS
         // MapServer. Added here as a raster source so it's tile-based and
         // virtually free performance-wise (only in-view tiles are fetched,
         // nothing runs on the main thread). Toggled via the "Flood zones"
@@ -201,6 +201,7 @@ export default function MapClient({ listings }: Props) {
           cluster: true,
           clusterMaxZoom: 14,
           clusterRadius: 50,
+          maxzoom: 14,
         })
 
         // Cluster circles (visible at low zoom)
@@ -260,7 +261,7 @@ export default function MapClient({ listings }: Props) {
             'circle-color': '#ffffff',
             'circle-radius': 6,
             'circle-stroke-width': 2,
-            // NOTE: pill/dot color hook ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ swap these for data-driven expressions later
+            // NOTE: pill/dot color hook ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ swap these for data-driven expressions later
             // e.g. ['case', ['==', ['get','status'],'pending'], '#eab308', '#111827']
             'circle-stroke-color': '#111827',
           },
@@ -278,11 +279,11 @@ export default function MapClient({ listings }: Props) {
             'text-size': 12,
             'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
             'text-padding': 2,
-            'text-allow-overlap': false,
-            'text-ignore-placement': false,
+            'text-allow-overlap': true,
+            'text-ignore-placement': true,
           },
           paint: {
-            // NOTE: pill color hook ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ default is black text on the white pill background
+            // NOTE: pill color hook ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ default is black text on the white pill background
             // below. To color-code later (e.g. viewed=gray, pending=yellow, sold=red),
             // replace the constant strings with ['case', ...] / ['match', ...] expressions.
             'text-color': '#111827',
@@ -293,7 +294,7 @@ export default function MapClient({ listings }: Props) {
         })
 
         // -------------------------------------------------------------------
-        // Interaction: cluster click ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ zoom in
+        // Interaction: cluster click ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ zoom in
         // -------------------------------------------------------------------
         map.on('click', 'clusters', (e: any) => {
           const features: any[] = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
@@ -316,7 +317,7 @@ export default function MapClient({ listings }: Props) {
           map.getCanvas().style.cursor = ''
         })
 
-        // Interaction: pill/dot click ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ select listing
+        // Interaction: pill/dot click ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ select listing
         const selectFromFeature = (e: any) => {
           const f = e.features && e.features[0]
           if (!f) return
@@ -351,7 +352,7 @@ export default function MapClient({ listings }: Props) {
         //
         // The GeoJSON source therefore NEVER contains more than 500 features at
         // any time, matching Zillow's "500 of N" behavior exactly. Clustering
-        // still works, but only across the 500 in-view points ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ listings
+        // still works, but only across the 500 in-view points ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ listings
         // outside the viewport are not counted in clusters (same as Zillow).
         // -------------------------------------------------------------------
         const rebuildSource = () => {
@@ -388,7 +389,7 @@ export default function MapClient({ listings }: Props) {
               city: l.city,
               propertyType: l.propertyType,
               status: l.status || 'active',
-              // Future color-coding hook ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ set these to real values when ready.
+              // Future color-coding hook ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ set these to real values when ready.
               viewed: false,
             },
           }))
@@ -445,7 +446,7 @@ export default function MapClient({ listings }: Props) {
     )
   }, [showFlood, mapReady])
 
-  // Derived: cards to show in the sidebar mirror the ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¤500 features currently in
+  // Derived: cards to show in the sidebar mirror the ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¤500 features currently in
   // the GeoJSON source. visibleIds is populated by rebuildSource() on every
   // moveend, so this is always in lockstep with what's actually on the map.
   const visibleInView = useMemo(() => {
@@ -501,7 +502,7 @@ export default function MapClient({ listings }: Props) {
 
       {/* Map */}
       <div className="relative h-[50vh] w-full lg:h-full lg:w-3/5">
-        <div ref={mapContainerRef} className="absolute inset-0" />
+        <div ref={mapContainerRef} className="h-full w-full" />
         {/* Layer toggles (top-left over the map) */}
         <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
           <button
@@ -515,7 +516,7 @@ export default function MapClient({ listings }: Props) {
             }
             title="Toggle FEMA flood hazard zones"
           >
-            {showFlood ? 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Flood zones' : 'Flood zones'}
+            {showFlood ? 'ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Flood zones' : 'Flood zones'}
           </button>
         </div>
       </div>
