@@ -531,7 +531,7 @@ export default function MapClient() {
   return (
     <div
       className="flex w-full overflow-hidden bg-gray-100"
-      style={{ height: 'calc(100vh - 64px)' }}
+      style={{ height: 'calc(100vh - 64px)', marginTop: '64px' }}
     >
       {/* Load Google Maps API via next/script - onReady fires after script load AND hydration */}
       <Script
