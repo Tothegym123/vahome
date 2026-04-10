@@ -47,6 +47,85 @@ interface FilterState {
   beds: string;
 }
 
+// Military base boundaries (Hampton Roads area)
+// Easily removable: delete this array and related code to remove base overlays
+const MILITARY_BASES = [
+  {
+    name: 'Naval Station Norfolk',
+    coords: [
+      { lat: 36.9575, lng: -76.3380 },
+      { lat: 36.9575, lng: -76.2950 },
+      { lat: 36.9420, lng: -76.2950 },
+      { lat: 36.9350, lng: -76.3050 },
+      { lat: 36.9300, lng: -76.3200 },
+      { lat: 36.9400, lng: -76.3380 },
+    ],
+  },
+  {
+    name: 'NAS Oceana',
+    coords: [
+      { lat: 36.8310, lng: -76.0500 },
+      { lat: 36.8310, lng: -76.0100 },
+      { lat: 36.8100, lng: -76.0100 },
+      { lat: 36.8100, lng: -76.0500 },
+    ],
+  },
+  {
+    name: 'JEB Little Creek-Fort Story',
+    coords: [
+      { lat: 36.9250, lng: -76.1850 },
+      { lat: 36.9250, lng: -76.1400 },
+      { lat: 36.9100, lng: -76.1400 },
+      { lat: 36.9100, lng: -76.1850 },
+    ],
+  },
+  {
+    name: 'Norfolk Naval Shipyard',
+    coords: [
+      { lat: 36.8380, lng: -76.3050 },
+      { lat: 36.8380, lng: -76.2900 },
+      { lat: 36.8200, lng: -76.2900 },
+      { lat: 36.8200, lng: -76.3050 },
+    ],
+  },
+  {
+    name: 'Dam Neck Annex',
+    coords: [
+      { lat: 36.8130, lng: -75.9750 },
+      { lat: 36.8130, lng: -75.9580 },
+      { lat: 36.7950, lng: -75.9580 },
+      { lat: 36.7950, lng: -75.9750 },
+    ],
+  },
+  {
+    name: 'Langley AFB',
+    coords: [
+      { lat: 37.0950, lng: -76.3750 },
+      { lat: 37.0950, lng: -76.3400 },
+      { lat: 37.0750, lng: -76.3400 },
+      { lat: 37.0750, lng: -76.3750 },
+    ],
+  },
+  {
+    name: 'Fort Eustis',
+    coords: [
+      { lat: 37.1650, lng: -76.6200 },
+      { lat: 37.1650, lng: -76.5800 },
+      { lat: 37.1400, lng: -76.5800 },
+      { lat: 37.1400, lng: -76.6200 },
+    ],
+  },
+  {
+    name: 'Naval Weapons Station Yorktown',
+    coords: [
+      { lat: 37.2400, lng: -76.5900 },
+      { lat: 37.2400, lng: -76.5500 },
+      { lat: 37.2150, lng: -76.5500 },
+      { lat: 37.2150, lng: -76.5900 },
+    ],
+  },
+];
+
 // Color mapping for listing status
 const getStatusColor = (status: string): string => {
   switch (status.toLowerCase()) {
@@ -72,8 +151,10 @@ export default function MapClient() {
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const boundsRef = useRef<any>(null);
   const fetchMapDataRef = useRef<((bounds: MapBounds) => Promise<void>) | null>(null);
+  const basePolygonsRef = useRef<any[]>([]);
 
   const [listings, setListings] = useState<MapListing[]>([]);
+  const [showBases, setShowBases] = useState(false);
   const [videos, setVideos] = useState<MapVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -230,6 +311,45 @@ export default function MapClient() {
       }
     };
   }, []);
+
+  // Render/remove military base polygons
+  useEffect(() => {
+    if (!mapRef.current || typeof google === 'undefined' || !google.maps) return;
+
+    // Clear existing polygons
+    basePolygonsRef.current.forEach((poly) => poly.setMap(null));
+    basePolygonsRef.current = [];
+
+    if (showBases) {
+      MILITARY_BASES.forEach((base) => {
+        const polygon = new google.maps.Polygon({
+          paths: base.coords,
+          strokeColor: '#dc2626',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#dc2626',
+          fillOpacity: 0.25,
+          map: mapRef.current,
+        });
+
+        // Info window on click
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div class="p-2 font-sans font-semibold text-sm">${base.name}</div>`,
+        });
+
+        polygon.addListener('click', (event: any) => {
+          if (currentInfoWindowRef.current) {
+            currentInfoWindowRef.current.close();
+          }
+          infoWindow.setPosition(event.latLng);
+          infoWindow.open(mapRef.current);
+          currentInfoWindowRef.current = infoWindow;
+        });
+
+        basePolygonsRef.current.push(polygon);
+      });
+    }
+  }, [showBases]);
 
   // Render listing markers
   useEffect(() => {
@@ -474,6 +594,17 @@ export default function MapClient() {
               className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
               Search
+            </button>
+
+            <button
+              onClick={() => setShowBases((prev) => !prev)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                showBases
+                  ? 'bg-red-600 text-white hover:bg-red-700'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              {showBases ? 'Hide Bases' : 'Military Bases'}
             </button>
           </div>
         </div>
