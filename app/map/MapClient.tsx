@@ -816,7 +816,7 @@ export default function MapClient() {
                         style={{
                           backgroundColor: getStatusColor(listing.status),
                         }}
-                               >
+                      >
                         {listing.status}
                       </span>
                     </div>
