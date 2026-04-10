@@ -171,6 +171,7 @@ export default function MapClient() {
       streetViewControl: true,
       zoomControl: true,
       fullscreenControl: true,
+      gestureHandling: 'greedy',
     });
 
     mapRef.current = map;
