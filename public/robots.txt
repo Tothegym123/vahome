@@ -96,5 +96,4 @@ Allow: /
 Disallow: /api/
 Disallow: /admin/
 
-# Sitemap (uncomment when ready)
-# Sitemap: https://www.vahome.com/sitemap.xml
+Sitemap: https://www.vahometest2.com/sitemap.xml
