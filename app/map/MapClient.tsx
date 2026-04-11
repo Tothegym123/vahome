@@ -288,6 +288,7 @@ export default function MapClient() {
   const fetchMapDataRef = useRef<((bounds: MapBounds) => Promise<void>) | null>(null);
   const basePolygonsRef = useRef<any[]>([]);
 
+  const [mapActivated, setMapActivated] = useState(false);
   const [listings, setListings] = useState<MapListing[]>([]);
   const [showBases, setShowBases] = useState(false);
   const [videos, setVideos] = useState<MapVideo[]>([]);
@@ -668,12 +669,14 @@ export default function MapClient() {
       className="flex w-full overflow-hidden bg-gray-100"
       style={{ height: 'calc(100vh - 64px)', marginTop: '64px' }}
     >
-      {/* Load Google Maps API via next/script - onReady fires after script load AND hydration */}
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=marker`}
-        strategy="afterInteractive"
-        onReady={initMap}
-      />
+      {/* Load Google Maps API only after user activates the map */}
+      {mapActivated && (
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=marker`}
+          strategy="afterInteractive"
+          onReady={initMap}
+        />
+      )}
 
       {/* Map Container */}
       <div
@@ -681,86 +684,125 @@ export default function MapClient() {
           isMobile ? 'w-full' : 'w-3/5'
         } relative flex flex-col bg-white shadow-lg`}
       >
-        {/* Filter Bar */}
-        <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
-          <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center">
-            <select
-              value={filters.type}
-              onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Property Type</option>
-              <option value="Single Family">Single Family</option>
-              <option value="Condo">Condo</option>
-              <option value="Townhouse">Townhouse</option>
-              <option value="Land">Land</option>
-            </select>
+        {/* Filter Bar - only show after map is activated */}
+        {mapActivated && (
+          <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
+            <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center">
+              <select
+                value={filters.type}
+                onChange={(e) => handleFilterChange('type', e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Property Type</option>
+                <option value="Single Family">Single Family</option>
+                <option value="Condo">Condo</option>
+                <option value="Townhouse">Townhouse</option>
+                <option value="Land">Land</option>
+              </select>
 
-            <input
-              type="number"
-              placeholder="Min Price"
-              value={filters.minPrice}
-              onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              <input
+                type="number"
+                placeholder="Min Price"
+                value={filters.minPrice}
+                onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
 
-            <input
-              type="number"
-              placeholder="Max Price"
-              value={filters.maxPrice}
-              onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              <input
+                type="number"
+                placeholder="Max Price"
+                value={filters.maxPrice}
+                onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
 
-            <select
-              value={filters.beds}
-              onChange={(e) => handleFilterChange('beds', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Bedrooms</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-            </select>
+              <select
+                value={filters.beds}
+                onChange={(e) => handleFilterChange('beds', e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Bedrooms</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+              </select>
 
-            <button
-              onClick={handleSearch}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
-            >
-              Search
-            </button>
+              <button
+                onClick={handleSearch}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
+              >
+                Search
+              </button>
 
-            <button
-              onClick={() => setShowBases((prev) => !prev)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
-                showBases
-                  ? 'bg-red-600 text-white hover:bg-red-700'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {showBases ? 'Hide Bases' : 'Military Bases'}
-            </button>
+              <button
+                onClick={() => setShowBases((prev) => !prev)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                  showBases
+                    ? 'bg-red-600 text-white hover:bg-red-700'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {showBases ? 'Hide Bases' : 'Military Bases'}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Map */}
-        <div
-          ref={containerRef}
-          className="flex-1 relative"
-          style={{ minHeight: '400px' }}
-        />
+        {/* Static placeholder before map is activated */}
+        {!mapActivated && (
+          <div
+            className="flex-1 relative cursor-pointer group"
+            style={{ minHeight: '400px' }}
+            onClick={() => setMapActivated(true)}
+          >
+            {/* Static map image centered on Hampton Roads */}
+            <img
+              src={`https://maps.googleapis.com/maps/api/staticmap?center=36.85,-76.28&zoom=10&size=1200x800&scale=2&maptype=roadmap&key=${mapsApiKey}`}
+              alt="Hampton Roads area map"
+              className="w-full h-full object-cover"
+              fetchPriority="high"
+            />
+            {/* Click-to-load overlay */}
+            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex flex-col items-center justify-center">
+              <div className="bg-white rounded-2xl shadow-2xl px-8 py-6 text-center max-w-sm mx-4">
+                <div className="text-4xl mb-3">&#x1F5FA;&#xFE0F;</div>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">
+                  Interactive Map Search
+                </h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  Explore Hampton Roads listings with filters, military base overlays, and neighborhood video tours.
+                </p>
+                <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-sm group-hover:bg-blue-700 transition-colors">
+                  <span>&#x1F50D;</span>
+                  <span>Click to Explore the Map</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
-        {/* Badge - Listing and Video Count */}
-        <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 text-sm font-semibold text-gray-800 z-10">
-          <div>&#x1F4CD; {listings.length} Listings</div>
-          {videos.length > 0 && (
-            <div>&#x1F3A5; {videos.length} Video Tours</div>
-          )}
-        </div>
+        {/* Interactive map container - rendered after activation */}
+        {mapActivated && (
+          <div
+            ref={containerRef}
+            className="flex-1 relative"
+            style={{ minHeight: '400px' }}
+          />
+        )}
 
-        {/* Mobile View Listings Button */}
-        {isMobile && (
+        {/* Badge - Listing and Video Count (only after map is active) */}
+        {mapActivated && (
+          <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 text-sm font-semibold text-gray-800 z-10">
+            <div>&#x1F4CD; {listings.length} Listings</div>
+            {videos.length > 0 && (
+              <div>&#x1F3A5; {videos.length} Video Tours</div>
+            )}
+          </div>
+        )}
+
+        {/* Mobile View Listings Button (only after map is active) */}
+        {isMobile && mapActivated && (
           <button
             onClick={() => setDrawerOpen(!drawerOpen)}
             className="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition-colors font-medium z-10"
@@ -773,6 +815,28 @@ export default function MapClient() {
       {/* Desktop Listings Panel */}
       {!isMobile && (
         <div className="w-2/5 bg-white border-l border-gray-200 flex flex-col">
+          {/* Pre-activation info panel */}
+          {!mapActivated && (
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+              <div className="text-5xl mb-4">&#x1F3E0;</div>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                Hampton Roads Real Estate
+              </h2>
+              <p className="text-sm text-gray-600 mb-6 max-w-xs">
+                Click the map to start exploring listings across Virginia Beach, Norfolk, Chesapeake, Suffolk, Hampton, and Newport News.
+              </p>
+              <button
+                onClick={() => setMapActivated(true)}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors"
+              >
+                Load Interactive Map
+              </button>
+            </div>
+          )}
+
+          {/* Post-activation listings */}
+          {mapActivated && (
+          <>
           <div className="border-b border-gray-200 p-4 bg-gray-50">
             <h2 className="text-lg font-bold text-gray-900">
               Properties ({listings.length})
@@ -832,6 +896,8 @@ export default function MapClient() {
               </div>
             )}
           </div>
+          </>
+          )}
         </div>
       )}
 
