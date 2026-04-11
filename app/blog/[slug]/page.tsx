@@ -21,7 +21,15 @@ export async function generateMetadata({
     return { title: "Post Not Found | VaHome.com Blog" };
   }
   return {
-    title: `${post.title} | VaHome.com Blog`,
+    title: (() => {
+      const suffix = ' | VaHome.com';
+      const maxLen = 70;
+      const maxTitleLen = maxLen - suffix.length;
+      if (post.title.length > maxTitleLen) {
+        return post.title.substring(0, maxTitleLen - 1).trimEnd() + '\u2026' + suffix;
+      }
+      return post.title + suffix;
+    })(),
     description: post.excerpt,
     openGraph: {
       title: post.title,
