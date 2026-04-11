@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.vahometest2.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.vahometest2.com/about/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.vahometest2.com/agents/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.vahometest2.com/blog/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vahometest2.com/contact/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.vahometest2.com/lenders/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.vahometest2.com/listings/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.vahometest2.com/map/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.vahometest2.com/sell/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vahometest2.com/military-resources/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.vahometest2.com/privacy/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.vahometest2.com/terms/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.vahometest2.com/listings/?city=Virginia+Beach</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vahometest2.com/listings/?city=Chesapeake</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vahometest2.com/listings/?city=Norfolk</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vahometest2.com/listings/?city=Hampton</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vahometest2.com/listings/?city=Newport+News</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vahometest2.com/listings/?city=Suffolk</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+</urlset>
