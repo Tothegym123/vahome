@@ -38,6 +38,20 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/military',
+        destination: '/military-resources/',
+        permanent: true,
+      },
+      {
+        source: '/military/',
+        destination: '/military-resources/',
+        permanent: true,
+      },
+    ];
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
