@@ -1,4 +1,36 @@
-export default function ListingsPage() {
+import { Metadata } from "next";
+
+export function generateMetadata({ searchParams }: { searchParams: { city?: string; q?: string } }): Metadata {
+  const city = searchParams.city;
+  const query = searchParams.q;
+  
+  let title = "Homes for Sale in Hampton Roads";
+  let description = "Browse homes for sale in Hampton Roads, Virginia. Find your perfect property in Virginia Beach, Norfolk, Chesapeake, and more.";
+  
+  if (city) {
+    title = "Homes for Sale in " + city + ", VA";
+    description = "Browse homes for sale in " + city + ", Virginia. View listings, prices, and property details with VaHome.com.";
+  } else if (query) {
+    title = "Search Results: " + query;
+    description = "Property search results for " + query + " in Hampton Roads, Virginia.";
+  }
+  title += " | VaHome.com";
+  
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: "/listings/",
+    },
+    openGraph: { title, description, type: "website" },
+  };
+}
+
+export default function ListingsPage({
+  searchParams,
+}: {
+  searchParams: { city?: string; q?: string };
+}) {
   return (
     <div className="pt-20 min-h-screen">
       {/* Search / Filter Bar */}
