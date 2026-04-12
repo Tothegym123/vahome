@@ -13,7 +13,7 @@ const navLinks = [
   { label: 'Contact', href: '/contact' },
   { label: 'Agents', href: '/agents' },
   { label: 'Lenders', href: '/lenders' },
-  { label: 'Military Resources', href: '/military' },
+  { label: 'Military Resources', href: '/military-resources' },
 ]
 
 export default function Header() {
@@ -138,7 +138,7 @@ export default function Header() {
             <div className={"pointer-events-auto rounded-xl shadow-lg border transition-all duration-500 " + (isDark ? "bg-gray-800 border-gray-700 shadow-black/30" : "bg-white border-gray-200 shadow-lg")} style={{width: '28rem', maxWidth: '90vw'}}>
               <div className="px-4 py-3 flex items-start justify-between gap-3">
                 <p className={"text-sm leading-relaxed " + (isDark ? "text-gray-300" : "text-gray-600")}>
-                  You can start without signing up â but the <button onClick={handleRegisterClick} className={"font-semibold underline underline-offset-2 " + (isDark ? "text-red-400 hover:text-red-300" : "text-red-600 hover:text-red-700")}>really cool features</button> unlock when you do.
+                  You can start without signing up Ã¢ÂÂ but the <button onClick={handleRegisterClick} className={"font-semibold underline underline-offset-2 " + (isDark ? "text-red-400 hover:text-red-300" : "text-red-600 hover:text-red-700")}>really cool features</button> unlock when you do.
                 </p>
                 <button onClick={() => setShowBanner(false)} className={"flex-shrink-0 mt-0.5 p-1 rounded-full transition-colors " + (isDark ? "text-gray-500 hover:bg-gray-700 hover:text-gray-300" : "text-gray-400 hover:bg-gray-100 hover:text-gray-600")} aria-label="Dismiss banner">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
