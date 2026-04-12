@@ -1,3 +1,17 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About the VaHome Team | Hampton Roads Real Estate Experts",
+  description:
+    "Meet the VaHome Team — your trusted real estate experts in Hampton Roads, Virginia. Serving Virginia Beach, Norfolk, Chesapeake, Suffolk, and surrounding areas.",
+  openGraph: {
+    title: "About the VaHome Team | Hampton Roads Real Estate Experts",
+    description:
+      "Meet the VaHome Team — your trusted real estate experts in Hampton Roads, Virginia.",
+    type: "website",
+  },
+};
+
 export default function AboutPage() {
   return (
     <div className="pt-24 pb-20 min-h-screen">
