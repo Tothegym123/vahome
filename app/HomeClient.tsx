@@ -533,7 +533,7 @@ export default function HomeClient() {
               {listings.map((l) => (
                 <Link key={l.address} href={`/listings?q=${encodeURIComponent(l.address + ' ' + l.city)}`} className="fade card-lift card-bg morph rounded-2xl overflow-hidden block">
                   <div className="relative overflow-hidden aspect-[4/3]">
-                    <img src={l.img} alt={l.address} className="card-img w-full h-full object-cover" />
+                    <img src={l.img} alt={l.address} className="card-img w-full h-full object-cover" width={400} height={300} loading="lazy" />
                     <div className="absolute top-3 left-3 accent-bg-c morph text-white text-xs font-bold px-2.5 py-1 rounded-lg">{l.price}</div>
                     {l.badge && <div className={`absolute top-3 right-3 ${l.badgeColor} text-white text-xs font-semibold px-2 py-0.5 rounded-full`}>{l.badge}</div>}
                   </div>
@@ -606,7 +606,7 @@ export default function HomeClient() {
             <div className="fade grid lg:grid-cols-2 gap-12 items-center">
               <div className="relative">
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative">
-                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Map preview" className="w-full h-full object-cover" />
+                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Map preview" className="w-full h-full object-cover" width={800} height={600} loading="lazy" />
                   <div className="overlay-grad morph absolute inset-0" />
                   <div className="absolute top-[25%] left-[30%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg">$329K</div>
                   <div className="absolute top-[50%] left-[60%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg">$425K</div>
@@ -652,7 +652,7 @@ export default function HomeClient() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {neighborhoods.map((n) => (
                 <Link key={n.name} href={`/listings?city=${encodeURIComponent(n.name)}`} className="fade card-lift group relative rounded-2xl overflow-hidden aspect-[3/2] block">
-                  <img src={n.img} alt={n.name} className="card-img w-full h-full object-cover" />
+                  <img src={n.img} alt={n.name} className="card-img w-full h-full object-cover" width={400} height={300} loading="lazy" />
                   <div className="overlay-grad morph absolute inset-0" />
                   <div className="absolute bottom-4 left-4 z-10 text-white">
                     <h3 className="font-semibold text-lg">{n.name}</h3>
