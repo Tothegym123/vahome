@@ -22,7 +22,7 @@ export function generateMetadata({ searchParams }: { searchParams: { page?: stri
     title,
     description,
     alternates: {
-      canonical: category || page > 1 ? "/blog/" : undefined,
+      canonical: "/blog/",
     },
     openGraph: {
       title,
