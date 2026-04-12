@@ -2,22 +2,29 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts, getAllCategories } from "../lib/blog-posts";
 
-export function generateMetadata({ searchParams }: { searchParams: { page?: string; category?: string } }): Metadata {
+export function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { page?: string; category?: string };
+}): Metadata {
   const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
   const category = searchParams.category;
-  
   let title = "Real Estate Blog";
-  let description = "Expert real estate tips, market insights, and home buying guides for Hampton Roads, Virginia.";
-  
+  let description =
+    "Expert real estate tips, market insights, and home buying guides for Hampton Roads, Virginia.";
+
   if (category) {
     title = category + " Real Estate Articles";
-    description = "Browse " + category + " real estate articles, tips, and guides for Hampton Roads, Virginia.";
+    description =
+      "Browse " +
+      category +
+      " real estate articles, tips, and guides for Hampton Roads, Virginia.";
   }
   if (page > 1) {
     title += " - Page " + page;
   }
   title += " | VaHome.com";
-  
+
   return {
     title,
     description,
@@ -52,8 +59,10 @@ export default function BlogPage({
 
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
   const startIdx = (currentPage - 1) * POSTS_PER_PAGE;
-  const paginatedPosts = filteredPosts.slice(startIdx, startIdx + POSTS_PER_PAGE);
-
+  const paginatedPosts = filteredPosts.slice(
+    startIdx,
+    startIdx + POSTS_PER_PAGE
+  );
   const categories = getAllCategories();
 
   return (
@@ -61,9 +70,12 @@ export default function BlogPage({
       {/* Header */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">VaHome Blog</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            VaHome Blog
+          </h1>
           <p className="text-lg text-gray-600">
-            Real estate insights and home buying tips for Hampton Roads, Virginia
+            Real estate insights and home buying tips for Hampton Roads,
+            Virginia
           </p>
         </div>
       </div>
@@ -94,24 +106,23 @@ export default function BlogPage({
                         </div>
                       )}
                     </div>
-
                     <div className="p-6 flex flex-col flex-grow">
                       <div className="mb-3">
                         <span className="inline-block bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
                           {post.category}
                         </span>
                       </div>
-
                       <h2 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
-                        <Link href={`/blog/${post.slug}`} className="hover:text-blue-600 transition-colors">
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          className="hover:text-blue-600 transition-colors"
+                        >
                           {post.title}
                         </Link>
                       </h2>
-
                       <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
                         {post.excerpt}
                       </p>
-
                       <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
                         <time dateTime={post.date}>
                           {new Date(post.date).toLocaleDateString("en-US", {
@@ -122,12 +133,12 @@ export default function BlogPage({
                         </time>
                         <span>{post.author || "VaHome Team"}</span>
                       </div>
-
                       <Link
                         href={`/blog/${post.slug}`}
                         className="inline-block text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-200"
+                        aria-label={`Read more about ${post.title}`}
                       >
-                        Read More &rarr;
+                        Read: {post.title} &rarr;
                       </Link>
                     </div>
                   </article>
@@ -146,40 +157,55 @@ export default function BlogPage({
               <div className="flex justify-center items-center gap-2 mt-8">
                 {currentPage > 1 && (
                   <Link
-                    href={`/blog?page=${currentPage - 1}${selectedCategory ? `&category=${selectedCategory}` : ""}`}
+                    href={`/blog?page=${currentPage - 1}${
+                      selectedCategory
+                        ? `&category=${selectedCategory}`
+                        : ""
+                    }`}
                     className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                   >
                     &larr; Previous
                   </Link>
                 )}
-                {Array.from({ length: Math.min(totalPages, 10) }, (_, i) => {
-                  let page: number;
-                  if (totalPages <= 10) {
-                    page = i + 1;
-                  } else if (currentPage <= 5) {
-                    page = i + 1;
-                  } else if (currentPage >= totalPages - 4) {
-                    page = totalPages - 9 + i;
-                  } else {
-                    page = currentPage - 4 + i;
+                {Array.from(
+                  { length: Math.min(totalPages, 10) },
+                  (_, i) => {
+                    let page: number;
+                    if (totalPages <= 10) {
+                      page = i + 1;
+                    } else if (currentPage <= 5) {
+                      page = i + 1;
+                    } else if (currentPage >= totalPages - 4) {
+                      page = totalPages - 9 + i;
+                    } else {
+                      page = currentPage - 4 + i;
+                    }
+                    return (
+                      <Link
+                        key={page}
+                        href={`/blog?page=${page}${
+                          selectedCategory
+                            ? `&category=${selectedCategory}`
+                            : ""
+                        }`}
+                        className={`px-3 py-2 rounded-lg ${
+                          page === currentPage
+                            ? "bg-blue-600 text-white"
+                            : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                        }`}
+                      >
+                        {page}
+                      </Link>
+                    );
                   }
-                  return (
-                    <Link
-                      key={page}
-                      href={`/blog?page=${page}${selectedCategory ? `&category=${selectedCategory}` : ""}`}
-                      className={`px-3 py-2 rounded-lg ${
-                        page === currentPage
-                          ? "bg-blue-600 text-white"
-                          : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-                      }`}
-                    >
-                      {page}
-                    </Link>
-                  );
-                })}
+                )}
                 {currentPage < totalPages && (
                   <Link
-                    href={`/blog?page=${currentPage + 1}${selectedCategory ? `&category=${selectedCategory}` : ""}`}
+                    href={`/blog?page=${currentPage + 1}${
+                      selectedCategory
+                        ? `&category=${selectedCategory}`
+                        : ""
+                    }`}
                     className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                   >
                     Next &rarr;
@@ -214,7 +240,9 @@ export default function BlogPage({
                     return (
                       <Link
                         key={category}
-                        href={`/blog?category=${encodeURIComponent(category)}`}
+                        href={`/blog?category=${encodeURIComponent(
+                          category
+                        )}`}
                         className={`block px-4 py-2 rounded-lg text-sm ${
                           selectedCategory === category
                             ? "bg-blue-600 text-white"
@@ -249,8 +277,8 @@ export default function BlogPage({
                   Questions?
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
-                  The VaHome Team is ready to help you navigate the Hampton Roads
-                  real estate market.
+                  The VaHome Team is ready to help you navigate the Hampton
+                  Roads real estate market.
                 </p>
                 <p className="text-sm font-semibold text-gray-900">
                   (757) 777-7577
