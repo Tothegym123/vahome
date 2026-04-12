@@ -17,9 +17,11 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const post = getPostBySlug(params.slug);
+
   if (!post) {
     return { title: "Post Not Found | VaHome.com Blog" };
   }
+
   return {
     title: (() => {
       const suffix = ' | VaHome.com';
@@ -31,13 +33,18 @@ export async function generateMetadata({
       return post.title + suffix;
     })(),
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${params.slug}/`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
       publishedTime: post.date,
       authors: [post.author || "VaHome Team"],
-      images: post.image ? [{ url: post.image, alt: post.title }] : undefined,
+      images: post.image
+        ? [{ url: post.image, alt: post.title }]
+        : undefined,
     },
   };
 }
@@ -55,8 +62,44 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   const recentPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 5);
   const categories = getAllCategories();
 
+  // JSON-LD Article structured data for AI search optimization
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.image || undefined,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      "@type": "Person",
+      name: post.author || "VaHome Team",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "VaHome.com",
+      url: "https://www.vahometest2.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.vahometest2.com/VaHome-logo.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.vahometest2.com/blog/${params.slug}/`,
+    },
+    articleSection: post.category,
+    url: `https://www.vahometest2.com/blog/${params.slug}/`,
+  };
+
   return (
     <div className="min-h-screen bg-white" style={{ marginTop: "64px" }}>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Breadcrumbs */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -99,11 +142,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               >
                 {post.category}
               </Link>
-
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 {post.title}
               </h1>
-
               <div className="flex items-center space-x-4 text-sm text-gray-600 border-t border-b border-gray-200 py-4">
                 <span>
                   By{" "}
@@ -124,18 +165,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Post Content */}
             <div
-              className="prose prose-lg max-w-none text-gray-700
-                [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-gray-900 [&_h2]:mt-8 [&_h2]:mb-4
-                [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-gray-900 [&_h3]:mt-6 [&_h3]:mb-3
-                [&_p]:mb-4 [&_p]:leading-relaxed
-                [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-700
-                [&_strong]:text-gray-900 [&_strong]:font-bold
-                [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-4 [&_ul]:space-y-2
-                [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-4 [&_ol]:space-y-2
-                [&_li]:text-gray-700
-                [&_blockquote]:border-l-4 [&_blockquote]:border-blue-600 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-6
-                [&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full
-                [&_table]:w-full [&_table]:border-collapse [&_th]:bg-gray-100 [&_th]:p-3 [&_th]:text-left [&_td]:border [&_td]:border-gray-200 [&_td]:p-3"
+              className="prose prose-lg max-w-none text-gray-700 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-gray-900 [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-gray-900 [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:mb-4 [&_p]:leading-relaxed [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-700 [&_strong]:text-gray-900 [&_strong]:font-bold [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-4 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-4 [&_ol]:space-y-2 [&_li]:text-gray-700 [&_blockquote]:border-l-4 [&_blockquote]:border-blue-600 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-6 [&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full [&_table]:w-full [&_table]:border-collapse [&_th]:bg-gray-100 [&_th]:p-3 [&_th]:text-left [&_td]:border [&_td]:border-gray-200 [&_td]:p-3"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
@@ -173,7 +203,8 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                   Looking for your dream home?
                 </h3>
                 <p className="text-sm text-blue-100 mb-4">
-                  Explore listings in Hampton Roads and find the perfect property.
+                  Explore listings in Hampton Roads and find the perfect
+                  property.
                 </p>
                 <Link
                   href="/map"
