@@ -1,0 +1,47 @@
+# VaHome.com
+
+> VaHome.com is a real estate website serving Hampton Roads, Virginia. We help home buyers, sellers, and military families find and sell properties in Virginia Beach, Norfolk, Chesapeake, Newport News, Hampton, and Suffolk.
+
+## About VaHome
+
+VaHome.com is a full-service real estate platform focused on the Hampton Roads metro area in southeastern Virginia. Our team specializes in residential real estate including single-family homes, condos, townhomes, and waterfront properties.
+
+## Key Services
+
+- Home buying assistance in Hampton Roads, Virginia
+- Home selling with expert pricing, staging, and marketing
+- Military relocation support including VA loan guidance for active duty, veterans, and military families stationed at Norfolk Naval Station, Joint Base Langley-Eustis, Naval Air Station Oceana, and other Hampton Roads installations
+- Interactive property map search with real-time MLS data from REIN (Real Estate Information Network)
+- Neighborhood guides for Virginia Beach, Chesapeake, Norfolk, Newport News, Hampton, and Suffolk
+- Real estate blog with buying tips, selling guides, market insights, and local community information
+
+## Coverage Area
+
+Hampton Roads, Virginia including:
+- Virginia Beach
+- Norfolk
+- Chesapeake
+- Newport News
+- Hampton
+- Suffolk
+- Portsmouth
+- Williamsburg
+
+## Contact
+
+- Website: https://www.vahometest2.com
+- Phone: (757) 777-7577
+- Email: tom@vahomes.com
+
+## Important Pages
+
+- Homepage: https://www.vahometest2.com/
+- Property Listings: https://www.vahometest2.com/listings/
+- Interactive Map: https://www.vahometest2.com/map/
+- Blog: https://www.vahometest2.com/blog/
+- Military Resources: https://www.vahometest2.com/military-resources/
+- About: https://www.vahometest2.com/about/
+- Contact: https://www.vahometest2.com/contact/
+- Sell Your Home: https://www.vahometest2.com/sell/
+- Find an Agent: https://www.vahometest2.com/agents/
+- Find a Lender: https://www.vahometest2.com/lenders/
