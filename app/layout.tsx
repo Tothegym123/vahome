@@ -1,10 +1,17 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import AuthProvider from './components/AuthProvider'
 import AuthModal from './components/AuthModal'
 import OnboardingModal from './components/OnboardingModal'
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
   title: 'VaHome.com | Homes for Sale in Hampton Roads, Virginia Beach & Norfolk',
@@ -18,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={inter.variable}>
+      <body className={inter.className}>
         <AuthProvider>
           <Header />
           <AuthModal />
