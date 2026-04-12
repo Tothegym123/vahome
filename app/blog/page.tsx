@@ -2,17 +2,35 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts, getAllCategories } from "../lib/blog-posts";
 
-export const metadata: Metadata = {
-  title: "Real Estate Blog | VaHome.com",
-  description:
-    "Expert real estate tips, market insights, and home buying guides for Hampton Roads, Virginia. Stay updated with the VaHome Team's latest articles.",
-  openGraph: {
-    title: "Real Estate Blog | VaHome.com",
-    description:
-      "Expert real estate tips, market insights, and home buying guides for Hampton Roads, Virginia.",
-    type: "website",
-  },
-};
+export function generateMetadata({ searchParams }: { searchParams: { page?: string; category?: string } }): Metadata {
+  const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
+  const category = searchParams.category;
+  
+  let title = "Real Estate Blog";
+  let description = "Expert real estate tips, market insights, and home buying guides for Hampton Roads, Virginia.";
+  
+  if (category) {
+    title = category + " Real Estate Articles";
+    description = "Browse " + category + " real estate articles, tips, and guides for Hampton Roads, Virginia.";
+  }
+  if (page > 1) {
+    title += " - Page " + page;
+  }
+  title += " | VaHome.com";
+  
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: category || page > 1 ? "/blog/" : undefined,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+  };
+}
 
 const POSTS_PER_PAGE = 12;
 
