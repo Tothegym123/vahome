@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
     --primary: #f94432;
     --primary-dark: #e72819;
@@ -23,7 +21,6 @@ html {
 }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1a1a1a;
     background: #ffffff;
     -webkit-font-smoothing: antialiased;
