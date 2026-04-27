@@ -45,16 +45,25 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false)
   const [stats, setStats] = useState({ totalLeads: 0, totalTours: 0, totalFavorites: 0, newLeadsToday: 0 })
 
-  const ADMIN_PASSWORD = 'vahome2026'
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (password === ADMIN_PASSWORD) {
-      setAuthenticated(true)
-      setError('')
-      loadData()
-    } else {
-      setError('Invalid password')
+    setError('')
+    try {
+      const res = await fetch('/api/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      })
+      if (res.ok) {
+        setAuthenticated(true)
+        loadData()
+      } else if (res.status === 401) {
+        setError('Invalid password')
+      } else {
+        setError('Server error \u2014 check ADMIN_PASSWORD env var on Vercel')
+      }
+    } catch (err) {
+      setError('Network error \u2014 please try again')
     }
   }
 
