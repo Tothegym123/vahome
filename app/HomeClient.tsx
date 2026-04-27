@@ -200,7 +200,7 @@ export default function HomeClient() {
         .civilian .text-secondary-themed { color: #6b7280; }
         .civilian .text-muted-themed { color: #9ca3af; }
         .toggle-label-c { color: #374151; }
-        .military .toggle-label-c { color: #e5e7eb; }
+        .military .toggle-label-c { color: #374151; }
         .civilian .accent-color { color: #dc2626; }
         .civilian .accent-bg-c { background: #dc2626; }
         .civilian .accent-bg-soft-c { background: rgba(220,38,38,0.06); }
