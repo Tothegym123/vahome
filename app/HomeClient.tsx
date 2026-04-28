@@ -1,6 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { PAY_GRADES, PAY_GRADE_LABELS, getBah, type PayGrade } from './data/bah-rates'
+import { getDutyStation } from './data/duty-stations'
 import Link from 'next/link'
 import { useAuth } from './components/AuthProvider'
 import MortgageCalculator from './components/MortgageCalculator'
@@ -99,13 +101,20 @@ export default function HomeClient() {
   const [selectedBaseIdx, setSelectedBaseIdx] = useState<number>(-1)
   const [dutyStation, setDutyStation] = useState('naval-station-norfolk')
   const [maxCommute, setMaxCommute] = useState('30')
-  const [bahBudget, setBahBudget] = useState('3000')
+  const [payGrade, setPayGrade] = useState<PayGrade>('E-5')
+  const [withDependents, setWithDependents] = useState(true)
+  const bahCap = useMemo(() => {
+    const station = getDutyStation(dutyStation)
+    return getBah(station?.mhaCode || 'VA058', payGrade, withDependents)
+  }, [dutyStation, payGrade, withDependents])
 
   const handleMilitarySearch = () => {
     const params = new URLSearchParams({
       duty: dutyStation,
       commute: maxCommute,
-      bah: bahBudget,
+      bah: String(bahCap),
+      paygrade: payGrade,
+      deps: withDependents ? '1' : '0',
     })
     window.location.href = `/map/?${params.toString()}`
   }
@@ -397,26 +406,55 @@ export default function HomeClient() {
                     </select>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:items-end">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">BAH Budget</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Paygrade</label>
                     <select
-                      value={bahBudget}
-                      onChange={(e) => setBahBudget(e.target.value)}
+                      value={payGrade}
+                      onChange={(e) => setPayGrade(e.target.value as PayGrade)}
                       className="w-full px-3 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="2000">Up to $2,000/mo</option>
-                      <option value="2500">Up to $2,500/mo</option>
-                      <option value="3000">Up to $3,000/mo</option>
-                      <option value="3500">Up to $3,500/mo</option>
-                      <option value="4000">Up to $4,000/mo</option>
-                      <option value="4500">Up to $4,500/mo</option>
-                      <option value="5000">Up to $5,000+/mo</option>
+                      {PAY_GRADES.map((g) => (
+                        <option key={g} value={g}>{PAY_GRADE_LABELS[g]}</option>
+                      ))}
                     </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Dependents</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setWithDependents(true)}
+                        className={`px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors ${withDependents ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'}`}
+                      >
+                        With deps
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setWithDependents(false)}
+                        className={`px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors ${!withDependents ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'}`}
+                      >
+                        Without
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 border-t border-gray-100">
+                  <div className="text-sm">
+                    <span className="text-gray-600">Your BAH cap: </span>
+                    <span className="font-bold text-gray-900 text-base">${bahCap.toLocaleString()}/mo</span>
+                    <a
+                      href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate-Lookup/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2 text-xs text-blue-600 hover:underline"
+                    >
+                      Verify at DoD &rarr;
+                    </a>
                   </div>
                   <button
                     onClick={handleMilitarySearch}
-                    className="w-full px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors flex items-center justify-center gap-2"
+                    className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     Search Military Homes
