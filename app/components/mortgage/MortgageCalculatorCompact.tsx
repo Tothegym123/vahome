@@ -72,7 +72,7 @@ export default function MortgageCalculatorCompact({
       aria-label="Estimated monthly payment"
       className="rounded-2xl border border-gray-200 bg-white"
     >
-      {/* Snapshot header â always visible */}
+      {/* Snapshot header  -  always visible */}
       <button
         type="button"
         onClick={onExpand}
