@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import Script from 'next/script';
+import { getDutyStation, distanceMiles, type DutyStation } from '../data/duty-stations';
 
 declare const google: any;
 
@@ -47,7 +48,7 @@ interface FilterState {
   beds: string;
 }
 
-// Military base boundaries (Hampton Roads area â within ~50 mi of Norfolk)
+// Military base boundaries (Hampton Roads area Ã¢ÂÂ within ~50 mi of Norfolk)
 // Easily removable: delete this array and related code to remove base overlays
 const MILITARY_BASES = [
   {
@@ -305,6 +306,24 @@ export default function MapClient() {
     beds: '',
   });
 
+  // Parse military filter from URL (?duty=...&commute=...&bah=...&paygrade=...&deps=...)
+  // Computed once on mount; navigation re-mounts the component.
+  const militaryFilter = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    const params = new URLSearchParams(window.location.search);
+    const duty = params.get('duty');
+    if (!duty) return null;
+    const station = getDutyStation(duty);
+    if (!station) return null;
+    return {
+      station,
+      commuteMin: parseInt(params.get('commute') || '30', 10) || 30,
+      bahCap: parseInt(params.get('bah') || '0', 10) || 0,
+      paygrade: params.get('paygrade') || '',
+      deps: params.get('deps') === '1',
+    };
+  }, []);
+
   // Detect mobile
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -346,7 +365,19 @@ export default function MapClient() {
         const fetchedVideos: MapVideo[] =
           videosJson.videos || videosJson || [];
 
-        setListings(fetchedListings);
+        // Apply military filter if active (price ≤ BAH cap AND drive ≤ commute target)
+        const filteredListings = militaryFilter
+          ? fetchedListings.filter((l: MapListing) => {
+              if (militaryFilter.bahCap > 0 && l.price > militaryFilter.bahCap) return false;
+              if (typeof l.lat === 'number' && typeof l.lng === 'number') {
+                const miles = distanceMiles(l.lat, l.lng, militaryFilter.station.lat, militaryFilter.station.lng);
+                const driveMin = (miles * 1.3) / (30 / 60);
+                if (driveMin > militaryFilter.commuteMin) return false;
+              }
+              return true;
+            })
+          : fetchedListings;
+        setListings(filteredListings);
         // Only show video markers if fewer than 500 listings
         setVideos(fetchedListings.length < 500 ? fetchedVideos : []);
       } catch (error) {
@@ -382,8 +413,10 @@ export default function MapClient() {
     if (typeof google === 'undefined' || !google.maps) return;
 
     const map = new google.maps.Map(containerRef.current, {
-      zoom: 10,
-      center: { lat: 36.85, lng: -76.28 },
+      zoom: militaryFilter ? 11 : 10,
+      center: militaryFilter
+        ? { lat: militaryFilter.station.lat, lng: militaryFilter.station.lng }
+        : { lat: 36.85, lng: -76.28 },
       mapTypeControl: true,
       streetViewControl: true,
       zoomControl: true,
