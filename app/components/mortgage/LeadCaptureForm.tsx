@@ -15,9 +15,9 @@ import { fmtUsd } from '@/app/lib/mortgage/calculations'
 export interface LeadCaptureFormProps {
   open: boolean
   onClose: () => void
-  /** Title shown at top of modal — varies by trigger. */
+  /** Title shown at top of modal  -  varies by trigger. */
   title: string
-  /** Sub-headline — context for why we're asking. */
+  /** Sub-headline  -  context for why we're asking. */
   subtitle?: string
   /** Primary CTA label on submit button. */
   submitLabel: string
@@ -33,8 +33,8 @@ export interface LeadCaptureFormProps {
 
 const TIMELINES: { value: LeadFormData['buyingTimeline']; label: string }[] = [
   { value: '0-3-months',  label: 'Within 3 months' },
-  { value: '3-6-months',  label: '3–6 months' },
-  { value: '6-12-months', label: '6–12 months' },
+  { value: '3-6-months',  label: '3-6 months' },
+  { value: '6-12-months', label: '6-12 months' },
   { value: '12-plus-months', label: 'Over a year' },
   { value: 'just-looking', label: 'Just looking' },
 ]
@@ -208,7 +208,7 @@ export default function LeadCaptureForm({
                 value={form.desiredCity || ''}
                 onChange={(e) => update('desiredCity', e.target.value)}
                 className={inputClass}
-                placeholder="Virginia Beach, Norfolk, Chesapeake…"
+                placeholder="Virginia Beach, Norfolk, Chesapeake..."
               />
             </Field>
             <Field label="Notes (optional)">
@@ -217,7 +217,7 @@ export default function LeadCaptureForm({
                 onChange={(e) => update('notes', e.target.value)}
                 className={inputClass + ' min-h-[68px]'}
                 rows={3}
-                placeholder="Anything we should know — must-haves, school district, schools, deployment timing…"
+                placeholder="Anything we should know  -  must-haves, school district, schools, deployment timing..."
               />
             </Field>
 
@@ -233,7 +233,7 @@ export default function LeadCaptureForm({
                 disabled={submitting}
                 className="flex-1 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-60"
               >
-                {submitting ? 'Sending…' : submitLabel}
+                {submitting ? 'Sending...' : submitLabel}
               </button>
               <button
                 type="button"
