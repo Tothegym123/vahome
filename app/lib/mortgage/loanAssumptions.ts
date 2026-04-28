@@ -46,7 +46,7 @@ export const MIN_DOWN_PAYMENT_PCT: Record<LoanType, number> = {
 // -----------------------------------------------------------------------------
 // Conventional PMI  -  annual rate as % of loan amount.
 // Real PMI varies by LTV, credit score, and PMI provider. Lookup table:
-// (LTV band, credit band) → annual PMI rate.
+// (LTV band, credit band) - annual PMI rate.
 // Source: typical agency PMI rate cards 2026.
 // -----------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ export const PMI_TABLE: PmiLookup[] = [
       '<620': 0.55, '620-679': 0.40, '680-739': 0.25, '740-799': 0.18, '800+': 0.15,
     },
   },
-  // LTV ≤ 80%  -  no PMI
+  // LTV - 80%  -  no PMI
   {
     ltvMax: 0.80,
     byCredit: {
@@ -114,11 +114,11 @@ export interface VaFundingFeeKey {
 }
 
 export function getVaFundingFeePct(isFirstUse: boolean, downPaymentPct: number): number {
-  // Down payment ≥ 10%
+  // Down payment - 10%
   if (downPaymentPct >= 10) {
     return isFirstUse ? 1.25 : 1.25
   }
-  // 5% ≤ DP < 10%
+  // 5% - DP < 10%
   if (downPaymentPct >= 5) {
     return isFirstUse ? 1.50 : 1.50
   }
@@ -139,7 +139,7 @@ export const FHA_UPFRONT_MIP_PCT = 1.75  // % of base loan amount
 // Source: HUD Mortgagee Letter; current 2026 rates.
 export function getFhaAnnualMipPct(loanAmount: number, ltv: number, term: LoanTerm): number {
   const isHighBalance = loanAmount > 766_550   // 2026 conforming limit threshold
-  // Term ≤ 15 years
+  // Term - 15 years
   if (term <= 15) {
     if (ltv > 0.90) return isHighBalance ? 0.40 : 0.40
     if (ltv > 0.78) return isHighBalance ? 0.15 : 0.15
