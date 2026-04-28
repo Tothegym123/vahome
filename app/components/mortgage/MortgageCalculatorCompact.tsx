@@ -4,7 +4,7 @@
 'use client'
 
 import { useState } from 'react'
-import MortgageCalculator from './MortgageCalculator'
+import MortgageCalculator from '@/app/components/mortgage/MortgageCalculator'
 import { calculate, fmtUsd } from '@/app/lib/mortgage/calculations'
 import {
   getDefaultRate,
@@ -72,7 +72,7 @@ export default function MortgageCalculatorCompact({
       aria-label="Estimated monthly payment"
       className="rounded-2xl border border-gray-200 bg-white"
     >
-      {/* Snapshot header — always visible */}
+      {/* Snapshot header â always visible */}
       <button
         type="button"
         onClick={onExpand}
@@ -89,8 +89,8 @@ export default function MortgageCalculatorCompact({
             <span className="text-sm text-gray-500">/mo</span>
           </div>
           <div className="text-xs text-gray-500 mt-1">
-            {snapshotInputs.loanType === 'va' ? 'VA' : 'Conventional'} •{' '}
-            {snapshotInputs.downPaymentPct.toFixed(0)}% down • {snapshotInputs.loanTerm}-yr •{' '}
+            {snapshotInputs.loanType === 'va' ? 'VA' : 'Conventional'} â¢{' '}
+            {snapshotInputs.downPaymentPct.toFixed(0)}% down â¢ {snapshotInputs.loanTerm}-yr â¢{' '}
             {snapshotInputs.interestRate.toFixed(2)}%
           </div>
         </div>
