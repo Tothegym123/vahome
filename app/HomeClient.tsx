@@ -97,6 +97,18 @@ export default function HomeClient() {
 
   // Base selector state (for military mode)
   const [selectedBaseIdx, setSelectedBaseIdx] = useState<number>(-1)
+  const [dutyStation, setDutyStation] = useState('naval-station-norfolk')
+  const [maxCommute, setMaxCommute] = useState('30')
+  const [bahBudget, setBahBudget] = useState('3000')
+
+  const handleMilitarySearch = () => {
+    const params = new URLSearchParams({
+      duty: dutyStation,
+      commute: maxCommute,
+      bah: bahBudget,
+    })
+    window.location.href = `/map/?${params.toString()}`
+  }
 
   // Sync mode with profile
   useEffect(() => {
@@ -348,7 +360,71 @@ export default function HomeClient() {
                 : 'Explore 2,800+ homes across Chesapeake, Virginia Beach, Norfolk & beyond with real-time MLS data and interactive maps.'}
             </p>
 
-            <div className="fade search-box-c morph rounded-2xl p-2 max-w-2xl">
+        {isMil ? (
+              <div className="fade morph rounded-2xl shadow-lg p-6 sm:p-8 max-w-2xl bg-white border border-gray-200">
+                <div className="flex items-center gap-2 mb-5">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <h3 className="text-xl font-bold text-gray-900">Military Home Search</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Duty Station</label>
+                    <select
+                      value={dutyStation}
+                      onChange={(e) => setDutyStation(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="naval-station-norfolk">Naval Station Norfolk</option>
+                      <option value="joint-base-langley-eustis">Joint Base Langley-Eustis</option>
+                      <option value="naval-air-station-oceana">Naval Air Station Oceana</option>
+                      <option value="naval-medical-center-portsmouth">Naval Medical Center Portsmouth</option>
+                      <option value="coast-guard-base-portsmouth">Coast Guard Base Portsmouth</option>
+                      <option value="naval-support-activity-hampton-roads">NSA Hampton Roads</option>
+                      <option value="naval-amphibious-base-little-creek">NAB Little Creek</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Max Commute</label>
+                    <select
+                      value={maxCommute}
+                      onChange={(e) => setMaxCommute(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="15">15 minutes</option>
+                      <option value="30">30 minutes</option>
+                      <option value="45">45 minutes</option>
+                      <option value="60">60 minutes</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:items-end">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">BAH Budget</label>
+                    <select
+                      value={bahBudget}
+                      onChange={(e) => setBahBudget(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="2000">Up to $2,000/mo</option>
+                      <option value="2500">Up to $2,500/mo</option>
+                      <option value="3000">Up to $3,000/mo</option>
+                      <option value="3500">Up to $3,500/mo</option>
+                      <option value="4000">Up to $4,000/mo</option>
+                      <option value="4500">Up to $4,500/mo</option>
+                      <option value="5000">Up to $5,000+/mo</option>
+                    </select>
+                  </div>
+                  <button
+                    onClick={handleMilitarySearch}
+                    className="w-full px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors flex items-center justify-center gap-2"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    Search Military Homes
+                  </button>
+                </div>
+              </div>
+            ) : (
+    <div className="fade search-box-c morph rounded-2xl p-2 max-w-2xl">
               <input
                   type="text"
                   placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'Search by address, city, or ZIP...'}
@@ -356,6 +432,7 @@ export default function HomeClient() {
                   onKeyDown={(e) => { if (e.key === 'Enter') window.location.href = '/listings'; }}
                 />
             </div>
+            )}
 
             <div className="fade flex flex-wrap gap-2 mt-5">
               {isMil
