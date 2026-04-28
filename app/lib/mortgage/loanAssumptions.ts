@@ -38,13 +38,13 @@ export const MIN_DOWN_PAYMENT_PCT: Record<LoanType, number> = {
   fha: 3.5,
   va: 0,
   usda: 0,
-  jumbo: 10,          // can vary 10–25%; 10% is generous floor
+  jumbo: 10,          // can vary 10-25%; 10% is generous floor
   cash: 100,
   custom: 0,
 }
 
 // -----------------------------------------------------------------------------
-// Conventional PMI — annual rate as % of loan amount.
+// Conventional PMI  -  annual rate as % of loan amount.
 // Real PMI varies by LTV, credit score, and PMI provider. Lookup table:
 // (LTV band, credit band) → annual PMI rate.
 // Source: typical agency PMI rate cards 2026.
@@ -63,28 +63,28 @@ export const PMI_TABLE: PmiLookup[] = [
       '<620': 1.45, '620-679': 1.10, '680-739': 0.75, '740-799': 0.55, '800+': 0.45,
     },
   },
-  // LTV 90.01–95% (5% down)
+  // LTV 90.01-95% (5% down)
   {
     ltvMax: 0.9500001,
     byCredit: {
       '<620': 1.20, '620-679': 0.85, '680-739': 0.55, '740-799': 0.40, '800+': 0.30,
     },
   },
-  // LTV 85.01–90% (10% down)
+  // LTV 85.01-90% (10% down)
   {
     ltvMax: 0.9000001,
     byCredit: {
       '<620': 0.95, '620-679': 0.65, '680-739': 0.40, '740-799': 0.30, '800+': 0.20,
     },
   },
-  // LTV 80.01–85% (15% down)
+  // LTV 80.01-85% (15% down)
   {
     ltvMax: 0.8500001,
     byCredit: {
       '<620': 0.55, '620-679': 0.40, '680-739': 0.25, '740-799': 0.18, '800+': 0.15,
     },
   },
-  // LTV ≤ 80% — no PMI
+  // LTV ≤ 80%  -  no PMI
   {
     ltvMax: 0.80,
     byCredit: {
@@ -104,7 +104,7 @@ export function getPmiAnnualRate(ltv: number, credit: CreditScoreBand): number {
 }
 
 // -----------------------------------------------------------------------------
-// VA funding fee — % of loan amount. As of statute extended through 2030.
+// VA funding fee  -  % of loan amount. As of statute extended through 2030.
 // Source: VA.gov funding-fee chart (verify annually).
 // -----------------------------------------------------------------------------
 
@@ -131,7 +131,7 @@ export function getVaFundingFeePct(isFirstUse: boolean, downPaymentPct: number):
 // We expose a flag in inputs for this; users self-attest.
 
 // -----------------------------------------------------------------------------
-// FHA MIP — Mortgage Insurance Premium
+// FHA MIP  -  Mortgage Insurance Premium
 // -----------------------------------------------------------------------------
 
 export const FHA_UPFRONT_MIP_PCT = 1.75  // % of base loan amount
@@ -182,12 +182,12 @@ export function getEstimatedTaxRate(citySlug?: string): number {
   return HAMPTON_ROADS_TAX_RATES[key] ?? 1.10
 }
 
-// Coastal Virginia homeowners insurance — annual % of dwelling value.
+// Coastal Virginia homeowners insurance  -  annual % of dwelling value.
 // Wind/storm areas push rates higher than national average.
 export const DEFAULT_INSURANCE_RATE_PCT = 0.45
 
 // -----------------------------------------------------------------------------
-// Closing costs + prepaids — rough Hampton Roads averages.
+// Closing costs + prepaids  -  rough Hampton Roads averages.
 // -----------------------------------------------------------------------------
 
 // % of purchase price (lender, title, recording, transfer tax, etc.)
@@ -209,7 +209,7 @@ export const DTI_CONSERVATIVE = 0.36   // total monthly debt / gross monthly inc
 export const DTI_AGGRESSIVE = 0.50     // VA / aggressive cap
 
 // -----------------------------------------------------------------------------
-// 2026 FHA & conforming loan limits — Hampton Roads
+// 2026 FHA & conforming loan limits  -  Hampton Roads
 // -----------------------------------------------------------------------------
 
 export const CONFORMING_LOAN_LIMIT_2026 = 766_550   // 1-unit, most areas
