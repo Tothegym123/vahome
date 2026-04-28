@@ -76,7 +76,7 @@ export default function MortgageCalculator({
     setInputs((cur) => ({ ...cur, [key]: val }))
   }
 
-  // Special: down payment $ â % linkage
+  // Special: down payment $ - % linkage
   function setDownPaymentDollars(v: number) {
     setInputs((cur) => ({
       ...cur,
@@ -297,7 +297,7 @@ export default function MortgageCalculator({
       {result.warnings.length > 0 && (
         <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-900">
           {result.warnings.map((w, i) => (
-            <div key={i}>â¢ {w}</div>
+            <div key={i}>  {w}</div>
           ))}
         </div>
       )}
