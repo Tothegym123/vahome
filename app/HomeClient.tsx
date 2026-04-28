@@ -5,7 +5,7 @@ import { PAY_GRADES, PAY_GRADE_LABELS, getBah, type PayGrade } from './data/bah-
 import { getDutyStation } from './data/duty-stations'
 import Link from 'next/link'
 import { useAuth } from './components/AuthProvider'
-import MortgageCalculator from './components/MortgageCalculator'
+import MortgageCalculator from './components/mortgage/MortgageCalculator'
 import PremiumTeaser from './components/PremiumTeaser'
 
 declare global {
