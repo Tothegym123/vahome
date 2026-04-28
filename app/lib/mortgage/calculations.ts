@@ -1,5 +1,5 @@
 // app/lib/mortgage/calculations.ts
-// Core mortgage math. Pure functions. No React imports — testable in isolation.
+// Core mortgage math. Pure functions. No React imports  -  testable in isolation.
 
 import type {
   CalculatorInputs,
@@ -69,7 +69,7 @@ function buildContext(inputs: CalculatorInputs): CalcContext {
 }
 
 // -----------------------------------------------------------------------------
-// Main calculate() — dispatches by loan type, returns full result
+// Main calculate()  -  dispatches by loan type, returns full result
 // -----------------------------------------------------------------------------
 
 export function calculate(inputs: CalculatorInputs): CalculationResult {
@@ -126,7 +126,7 @@ export function calculate(inputs: CalculatorInputs): CalculationResult {
       break
     }
     case 'jumbo': {
-      // No government MI; PMI may apply if LTV > 80% — many jumbo lenders
+      // No government MI; PMI may apply if LTV > 80%  -  many jumbo lenders
       // require 20%+ down. Use conventional PMI table when applicable.
       pmi = conventionalPmiMonthly(ctx)
       if (ctx.baseLoan <= CONFORMING_LOAN_LIMIT_2026) {
@@ -351,11 +351,11 @@ export function standardDisclaimers(): string[] {
 // -----------------------------------------------------------------------------
 
 export function fmtUsd(n: number): string {
-  if (!isFinite(n)) return '—'
+  if (!isFinite(n)) return ' - '
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
 }
 
 export function fmtPct(n: number, digits = 1): string {
-  if (!isFinite(n)) return '—'
+  if (!isFinite(n)) return ' - '
   return `${n.toFixed(digits)}%`
 }
