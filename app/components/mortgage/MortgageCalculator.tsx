@@ -2,9 +2,9 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import LoanTypeSelector from './LoanTypeSelector'
-import PaymentBreakdown from './PaymentBreakdown'
-import LeadCaptureForm from './LeadCaptureForm'
+import LoanTypeSelector from '@/app/components/mortgage/LoanTypeSelector'
+import PaymentBreakdown from '@/app/components/mortgage/PaymentBreakdown'
+import LeadCaptureForm from '@/app/components/mortgage/LeadCaptureForm'
 import { calculate, fmtUsd } from '@/app/lib/mortgage/calculations'
 import {
   getDefaultRate,
@@ -24,7 +24,7 @@ import type {
 } from '@/app/lib/mortgage/types'
 
 export interface MortgageCalculatorProps {
-  /** Optional listing context — when present, prefills price/tax/HOA. */
+  /** Optional listing context â when present, prefills price/tax/HOA. */
   listing?: ListingContext
   /** When true, lead form opens with VA mode highlighted. */
   defaultMilitary?: boolean
@@ -76,7 +76,7 @@ export default function MortgageCalculator({
     setInputs((cur) => ({ ...cur, [key]: val }))
   }
 
-  // Special: down payment $ ↔ % linkage
+  // Special: down payment $ â % linkage
   function setDownPaymentDollars(v: number) {
     setInputs((cur) => ({
       ...cur,
@@ -198,9 +198,9 @@ export default function MortgageCalculator({
                 className={inputClass}
               >
                 <option value="<620">Below 620</option>
-                <option value="620-679">620–679</option>
-                <option value="680-739">680–739</option>
-                <option value="740-799">740–799</option>
+                <option value="620-679">620â679</option>
+                <option value="680-739">680â739</option>
+                <option value="740-799">740â799</option>
                 <option value="800+">800+</option>
               </select>
             </Field>
@@ -220,8 +220,8 @@ export default function MortgageCalculator({
                   onChange={(e) => update('isFirstTimeVaUse', e.target.value === '1')}
                   className={inputClass}
                 >
-                  <option value="1">Yes — first use</option>
-                  <option value="0">No — used before</option>
+                  <option value="1">Yes â first use</option>
+                  <option value="0">No â used before</option>
                 </select>
               </Field>
               <Field label="Monthly BAH (optional)">
@@ -297,7 +297,7 @@ export default function MortgageCalculator({
       {result.warnings.length > 0 && (
         <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-900">
           {result.warnings.map((w, i) => (
-            <div key={i}>• {w}</div>
+            <div key={i}>â¢ {w}</div>
           ))}
         </div>
       )}
@@ -346,7 +346,7 @@ export default function MortgageCalculator({
 }
 
 // -----------------------------------------------------------------------------
-// BAH coverage card — only shown when user enters BAH
+// BAH coverage card â only shown when user enters BAH
 // -----------------------------------------------------------------------------
 
 function BahCoverageCard({
