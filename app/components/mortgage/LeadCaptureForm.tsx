@@ -120,7 +120,7 @@ export default function LeadCaptureForm({
             aria-label="Close"
             className="text-gray-400 hover:text-gray-600 -mt-1 -mr-1 p-1"
           >
-            ✕
+             
           </button>
         </div>
 
@@ -134,7 +134,7 @@ export default function LeadCaptureForm({
 
         {done ? (
           <div className="px-6 py-10 text-center">
-            <div className="text-3xl mb-3">✓</div>
+            <div className="text-3xl mb-3"> </div>
             <h4 className="text-lg font-semibold text-gray-900 mb-1">You're all set</h4>
             <p className="text-sm text-gray-600 mb-6">
               We'll send your detailed estimate to <strong>{form.email}</strong> shortly. A VaHome agent will reach out within one business day.
