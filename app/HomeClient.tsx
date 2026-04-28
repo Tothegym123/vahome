@@ -559,7 +559,7 @@ export default function HomeClient() {
               </div>
               <div className="max-w-md mx-auto">
                 {isLoggedIn ? (
-                  <MortgageCalculator isMilitary={isMil} />
+                  <MortgageCalculator defaultMilitary={isMil} />
                 ) : (
                   <PremiumTeaser
                     title={isMil ? 'VA Loan Calculator' : 'Mortgage Calculator'}
@@ -567,7 +567,7 @@ export default function HomeClient() {
                     icon={isMil ? '\u{1F396}\uFE0F' : '\u{1F4B0}'}
                     isMilitary={isMil}
                   >
-                    <MortgageCalculator isMilitary={isMil} />
+                    <MortgageCalculator defaultMilitary={isMil} />
                   </PremiumTeaser>
                 )}
               </div>
