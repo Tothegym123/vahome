@@ -34,7 +34,7 @@ import {
  * where:
  *   P = principal (loan amount)
  *   r = monthly interest rate (annual / 12 / 100)
- *   n = total number of payments (term years × 12)
+ *   n = total number of payments (term years - 12)
  *
  * Returns 0 if principal is 0 or non-finite. Handles 0% interest by linear amortization.
  */
