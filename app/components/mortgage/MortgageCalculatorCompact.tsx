@@ -89,8 +89,8 @@ export default function MortgageCalculatorCompact({
             <span className="text-sm text-gray-500">/mo</span>
           </div>
           <div className="text-xs text-gray-500 mt-1">
-            {snapshotInputs.loanType === 'va' ? 'VA' : 'Conventional'} â¢{' '}
-            {snapshotInputs.downPaymentPct.toFixed(0)}% down â¢ {snapshotInputs.loanTerm}-yr â¢{' '}
+            {snapshotInputs.loanType === 'va' ? 'VA' : 'Conventional'}  {' '}
+            {snapshotInputs.downPaymentPct.toFixed(0)}% down - {snapshotInputs.loanTerm}-yr  {' '}
             {snapshotInputs.interestRate.toFixed(2)}%
           </div>
         </div>
