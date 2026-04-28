@@ -85,7 +85,7 @@ export default function PaymentBreakdown({ result, compact = false }: PaymentBre
           {result.affordabilityRange && (
             <Stat
               label="Affordable home range"
-              value={`${fmtUsd(result.affordabilityRange.conservative)} – ${fmtUsd(result.affordabilityRange.aggressive)}`}
+              value={`${fmtUsd(result.affordabilityRange.conservative)} - ${fmtUsd(result.affordabilityRange.aggressive)}`}
             />
           )}
         </div>
