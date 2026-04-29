@@ -38,7 +38,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Explore</h3>
+            <h2 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Explore</h2>
             <ul className="space-y-3">
               {exploreLinks.map((item) => (
                 <li key={item.label}>
@@ -52,7 +52,7 @@ export default function Footer() {
 
           {/* Areas */}
           <div>
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Areas We Serve</h3>
+            <h2 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Areas We Serve</h2>
             <ul className="space-y-3">
               {areaLinks.map((area) => (
                 <li key={area.label}>
@@ -66,7 +66,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Get In Touch</h3>
+            <h2 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Get In Touch</h2>
             <ul className="space-y-3 text-sm text-gray-400">
               <li className="flex items-start gap-2">
                 <svg className="w-5 h-5 mt-0.5 text-primary-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
