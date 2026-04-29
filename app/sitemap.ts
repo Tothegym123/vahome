@@ -43,7 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   // City neighborhood guides
-  const cities = ["virginia-beach", "norfolk", "chesapeake", "portsmouth", "hampton", "newport-news", "suffolk"];
+  const cities = ["virginia-beach", "norfolk", "chesapeake", "portsmouth", "hampton", "newport-news", "suffolk", "williamsburg"];
   const cityUrls = cities.map((c) => ({
     path: `/military/military-friendly-neighborhoods/${c}/`,
     priority: 0.8,
