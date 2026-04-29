@@ -1,12 +1,12 @@
 import Link from 'next/link'
 
 const exploreLinks = [
-  { label: 'Buy a Home', href: '/listings' },
-  { label: 'Sell Your Home', href: '/sell' },
-  { label: 'Map Search', href: '/map' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Buy a Home', href: '/listings/' },
+  { label: 'Sell Your Home', href: '/sell/' },
+  { label: 'Map Search', href: '/map/' },
+  { label: 'Blog', href: '/blog/' },
+  { label: 'About Us', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
 ]
 
 const areaLinks = [
