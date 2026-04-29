@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Naval Station Norfolk Housing & Best Neighborhoods 2026 | VaHome',
   description:
     'Active-duty Navy housing guide for Naval Station Norfolk. BAH-aware home search, drive-time map, neighborhoods, schools, VA loans. Local Hampton Roads experts.',
-  alternates: { canonical: 'https://vahome.com/military/bases/naval-station-norfolk/' },
+  alternates: { canonical: 'https://www.vahome.com/military/bases/naval-station-norfolk/' },
 }
 
 const stats = [
@@ -17,9 +17,9 @@ const stats = [
 
 const cities = [
   { name: 'Norfolk', drive: '10 min', median: '$295K', summary: 'The most direct option. Ghent, Larchmont, Colonial Place. Strong walkability and downtown access.', slug: 'norfolk' },
-  { name: 'Virginia Beach', drive: '20â30 min', median: '$390K', summary: 'More space, newer construction, stronger schools. Kings Grant, Salem, Kempsville.', slug: 'virginia-beach' },
-  { name: 'Chesapeake', drive: '25â30 min', median: '$355K', summary: 'Larger lots, lower property taxes, top schools in Western Branch and Great Bridge.', slug: 'chesapeake' },
-  { name: 'Portsmouth', drive: '15â20 min via Midtown Tunnel', median: '$255K', summary: 'Most affordable. Olde Towne and Churchland are popular military neighborhoods.', slug: 'portsmouth' },
+  { name: 'Virginia Beach', drive: '20Ã¢ÂÂ30 min', median: '$390K', summary: 'More space, newer construction, stronger schools. Kings Grant, Salem, Kempsville.', slug: 'virginia-beach' },
+  { name: 'Chesapeake', drive: '25Ã¢ÂÂ30 min', median: '$355K', summary: 'Larger lots, lower property taxes, top schools in Western Branch and Great Bridge.', slug: 'chesapeake' },
+  { name: 'Portsmouth', drive: '15Ã¢ÂÂ20 min via Midtown Tunnel', median: '$255K', summary: 'Most affordable. Olde Towne and Churchland are popular military neighborhoods.', slug: 'portsmouth' },
 ]
 
 const bahRows = [
