@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy/" },
   title: 'Privacy Policy | VaHome.com',
   description: 'Privacy Policy for VaHome.com - learn how we collect, use, and protect your information.',
 }
