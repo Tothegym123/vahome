@@ -35,6 +35,7 @@ export function generateMetadata({ searchParams }: { searchParams: { city?: stri
     alternates: {
       canonical: city ? "https://vahome.com/listings/?city=" + encodeURIComponent(city) : "https://vahome.com/listings/",
     },
+    robots: searchParams && Object.keys(searchParams).length > 0 ? { index: false, follow: true } : undefined,
     openGraph: { title, description, type: "website" },
   };
 }
