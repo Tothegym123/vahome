@@ -41,7 +41,6 @@ const nextConfig = {
   async redirects() {
     return [
     { source: '/military-resources', destination: '/military', permanent: true },
-    { source: '/military-resources/:path*', destination: '/military/:path*', permanent: true },
       {
         source: '/blog/Inspection-vs--Appraisal-for-Home-Buyer',
         destination: '/blog/Inspection-vs--Appraisal-for-Home-Buyers',
