@@ -108,7 +108,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               Home
             </Link>
             <span className="text-gray-400">/</span>
-            <Link href="/blog" className="hover:text-gray-900">
+            <Link href="/blog/" className="hover:text-gray-900">
               Blog
             </Link>
             <span className="text-gray-400">/</span>
@@ -186,7 +186,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Back to Blog */}
             <div className="mt-8">
               <Link
-                href="/blog"
+                href="/blog/"
                 className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700"
               >
                 &larr; Back to Blog
@@ -207,7 +207,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                   property.
                 </p>
                 <Link
-                  href="/map"
+                  href="/map/"
                   className="inline-block bg-white text-blue-600 font-semibold px-4 py-2 rounded-lg hover:bg-blue-50 w-full text-center"
                 >
                   Search the Map
