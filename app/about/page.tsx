@@ -19,6 +19,9 @@ export default function AboutPage() {
         {/* Hero */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">About VaHome</h1>
+          <section className="max-w-4xl mx-auto px-6 py-8">
+            <p className="text-gray-700 leading-relaxed text-base">{`The VaHome team is a Hampton Roads-based real estate group serving Virginia Beach, Norfolk, Chesapeake, Suffolk, Hampton, Newport News, and Portsmouth. We specialize in helping military families, first-time buyers, and longtime Virginia residents navigate the Hampton Roads market. Our agents combine deep local knowledge with technology-forward tools — interactive maps, mortgage calculators with VA loan support, BAH-aware home search, and detailed neighborhood data for every part of the region. Whether you're buying your first home, relocating from another state, PCS'ing to a military base, or selling a property after years in the area, we focus on making the process clear, honest, and tailored to your specific situation. Real estate is one of the largest financial decisions most people make, and we treat it that way.`}</p>
+          </section>
           <p className="text-gray-500 text-lg">
             Your trusted real estate team in Hampton Roads, Virginia.
           </p>
