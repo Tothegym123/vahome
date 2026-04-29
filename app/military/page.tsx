@@ -66,22 +66,25 @@ export default function MilitaryHomePage() {
       <section className="border-y border-gray-200 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
-            <div className="text-3xl font-bold text-gray-900">10</div>
-            <div className="text-sm text-gray-600 mt-1">Hampton Roads bases</div>
+            <div className="text-3xl font-bold text-gray-900">18</div>
+            <div className="text-sm text-gray-600 mt-1">Military installations</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-gray-900">~80,000</div>
-            <div className="text-sm text-gray-600 mt-1">Active duty in region</div>
+            <div className="text-3xl font-bold text-gray-900">~120K</div>
+            <div className="text-sm text-gray-600 mt-1">DoD personnel in region</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-gray-900">60%</div>
-            <div className="text-sm text-gray-600 mt-1">Buyers using VA loans</div>
+            <div className="text-3xl font-bold text-gray-900">41%</div>
+            <div className="text-sm text-gray-600 mt-1">VA share of HR purchase loans</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-gray-900">$340K</div>
-            <div className="text-sm text-gray-600 mt-1">Median home price</div>
+            <div className="text-3xl font-bold text-gray-900">$355K</div>
+            <div className="text-sm text-gray-600 mt-1">Median home price (Jan 2026)</div>
           </div>
         </div>
+        <p className="mt-4 text-xs text-gray-500 text-center max-w-3xl mx-auto px-4">
+          Sources: <a href="https://www.hrmffa.org/about-us" target="_blank" rel="noopener noreferrer" className="underline">HRMFFA</a> (installations + personnel); <a href="https://jenniferdawnrealestate.com/hampton-roads-virginia-housing-market-overview" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a> (Jan 2026 median); <a href="https://www.tieronecoastal.com/va-loans-hampton-roads-military-buyers/" target="_blank" rel="noopener noreferrer" className="underline">2024 HMDA</a> (VA loan share).
+        </p>
       </section>
 
       {/* Three pillars */}
@@ -91,7 +94,7 @@ export default function MilitaryHomePage() {
             href="/military/relocation/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">🗺️</div>
+            <div className="text-3xl mb-3">ðºï¸</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Relocation guide</h2>
             <p className="text-gray-600 text-sm">
               Complete 2026 guide to Hampton Roads &mdash; every base, every city, schools, BAH, VA loans, flood zones, PCS season.
@@ -103,7 +106,7 @@ export default function MilitaryHomePage() {
             href="/military/bah-calculator/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">💰</div>
+            <div className="text-3xl mb-3">ð°</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">BAH calculator</h2>
             <p className="text-gray-600 text-sm">
               2026 Norfolk MHA rates by paygrade &amp; dependents. See your max affordable home price &mdash; then jump straight to listings in range.
@@ -115,7 +118,7 @@ export default function MilitaryHomePage() {
             href="/military/va-loan-homes/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">🇺🇸</div>
+            <div className="text-3xl mb-3">ðºð¸</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">VA loan homes</h2>
             <p className="text-gray-600 text-sm">
               $0 down. No PMI. 2026 limits, eligibility, funding fee. Browse VA-eligible homes across Hampton Roads.
