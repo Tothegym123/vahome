@@ -58,8 +58,8 @@ const breadcrumbSchema = {
 const timeline = [
   { phase: "120-90 days out", actions: ["Read the orders carefully (UIC, report date, gaining command POC)", "Apply for housing wait list at base (don't commit, just queue)", "Start a Hampton Roads listings alert", "Pull your VA Certificate of Eligibility"] },
   { phase: "90-60 days out", actions: ["Get VA loan pre-approval (NOT just pre-qual)", "Pick your duty-station-aligned city: Norfolk/VB for NSN, VB for Oceana, Hampton/Newport News for Langley/JBLE", "Schedule HHG move date", "Identify 5-10 candidate neighborhoods"] },
-  { phase: "60-30 days out", actions: ["House-hunting trip (3-5 days, 8-12 showings)", "Submit offers — be ready to write within 24 hours of seeing the right home", "Lock your rate when ratified", "Start school enrollment paperwork"] },
-  { phase: "30-0 days out", actions: ["Final walkthrough (in person or virtual via your Realtor)", "Closing scheduled to align with HHG arrival ±3 days", "Set up Dominion Energy, water, internet at new address", "Forward mail to gaining command, not the new house yet"] },
+  { phase: "60-30 days out", actions: ["House-hunting trip (3-5 days, 8-12 showings)", "Submit offers â be ready to write within 24 hours of seeing the right home", "Lock your rate when ratified", "Start school enrollment paperwork"] },
+  { phase: "30-0 days out", actions: ["Final walkthrough (in person or virtual via your Realtor)", "Closing scheduled to align with HHG arrival Â±3 days", "Set up Dominion Energy, water, internet at new address", "Forward mail to gaining command, not the new house yet"] },
   { phase: "Move week", actions: ["Inspect HHG load and unload day-of", "Check in at gaining command (don't skip the personnel office)", "Register vehicles in VA within 30 days (DMV Hampton Roads has 4 locations)"] },
   { phase: "First 90 days at command", actions: ["Get VA in-state tuition/registration paperwork to dependents", "Register for Tricare regional", "Update DEERS with new address", "Find a primary care manager (Naval Medical Center Portsmouth or Tricare network)"] },
 ];
@@ -99,11 +99,14 @@ export default function PCSToHRPage() {
 
       <section className="border-b border-gray-200 bg-gray-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div><p className="text-2xl font-bold text-blue-700">10</p><p className="text-xs text-gray-600 mt-1">Installations</p></div>
-          <div><p className="text-2xl font-bold text-blue-700">~80K</p><p className="text-xs text-gray-600 mt-1">Active duty</p></div>
+          <div><p className="text-2xl font-bold text-blue-700">18</p><p className="text-xs text-gray-600 mt-1">Installations</p></div>
+          <div><p className="text-2xl font-bold text-blue-700">~120K</p><p className="text-xs text-gray-600 mt-1">DoD personnel</p></div>
           <div><p className="text-2xl font-bold text-blue-700">7</p><p className="text-xs text-gray-600 mt-1">Cities</p></div>
-          <div><p className="text-2xl font-bold text-blue-700">$340K</p><p className="text-xs text-gray-600 mt-1">Median home price</p></div>
+          <div><p className="text-2xl font-bold text-blue-700">$355K</p><p className="text-xs text-gray-600 mt-1">Median (Jan 2026)</p></div>
         </div>
+        <p className="mt-3 text-xs text-gray-500 text-center max-w-3xl mx-auto px-4">
+          Sources: <a href="https://www.hrmffa.org/about-us" target="_blank" rel="noopener noreferrer" className="underline">HRMFFA</a> (installations + personnel); <a href="https://jenniferdawnrealestate.com/hampton-roads-virginia-housing-market-overview" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a> (Jan 2026 median).
+        </p>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
