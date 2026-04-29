@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/terms/" },
   title: 'Terms of Service | VaHome.com',
   description: 'Terms of Service for VaHome.com - understand your rights and responsibilities when using our services.',
 }
