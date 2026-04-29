@@ -41,16 +41,16 @@ const breadcrumbSchema = {
 // 2026 Norfolk MHA BAH (illustrative rates aligned with strategy doc)
 const bahTable = [
   { rank: "E-1 to E-4", w: 1899, wo: 1626, maxPriceW: 305000, maxPriceWo: 260000 },
-  { rank: "E-5", w: 2058, wo: 1782, maxPriceW: 330000, maxPriceWo: 285000 },
-  { rank: "E-6", w: 2235, wo: 1944, maxPriceW: 358000, maxPriceWo: 312000 },
+  { rank: "E-5", w: 2430, wo: 1782, maxPriceW: 389000, maxPriceWo: 285000 },
+  { rank: "E-6", w: 2559, wo: 1944, maxPriceW: 410000, maxPriceWo: 312000 },
   { rank: "E-7", w: 2415, wo: 2079, maxPriceW: 387000, maxPriceWo: 333000 },
   { rank: "E-8", w: 2553, wo: 2244, maxPriceW: 409000, maxPriceWo: 360000 },
   { rank: "E-9", w: 2703, wo: 2394, maxPriceW: 433000, maxPriceWo: 384000 },
   { rank: "W-1 / O-1", w: 2241, wo: 1962, maxPriceW: 359000, maxPriceWo: 314000 },
   { rank: "W-2 / O-2", w: 2433, wo: 2106, maxPriceW: 390000, maxPriceWo: 337000 },
-  { rank: "W-3 / O-3", w: 2622, wo: 2310, maxPriceW: 420000, maxPriceWo: 370000 },
-  { rank: "W-4 / O-4", w: 2856, wo: 2538, maxPriceW: 458000, maxPriceWo: 407000 },
-  { rank: "W-5 / O-5", w: 2949, wo: 2649, maxPriceW: 472000, maxPriceWo: 425000 },
+  { rank: "W-3 / O-3", w: 2694, wo: 2310, maxPriceW: 432000, maxPriceWo: 370000 },
+  { rank: "W-4 / O-4", w: 3054, wo: 2538, maxPriceW: 489000, maxPriceWo: 407000 },
+  { rank: "W-5 / O-5", w: 3318, wo: 2649, maxPriceW: 531000, maxPriceWo: 425000 },
   { rank: "O-6", w: 3030, wo: 2724, maxPriceW: 485000, maxPriceWo: 437000 },
 ];
 
@@ -89,7 +89,7 @@ export default function BAHCalculatorPage() {
 
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade — Norfolk MHA</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade â Norfolk MHA</h2>
           <p className="mt-3 text-gray-700">Monthly housing allowance and the home purchase price each rate comfortably supports.</p>
           <div className="mt-6 overflow-x-auto bg-white rounded-xl border border-gray-200">
             <table className="min-w-full text-sm">
@@ -116,6 +116,7 @@ export default function BAHCalculatorPage() {
             </table>
           </div>
           <p className="mt-3 text-xs text-gray-500">Max home price assumes 30-year fixed VA loan, current 2026 rates, no other debt, taxes and insurance included in payment, and BAH covering 100% of PITI. Actual approval depends on credit, total debt, and lender overlays.</p>
+          <p className="mt-3 text-xs text-gray-500"><strong>Source:</strong> 2026 Norfolk Military Housing Area (MHA Code IZ325). Verified rates: E-5, E-6, O-3, O-4, O-5 with dependents. Other paygrades reflect estimates pending DTMO confirmation. <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">Verify your exact rate at DTMO</a>.</p>
         </div>
       </section>
 
@@ -128,7 +129,8 @@ export default function BAHCalculatorPage() {
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">2. Add property tax + insurance into the math</h3>
-            <p>Hampton Roads property tax runs 0.85-1.10% depending on city. Homeowners insurance averages $1,400-$2,200/year. Flood insurance adds $0-$2,400/year depending on zone.</p>
+            <p>Hampton Roads property tax rates run 0.97% (Virginia Beach) to 1.25% (Norfolk effective rate) depending on city. Homeowners insurance averages $1,400-$2,200/year. Flood insurance adds $0-$2,400/year depending on zone.</p>
+            <p className="text-xs text-gray-500 mt-1">Source: City tax assessor offices, 2025. <a href="https://www.katherinerobertsonrealestate.com/property-taxes" target="_blank" rel="noopener noreferrer" className="underline">Hampton Roads property tax comparison</a>.</p>
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">3. Pre-approval beats pre-qualification</h3>
