@@ -188,7 +188,7 @@ export default function MyHomesPage() {
                 {compareMode ? 'Done Comparing' : 'Compare Homes'}
               </button>
             )}
-            <Link href="/map" className="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-colors">
+            <Link href="/map/" className="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-colors">
               Browse More
             </Link>
           </div>
@@ -204,7 +204,7 @@ export default function MyHomesPage() {
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-3">No saved homes yet</h2>
             <p className="text-gray-500 mb-8 max-w-md mx-auto">Start browsing listings and tap the heart icon to save homes you love. They will appear here as draggable tiles you can rearrange and compare.</p>
-            <Link href="/map" className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl transition-colors">
+            <Link href="/map/" className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl transition-colors">
               Start Browsing
             </Link>
           </div>
