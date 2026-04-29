@@ -56,4 +56,4 @@ Disallow: /settings/
 Disallow: /settings
 
 # Sitemap
-Sitemap: https://www.vahome.com/sitemap.xml
+Sitemap: https://vahome.com/sitemap.xml
