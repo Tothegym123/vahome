@@ -172,9 +172,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Author Bio */}
             <div className="mt-12 pt-8 border-t border-gray-200">
               <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">
                   About the Author
-                </h3>
+                </h2>
                 <p className="text-gray-700">
                   The VaHome Team is dedicated to providing expert real estate
                   insights for Hampton Roads, Virginia. Contact us at (757)
@@ -199,9 +199,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="space-y-6 lg:sticky lg:top-24">
               {/* CTA */}
               <div className="bg-blue-600 rounded-lg p-6 text-white shadow-lg">
-                <h3 className="text-lg font-bold mb-2">
+                <h2 className="text-lg font-bold mb-2">
                   Looking for your dream home?
-                </h3>
+                </h2>
                 <p className="text-sm text-blue-100 mb-4">
                   Explore listings in Hampton Roads and find the perfect
                   property.
@@ -216,9 +216,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
               {/* Recent Posts */}
               <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">
                   Recent Posts
-                </h3>
+                </h2>
                 <ul className="space-y-3">
                   {recentPosts.map((p) => (
                     <li key={p.slug}>
@@ -242,9 +242,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
               {/* Categories */}
               <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">
                   Categories
-                </h3>
+                </h2>
                 <div className="space-y-1">
                   {categories.map((category) => (
                     <Link
@@ -264,9 +264,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
               {/* Contact */}
               <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">
                   Have Questions?
-                </h3>
+                </h2>
                 <p className="text-sm text-gray-600 mb-3">
                   The VaHome Team is here to help.
                 </p>
