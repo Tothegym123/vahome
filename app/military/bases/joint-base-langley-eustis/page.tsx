@@ -104,7 +104,7 @@ export default function JBLEBasePage() {
               Headquarters of the U.S. Army Transportation Corps, U.S. Army Aviation Logistics School, and TRADOC's Combined Arms Support Command training mission. Located in Newport News with direct I-64 access.
             </p>
             <p className="mt-3 text-xs text-gray-500 italic">
-              Source: <a href="https://home.army.mil/eustis/" target="_blank" rel="noopener noreferrer" className="underline">home.army.mil/eustis</a>.
+              Source: <a href="https://home.army.mil/jble/" target="_blank" rel="noopener noreferrer" className="underline">home.army.mil/eustis</a>.
             </p>
           </div>
         </div>
@@ -114,15 +114,15 @@ export default function JBLEBasePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Best Neighborhoods for JBLE Families</h2>
           <p className="mt-3 text-gray-700">
-            The Peninsula offers a different cost-of-living profile than South Hampton Roads — generally lower median prices with strong public schools. Top-fit areas:
+            The Peninsula offers a different cost-of-living profile than South Hampton Roads â generally lower median prices with strong public schools. Top-fit areas:
           </p>
           <div className="mt-6 grid sm:grid-cols-2 gap-4">
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <p className="font-semibold text-gray-900">Hampton — Riverdale, Wythe, Fox Hill</p>
+              <p className="font-semibold text-gray-900">Hampton â Riverdale, Wythe, Fox Hill</p>
               <p className="text-sm text-gray-600 mt-1">Closest to Langley AFB. 10-15 min commute. Mix of starter homes and waterfront.</p>
             </div>
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <p className="font-semibold text-gray-900">Newport News — Hilton Village, Riverside, City Center</p>
+              <p className="font-semibold text-gray-900">Newport News â Hilton Village, Riverside, City Center</p>
               <p className="text-sm text-gray-600 mt-1">Closest to Fort Eustis. Hilton Village is a historic walkable district.</p>
             </div>
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
