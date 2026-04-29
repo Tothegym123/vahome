@@ -1,4 +1,5 @@
 export const metadata = {
+  alternates: { canonical: "/lenders/" },
   title: 'Hampton Roads Mortgage Lenders | VaHome.com',
   description: 'Vetted mortgage lenders for Virginia Beach, Norfolk, Chesapeake, and the rest of Hampton Roads. VA loan specialists, FHA, USDA, conventional, and refinance options.',
 };
@@ -16,15 +17,15 @@ export default function LendersPage() {
         </p>
         <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Loan Types We Help With</h2>
         <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
-          <li><strong>VA Loans</strong> — for active-duty military, veterans, and eligible spouses</li>
-          <li><strong>FHA Loans</strong> — for first-time buyers and lower down payment scenarios</li>
-          <li><strong>USDA Loans</strong> — for eligible rural and suburban Hampton Roads properties</li>
-          <li><strong>Conventional Loans</strong> — fixed and adjustable rate options</li>
-          <li><strong>Jumbo Loans</strong> — for higher-priced Hampton Roads properties</li>
-          <li><strong>Refinances</strong> — rate-and-term, cash-out, and VA IRRRL streamline options</li>
+          <li><strong>VA Loans</strong> â for active-duty military, veterans, and eligible spouses</li>
+          <li><strong>FHA Loans</strong> â for first-time buyers and lower down payment scenarios</li>
+          <li><strong>USDA Loans</strong> â for eligible rural and suburban Hampton Roads properties</li>
+          <li><strong>Conventional Loans</strong> â fixed and adjustable rate options</li>
+          <li><strong>Jumbo Loans</strong> â for higher-priced Hampton Roads properties</li>
+          <li><strong>Refinances</strong> â rate-and-term, cash-out, and VA IRRRL streamline options</li>
         </ul>
         <p className="text-gray-700 leading-relaxed text-base mb-6">
-          You're under no obligation to use any specific lender. We strongly encourage shopping rates and terms across multiple options to ensure you get the best deal. The VaHome team is happy to make introductions to vetted lenders, walk you through pre-approval, or just answer questions about which loan program might fit your situation. Reach out anytime — there's never any pressure to commit.
+          You're under no obligation to use any specific lender. We strongly encourage shopping rates and terms across multiple options to ensure you get the best deal. The VaHome team is happy to make introductions to vetted lenders, walk you through pre-approval, or just answer questions about which loan program might fit your situation. Reach out anytime â there's never any pressure to commit.
         </p>
         <div className="mt-8">
           <a href="/contact/" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg">Connect with a Lender</a>
