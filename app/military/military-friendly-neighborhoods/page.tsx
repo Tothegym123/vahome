@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Hampton Roads | VaHome",
-  description: "Compare every Hampton Roads city for military families. Virginia Beach, Norfolk, Chesapeake, Portsmouth, Hampton, Newport News, Suffolk — schools, BAH, commute, and flood-zone context for each.",
+  description: "Compare every Hampton Roads city for military families. Virginia Beach, Norfolk, Chesapeake, Portsmouth, Hampton, Newport News, Suffolk â schools, BAH, commute, and flood-zone context for each.",
   alternates: { canonical: "https://www.vahome.com/military/military-friendly-neighborhoods/" },
   openGraph: { title: "Military-Friendly Neighborhoods in Hampton Roads", description: "All 7 Hampton Roads cities ranked for military families.", url: "https://www.vahome.com/military/military-friendly-neighborhoods/", type: "article" },
 };
@@ -38,6 +38,7 @@ const cities = [
   { slug: "hampton", name: "Hampton", short: "Langley AFB / JBLE; Bethel Manor (10/10), Tucker-Capps (10/10), historic Phoebus", schoolAvg: "6.1" },
   { slug: "newport-news", name: "Newport News", short: "Fort Eustis / JBLE; Hilton Village, Kiln Creek; verify school zones (district avg 4.8)", schoolAvg: "4.8" },
   { slug: "suffolk", name: "Suffolk", short: "Harbour View, Bennett's Creek; MMMBT corridor; dual-commute sweet spot", schoolAvg: "varies" },
+  { slug: "williamsburg", name: "Williamsburg / James City County", short: "Colonial historic district; top-rated WJCC schools; quiet for JBLE/NWS Yorktown commuters", schoolAvg: "strong" },
 ];
 
 export default function MFNIndexPage() {
@@ -61,7 +62,7 @@ export default function MFNIndexPage() {
       </section>
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">All 7 Hampton Roads Cities</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">All 8 Hampton Roads Cities</h2>
         <p className="mt-3 text-gray-700 text-sm">School averages from GreatSchools.org (April 2026). All cities share Norfolk MHA (IZ325) for BAH.</p>
         <div className="mt-6 grid sm:grid-cols-2 gap-4">
           {cities.map((c) => (
@@ -93,7 +94,7 @@ export default function MFNIndexPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-2xl font-bold">Need help picking?</p>
-            <p className="text-blue-100 mt-1">Tell me your installation, paygrade, and school priorities — I'll suggest 2-3 cities to start with.</p>
+            <p className="text-blue-100 mt-1">Tell me your installation, paygrade, and school priorities â I'll suggest 2-3 cities to start with.</p>
           </div>
           <Link href="/contact?source=mfn-index" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Get my recommendations</Link>
         </div>
