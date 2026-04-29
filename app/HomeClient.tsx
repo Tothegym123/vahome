@@ -547,6 +547,48 @@ export default function HomeClient() {
           </div>
         </div>
 
+        {/* ===== MAP CTA ===== */}
+        <section id="map-section" className="py-20 section-alt morph">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="fade grid lg:grid-cols-2 gap-12 items-center">
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative">
+                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Map preview" className="w-full h-full object-cover" width={800} height={600} loading="lazy" />
+                  <div className="overlay-grad morph absolute inset-0" />
+                  <div className="absolute top-[25%] left-[30%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg">$329K</div>
+                  <div className="absolute top-[50%] left-[60%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg">$425K</div>
+                  <div className="absolute top-[65%] left-[40%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg animate-pulse">$289K</div>
+                </div>
+              </div>
+              <div>
+                <span className="accent-color morph text-xs font-bold tracking-widest uppercase">Interactive Map</span>
+                <h2 className="font-serif text-3xl sm:text-4xl text-themed morph mt-2 mb-5">
+                  {isMil ? 'Find Homes Near Your Base' : 'Search Like a Local'}
+                </h2>
+                <p className="text-secondary-themed morph leading-relaxed mb-8">
+                  {isMil
+                    ? 'Our interactive map shows every listing with real-time commute calculations to all 10 military installations. Filter by BAH range, base proximity, and VA loan eligibility.'
+                    : 'Our interactive map shows every active listing in Hampton Roads with real-time pricing, neighborhood boundaries, and filtering tools.'}
+                </p>
+                <div className="space-y-3 mb-8">
+                  {['Real-time price pills on every listing',
+                    isMil ? 'Commute times to all 10 bases' : 'Neighborhood video tours',
+                    isMil ? 'Filter by BAH range & VA eligibility' : 'Draw custom search boundaries',
+                  ].map((feat) => (
+                    <div key={feat} className="flex items-center gap-3">
+                      <div className="accent-bg-soft-c morph w-8 h-8 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 accent-color morph" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      </div>
+                      <span className="text-sm text-secondary-themed morph">{feat}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/map" className="btn-primary-c morph font-semibold px-6 py-3 rounded-xl transition text-sm inline-block">Open Map Search</Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ===== PREMIUM: MORTGAGE CALCULATOR (logged in) or TEASER (logged out) ===== */}
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-6">
@@ -715,47 +757,6 @@ export default function HomeClient() {
           </section>
         </div>
 
-        {/* ===== MAP CTA ===== */}
-        <section id="map-section" className="py-20 section-alt morph">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="fade grid lg:grid-cols-2 gap-12 items-center">
-              <div className="relative">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative">
-                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Map preview" className="w-full h-full object-cover" width={800} height={600} loading="lazy" />
-                  <div className="overlay-grad morph absolute inset-0" />
-                  <div className="absolute top-[25%] left-[30%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg">$329K</div>
-                  <div className="absolute top-[50%] left-[60%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg">$425K</div>
-                  <div className="absolute top-[65%] left-[40%] accent-bg-c morph text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg animate-pulse">$289K</div>
-                </div>
-              </div>
-              <div>
-                <span className="accent-color morph text-xs font-bold tracking-widest uppercase">Interactive Map</span>
-                <h2 className="font-serif text-3xl sm:text-4xl text-themed morph mt-2 mb-5">
-                  {isMil ? 'Find Homes Near Your Base' : 'Search Like a Local'}
-                </h2>
-                <p className="text-secondary-themed morph leading-relaxed mb-8">
-                  {isMil
-                    ? 'Our interactive map shows every listing with real-time commute calculations to all 10 military installations. Filter by BAH range, base proximity, and VA loan eligibility.'
-                    : 'Our interactive map shows every active listing in Hampton Roads with real-time pricing, neighborhood boundaries, and filtering tools.'}
-                </p>
-                <div className="space-y-3 mb-8">
-                  {['Real-time price pills on every listing',
-                    isMil ? 'Commute times to all 10 bases' : 'Neighborhood video tours',
-                    isMil ? 'Filter by BAH range & VA eligibility' : 'Draw custom search boundaries',
-                  ].map((feat) => (
-                    <div key={feat} className="flex items-center gap-3">
-                      <div className="accent-bg-soft-c morph w-8 h-8 rounded-full flex items-center justify-center">
-                        <svg className="w-4 h-4 accent-color morph" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                      </div>
-                      <span className="text-sm text-secondary-themed morph">{feat}</span>
-                    </div>
-                  ))}
-                </div>
-                <Link href="/map" className="btn-primary-c morph font-semibold px-6 py-3 rounded-xl transition text-sm inline-block">Open Map Search</Link>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* ===== NEIGHBORHOODS ===== */}
         <section id="neighborhoods" className="py-20">
