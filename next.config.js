@@ -41,6 +41,16 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/myteam',
+        destination: '/agents',
+        permanent: true,
+      },
+      {
+        source: '/neighborhood/:id/:slug*',
+        destination: '/map',
+        permanent: true,
+      },
+      {
         source: '/sitemap',
         destination: '/sitemap.xml',
         permanent: true,
