@@ -33,7 +33,7 @@ export function generateMetadata({ searchParams }: { searchParams: { city?: stri
     title,
     description,
     alternates: {
-      canonical: city ? "/listings/?city=" + encodeURIComponent(city) : "/listings/",
+      canonical: city ? "https://www.vahome.com/listings/?city=" + encodeURIComponent(city) : "https://www.vahome.com/listings/",
     },
     openGraph: { title, description, type: "website" },
   };
