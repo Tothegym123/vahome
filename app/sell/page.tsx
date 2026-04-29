@@ -12,6 +12,9 @@ export default function SellPage() {
       <div className="max-w-5xl mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Sell Your Home</h1>
+          <section className="max-w-4xl mx-auto px-6 py-8">
+            <p className="text-gray-700 leading-relaxed text-base">{`Selling a home in Hampton Roads requires understanding what makes each submarket distinct. Virginia Beach oceanfront properties move on different timelines than Chesapeake suburban subdivisions or Norfolk historic homes. The VaHome team prepares a detailed, data-backed valuation for every seller based on recent comparable sales, current inventory, your home's specific features, and seasonal market trends. From there, we develop a custom marketing plan that may include professional photography and video, a Mapbox-powered interactive map listing, MLS syndication to all major search portals, social media advertising, and direct outreach to our buyer database. Our goal is to maximize your sale price while minimizing time on market and the stress of the selling process.`}</p>
+          </section>
           <p className="text-gray-500 text-lg max-w-2xl mx-auto">
             Get a free, no-obligation valuation and a clear plan to maximize your sale price.
             The VaHome Team handles every step from listing to closing.
