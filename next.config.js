@@ -41,6 +41,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/blog/Inspection-vs--Appraisal-for-Home-Buyer',
+        destination: '/blog/Inspection-vs--Appraisal-for-Home-Buyers',
+        permanent: true,
+      },
+      {
         source: '/myteam',
         destination: '/agents',
         permanent: true,
