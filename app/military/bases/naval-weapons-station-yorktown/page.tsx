@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Naval Weapons Station Yorktown (NWS Yorktown): Living, Housing & PCS Guide | VaHome",
+  title: "NWS Yorktown PCS & Housing Guide | VaHome",
   description: "PCS guide for Naval Weapons Station Yorktown (NWS Yorktown) in Yorktown, VA. Top neighborhoods, BAH (Norfolk MHA), schools, commute, and VA-loan home search for Hampton Roads military families.",
   alternates: { canonical: "https://www.vahome.com/military/bases/naval-weapons-station-yorktown/" },
   openGraph: { title: "NWS Yorktown PCS Guide", description: "Hampton Roads housing, BAH, and neighborhoods for NWS Yorktown families.", url: "https://www.vahome.com/military/bases/naval-weapons-station-yorktown/", type: "article" },
@@ -128,7 +128,7 @@ export default function NavalWeaponsStationYorktownPage() {
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <p className="text-xs text-gray-500">
-          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NWS-Yorktown/" target="_blank" rel="noopener noreferrer" className="underline">CNIC — NWS Yorktown</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
+          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NWS-Yorktown/" target="_blank" rel="noopener noreferrer" className="underline">CNIC â NWS Yorktown</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
     </main>
