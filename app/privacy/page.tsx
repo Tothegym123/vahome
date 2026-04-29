@@ -10,6 +10,9 @@ export default function PrivacyPolicyPage() {
     <main className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Privacy Policy</h1>
+        <section className="max-w-4xl mx-auto px-6 py-8">
+          <p className="text-gray-700 leading-relaxed text-base">{`VaHome.com is committed to protecting the privacy and security of every visitor. This privacy policy describes the information we collect, how we use it, and the choices you have. We collect basic site analytics (page views, device type, referral source), information you voluntarily provide through forms (name, email, phone, search preferences), and minimal cookie data necessary to operate site features like saved searches and military profile preferences. We never sell your information to third parties. We share information only with the agents and lenders you specifically request to be connected with. You can request deletion of your data at any time by contacting us. For property listing data, we operate within REIN MLS's terms of use and rules for member sites.`}</p>
+        </section>
         <p className="text-sm text-gray-500 mb-10">Last Updated: 4/1/2026</p>
 
         <div className="prose prose-gray max-w-none space-y-8">
