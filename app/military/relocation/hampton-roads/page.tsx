@@ -120,7 +120,7 @@ export default function HamptonRoadsRelocationPage() {
       <section className="border-b border-gray-200 bg-gray-50">
         <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div><div className="text-2xl font-bold text-gray-900">10</div><div className="text-xs text-gray-600">Major bases</div></div>
-          <div><div className="text-2xl font-bold text-gray-900">~80K</div><div className="text-xs text-gray-600">Active duty</div></div>
+          <div><div className="text-2xl font-bold text-gray-900">~120K</div><div className="text-xs text-gray-600">Active duty</div></div>
           <div><div className="text-2xl font-bold text-gray-900">$355K</div><div className="text-xs text-gray-600">Median price</div></div>
           <div><div className="text-2xl font-bold text-gray-900">85%</div><div className="text-xs text-gray-600">VA-eligible inventory</div></div>
         </div>
@@ -132,7 +132,7 @@ export default function HamptonRoadsRelocationPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Hampton Roads is the densest military region in the country</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
             Hampton Roads spans seven cities and surrounding counties at the mouth of the Chesapeake Bay. It&rsquo;s the home of Naval Station Norfolk &mdash;
-            the largest naval base in the world &mdash; with more than 75,000 active-duty personnel based regionally and a defense-industrial economy that supports
+            the largest naval complex in the world &mdash; with more than 75,000 active-duty personnel based regionally and a defense-industrial economy that supports
             another 100,000+ civilian shipyard, contractor, and DoD employees.
           </p>
           <p className="text-gray-700 leading-relaxed mb-4">
@@ -232,7 +232,7 @@ export default function HamptonRoadsRelocationPage() {
           <ul className="list-disc list-inside text-gray-700 space-y-1 mb-4">
             <li><strong>2026 county VA loan limits:</strong> $766,550 for most of Hampton Roads</li>
             <li><strong>Funding fee:</strong> 1.40&ndash;3.30% (waived for disabled veterans)</li>
-            <li><strong>Most Hampton Roads sellers</strong> accept VA loans without issue &mdash; about 60% of regional buyers use VA</li>
+            <li><strong>Most Hampton Roads sellers</strong> accept VA loans without issue &mdash; about 41% of regional buyers use VA</li>
           </ul>
           <Link
             href="/military/va-loan-homes/hampton-roads/"
