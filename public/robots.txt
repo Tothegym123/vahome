@@ -40,62 +40,20 @@ User-agent: YouBot
 Allow: /
 
 # Block pure AI training scrapers (not search)
-User-agent: CCBot
-Disallow: /
 
-User-agent: anthropic-ai
-Disallow: /
-
-User-agent: ClaudeBot
-Disallow: /
-
-User-agent: Claude-Web
-Disallow: /
-
-User-agent: Bytespider
-Disallow: /
-
-User-agent: Diffbot
-Disallow: /
-
-User-agent: Meta-ExternalAgent
-Disallow: /
-
-User-agent: cohere-ai
-Disallow: /
-
-User-agent: Timpibot
-Disallow: /
-
-User-agent: VelenPublicWebCrawler
-Disallow: /
-
-User-agent: omgili
-Disallow: /
-
-User-agent: Scrapy
-Disallow: /
-
-User-agent: PetalBot
-Disallow: /
-
-# Block SEO crawlers (use dashboard access instead)
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: MJ12bot
-Disallow: /
-
-User-agent: DotBot
-Disallow: /
-
-# Default rule for all other bots
+# Block auth-protected and admin paths from crawl
 User-agent: *
-Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /admin
+Disallow: /dashboard/
+Disallow: /dashboard
+Disallow: /auth/
+Disallow: /auth
+Disallow: /my-homes/
+Disallow: /my-homes
+Disallow: /settings/
+Disallow: /settings
 
-Sitemap: https://www.vahometest2.com/sitemap.xml
+# Sitemap
+Sitemap: https://www.vahome.com/sitemap.xml
