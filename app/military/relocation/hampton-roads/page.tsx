@@ -121,7 +121,7 @@ export default function HamptonRoadsRelocationPage() {
         <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div><div className="text-2xl font-bold text-gray-900">10</div><div className="text-xs text-gray-600">Major bases</div></div>
           <div><div className="text-2xl font-bold text-gray-900">~80K</div><div className="text-xs text-gray-600">Active duty</div></div>
-          <div><div className="text-2xl font-bold text-gray-900">$340K</div><div className="text-xs text-gray-600">Median price</div></div>
+          <div><div className="text-2xl font-bold text-gray-900">$355K</div><div className="text-xs text-gray-600">Median price</div></div>
           <div><div className="text-2xl font-bold text-gray-900">85%</div><div className="text-xs text-gray-600">VA-eligible inventory</div></div>
         </div>
       </section>
@@ -293,6 +293,12 @@ export default function HamptonRoadsRelocationPage() {
             Call (757) 777-7577
           </a>
         </div>
+      </section>
+    
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-8">
+        <p className="text-xs text-gray-500">
+          Sources: <a href="https://www.hrmffa.org/about-us" target="_blank" rel="noopener noreferrer" className="underline">HRMFFA</a> (installations + personnel); <a href="https://jenniferdawnrealestate.com/hampton-roads-virginia-housing-market-overview" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a> (Jan 2026 median); <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH Calculator</a> (2026 Norfolk MHA rates).
+        </p>
       </section>
     </main>
   )
