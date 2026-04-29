@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Naval Medical Center Portsmouth (NMCP): Living, Housing & PCS Guide | VaHome",
+  title: "NMCP Portsmouth: PCS & Housing Guide | VaHome",
   description: "PCS guide for Naval Medical Center Portsmouth (NMCP) in Portsmouth, VA. Top neighborhoods, BAH (Norfolk MHA), schools, commute, and VA-loan home search for Hampton Roads military families.",
   alternates: { canonical: "https://www.vahome.com/military/bases/naval-medical-center-portsmouth/" },
   openGraph: { title: "NMCP PCS Guide", description: "Hampton Roads housing, BAH, and neighborhoods for NMCP families.", url: "https://www.vahome.com/military/bases/naval-medical-center-portsmouth/", type: "article" },
@@ -128,7 +128,7 @@ export default function NavalMedicalCenterPortsmouthPage() {
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <p className="text-xs text-gray-500">
-          Sources: <a href="https://portsmouth.tricare.mil" target="_blank" rel="noopener noreferrer" className="underline">TRICARE — NMCP</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
+          Sources: <a href="https://portsmouth.tricare.mil" target="_blank" rel="noopener noreferrer" className="underline">TRICARE â NMCP</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
     </main>
