@@ -7,7 +7,7 @@ const CATEGORY_INTROS: Record<string, string> = {
   "chesapeake": "Chesapeake is one of Hampton Roads' most popular real estate markets, known for great public schools, lower property taxes, and a wide mix of housing types from waterfront properties to suburban subdivisions. Articles in this category cover Chesapeake-specific topics including neighborhood guides for Western Branch, Greenbrier, and Great Bridge, school district analysis, new construction trends, and tips for buying or selling in the area. The VaHome team has extensive experience helping clients across Chesapeake.",
   "financing": "Understanding mortgage and financing options is one of the most important parts of buying a home. This category covers conventional loans, FHA loans, VA loans for active-duty military and veterans, USDA loans for rural Hampton Roads properties, jumbo loans, refinancing strategies, cash-out options, and credit-building tips for buyers preparing to apply. Each article is written with Hampton Roads buyers in mind, covering local lender recommendations and current rate trends.",
   "general": "General real estate articles for Hampton Roads home buyers and sellers. This category covers a wide range of topics including market trends, seasonal buying strategies, working with a Realtor, understanding home inspections and appraisals, navigating closings, and answering the most common questions we hear from clients. Whether you're researching your first move or your tenth, these articles provide practical information you can use right away.",
-  "hampton-roads": "Hampton Roads is one of America's most distinctive real estate regions, combining seven cities ÃÂ¢ÃÂÃÂ Virginia Beach, Norfolk, Chesapeake, Suffolk, Hampton, Newport News, and Portsmouth ÃÂ¢ÃÂÃÂ with the surrounding counties of York, James City, and Gloucester. This category covers regional topics that span multiple cities, including commute analysis, school district comparisons, military base proximity, area economic trends, and what makes each Hampton Roads submarket unique. The VaHome team works across the entire region.",
+  "hampton-roads": "Hampton Roads is one of America's most distinctive real estate regions, combining seven cities ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Virginia Beach, Norfolk, Chesapeake, Suffolk, Hampton, Newport News, and Portsmouth ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ with the surrounding counties of York, James City, and Gloucester. This category covers regional topics that span multiple cities, including commute analysis, school district comparisons, military base proximity, area economic trends, and what makes each Hampton Roads submarket unique. The VaHome team works across the entire region.",
   "military": "Hampton Roads is home to the largest concentration of active-duty military personnel in the United States, including Naval Station Norfolk, Joint Base Langley-Eustis, NAS Oceana, and many other installations. Military-focused articles cover VA loans, BAH calculations by paygrade and rank, PCS move planning, on-base versus off-base housing decisions, military-friendly neighborhoods, and tips for active-duty service members and veterans buying or selling. The VaHome team includes military-experienced agents.",
   "norfolk": "Norfolk is the second-largest city in Hampton Roads and home to Naval Station Norfolk, the largest naval base in the world. Articles in this category cover Norfolk-specific topics including neighborhood guides for Ghent, Larchmont, Colonial Place, and Edgewater, downtown waterfront development, the Tide light rail, and the city's strong military housing market. Norfolk's mix of historic homes, walkable neighborhoods, and military-driven demand makes it a unique submarket within Hampton Roads.",
   "suffolk": "Suffolk is the fastest-growing city in Hampton Roads and the largest by land area in Virginia. Articles in this category cover Suffolk-specific topics including new construction in Harbour View and Burbage Grant, historic Downtown Suffolk, rural and waterfront properties in the southern part of the city, school options, and the city's relatively affordable price point compared to neighboring areas. Suffolk's growth trajectory makes it especially attractive to families and military households.",
@@ -243,9 +243,9 @@ export default function BlogPage({
           <aside className="lg:col-span-1">
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">
                   Categories
-                </h3>
+                </h2>
                 <div className="space-y-1">
                   <Link
                     href="/blog/"
@@ -281,9 +281,9 @@ export default function BlogPage({
               </div>
 
               <div className="bg-blue-600 rounded-lg p-6 text-white">
-                <h3 className="text-lg font-bold mb-2">
+                <h2 className="text-lg font-bold mb-2">
                   Looking for your dream home?
-                </h3>
+                </h2>
                 <p className="text-sm text-blue-100 mb-4">
                   Browse our current listings in Hampton Roads and find your
                   perfect property.
@@ -297,9 +297,9 @@ export default function BlogPage({
               </div>
 
               <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">
                   Questions?
-                </h3>
+                </h2>
                 <p className="text-sm text-gray-600 mb-3">
                   The VaHome Team is ready to help you navigate the Hampton
                   Roads real estate market.
