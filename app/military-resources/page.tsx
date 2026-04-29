@@ -26,6 +26,9 @@ export default function MilitaryResourcesPage() {
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">
                 Military Resources
               </h1>
+              <section className="max-w-4xl mx-auto px-6 py-8">
+                <p className="text-gray-700 leading-relaxed text-base">{`Hampton Roads is home to the largest concentration of active-duty military in the United States, with major installations including Naval Station Norfolk (the world's largest naval base), NAS Oceana, Joint Base Langley-Eustis, Naval Air Station Norfolk, Naval Medical Center Portsmouth, and Naval Weapons Station Yorktown. The VaHome military resources page brings together everything you need as a service member or veteran buying or selling a home: VA loan eligibility and funding fee information, current Norfolk MHA BAH rates by paygrade, a buyer profile tool that filters listings by drive time to your duty station, PCS-move planning resources, and direct connections to lenders specializing in VA loans. Our team includes military-experienced agents who understand orders, reporting timelines, and the realities of moving on government schedules.`}</p>
+              </section>
               <p className="text-lg text-gray-300 leading-relaxed">
                 Hampton Roads is home to the largest concentration of military bases in the world.
                 The VaHome Team is here to help service members, veterans, and military families
