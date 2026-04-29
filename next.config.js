@@ -41,6 +41,21 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/sitemap',
+        destination: '/sitemap.xml',
+        permanent: true,
+      },
+      {
+        source: '/property-listings/sitemap',
+        destination: '/sitemap.xml',
+        permanent: true,
+      },
+      {
+        source: '/site/privacy-terms',
+        destination: '/privacy',
+        permanent: true,
+      },
+      {
         source: '/military',
         destination: '/military-resources/',
         permanent: true,
