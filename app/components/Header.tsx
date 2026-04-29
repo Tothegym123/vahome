@@ -53,7 +53,7 @@ export default function Header() {
                 <div className="flex items-center gap-2">
                   {/* My Homes button */}
                   <Link
-                    href="/my-homes"
+                    href="/my-homes/"
                     className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors shadow-sm"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -80,8 +80,8 @@ export default function Header() {
                             <p className={`text-sm font-medium truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>{user.user_metadata?.first_name} {user.user_metadata?.last_name}</p>
                             <p className={`text-xs truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{user.email}</p>
                           </div>
-                          <Link href="/my-homes" className={`block px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setShowUserMenu(false)}>My Homes</Link>
-                          <Link href="/settings" className={`block px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setShowUserMenu(false)}>Settings</Link>
+                          <Link href="/my-homes/" className={`block px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setShowUserMenu(false)}>My Homes</Link>
+                          <Link href="/settings/" className={`block px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setShowUserMenu(false)}>Settings</Link>
                           <Link href="/dashboard/favorites" className={`block px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setShowUserMenu(false)}>Saved Homes</Link>
                           <div className={`border-t mt-1 pt-1 ${isDark ? 'border-gray-700' : 'border-gray-100'}`}>
                             <button onClick={() => { signOut(); setShowUserMenu(false) }} className={`block w-full text-left px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-red-400 hover:bg-red-900/20' : 'text-red-600 hover:bg-red-50'}`}>Sign Out</button>
@@ -116,8 +116,8 @@ export default function Header() {
               <div className="mt-4 px-4 space-y-3">
                 {user ? (
                   <>
-                    <Link href="/my-homes" className="block w-full text-center py-2.5 text-sm font-bold text-white bg-red-600 rounded-lg" onClick={() => setMobileMenuOpen(false)}>My Homes</Link>
-                    <Link href="/settings" className={`block text-center py-2.5 text-sm font-medium border rounded-lg ${isDark ? 'text-gray-300 border-gray-700' : 'text-gray-700 border-gray-200'}`} onClick={() => setMobileMenuOpen(false)}>Settings</Link>
+                    <Link href="/my-homes/" className="block w-full text-center py-2.5 text-sm font-bold text-white bg-red-600 rounded-lg" onClick={() => setMobileMenuOpen(false)}>My Homes</Link>
+                    <Link href="/settings/" className={`block text-center py-2.5 text-sm font-medium border rounded-lg ${isDark ? 'text-gray-300 border-gray-700' : 'text-gray-700 border-gray-200'}`} onClick={() => setMobileMenuOpen(false)}>Settings</Link>
                     <button onClick={() => { signOut(); setMobileMenuOpen(false) }} className={`block w-full text-center py-2.5 text-sm font-medium border rounded-lg ${isDark ? 'text-red-400 border-red-800' : 'text-red-600 border-red-200'}`}>Sign Out</button>
                   </>
                 ) : (
@@ -138,7 +138,7 @@ export default function Header() {
             <div className={"pointer-events-auto rounded-xl shadow-lg border transition-all duration-500 " + (isDark ? "bg-gray-800 border-gray-700 shadow-black/30" : "bg-white border-gray-200 shadow-lg")} style={{width: '28rem', maxWidth: '90vw'}}>
               <div className="px-4 py-3 flex items-start justify-between gap-3">
                 <p className={"text-sm leading-relaxed " + (isDark ? "text-gray-300" : "text-gray-600")}>
-                  You can start without signing up â but the <button onClick={handleRegisterClick} className={"font-semibold underline underline-offset-2 " + (isDark ? "text-red-400 hover:text-red-300" : "text-red-600 hover:text-red-700")}>really cool features</button> unlock when you do.
+                  You can start without signing up Ã¢ÂÂ but the <button onClick={handleRegisterClick} className={"font-semibold underline underline-offset-2 " + (isDark ? "text-red-400 hover:text-red-300" : "text-red-600 hover:text-red-700")}>really cool features</button> unlock when you do.
                 </p>
                 <button onClick={() => setShowBanner(false)} className={"flex-shrink-0 mt-0.5 p-1 rounded-full transition-colors " + (isDark ? "text-gray-500 hover:bg-gray-700 hover:text-gray-300" : "text-gray-400 hover:bg-gray-100 hover:text-gray-600")} aria-label="Dismiss banner">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
