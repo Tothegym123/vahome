@@ -71,16 +71,8 @@ const nextConfig = {
         destination: '/privacy',
         permanent: true,
       },
-      {
-        source: '/military',
-        destination: '/military-resources/',
-        permanent: true,
-      },
-      {
-        source: '/military/',
-        destination: '/military-resources/',
-        permanent: true,
-      },
+      
+      
     ];
   },
   compiler: {
