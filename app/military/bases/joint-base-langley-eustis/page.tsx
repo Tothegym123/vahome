@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Joint Base Langley-Eustis (JBLE): Living, Housing & PCS Guide | VaHome",
   description:
     "Complete relocation guide for Joint Base Langley-Eustis. F-22 Raptors at Langley AFB, U.S. Army Transportation Corps at Fort Eustis. Best Hampton & Newport News neighborhoods, BAH, schools, commute math.",
-  alternates: { canonical: "https://www.vahome.com/military/bases/joint-base-langley-eustis/" },
-  openGraph: { title: "Joint Base Langley-Eustis (JBLE) PCS Guide", description: "Hampton + Newport News housing, BAH, schools, and commute for Air Force and Army families.", url: "https://www.vahome.com/military/bases/joint-base-langley-eustis/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/bases/joint-base-langley-eustis/" },
+  openGraph: { title: "Joint Base Langley-Eustis (JBLE) PCS Guide", description: "Hampton + Newport News housing, BAH, schools, and commute for Air Force and Army families.", url: "https://vahome.com/military/bases/joint-base-langley-eustis/", type: "article" },
 };
 
 const articleSchema = {
@@ -18,7 +18,7 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/bases/joint-base-langley-eustis/",
+  mainEntityOfPage: "https://vahome.com/military/bases/joint-base-langley-eustis/",
 };
 
 const placeSchema = {
@@ -33,10 +33,10 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Bases", item: "https://www.vahome.com/military/bases/" },
-    { "@type": "ListItem", position: 4, name: "Joint Base Langley-Eustis", item: "https://www.vahome.com/military/bases/joint-base-langley-eustis/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Bases", item: "https://vahome.com/military/bases/" },
+    { "@type": "ListItem", position: 4, name: "Joint Base Langley-Eustis", item: "https://vahome.com/military/bases/joint-base-langley-eustis/" },
   ],
 };
 
@@ -114,15 +114,15 @@ export default function JBLEBasePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Best Neighborhoods for JBLE Families</h2>
           <p className="mt-3 text-gray-700">
-            The Peninsula offers a different cost-of-living profile than South Hampton Roads Ã¢ÂÂ generally lower median prices with strong public schools. Top-fit areas:
+            The Peninsula offers a different cost-of-living profile than South Hampton Roads ÃÂ¢ÃÂÃÂ generally lower median prices with strong public schools. Top-fit areas:
           </p>
           <div className="mt-6 grid sm:grid-cols-2 gap-4">
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <p className="font-semibold text-gray-900">Hampton Ã¢ÂÂ Riverdale, Wythe, Fox Hill</p>
+              <p className="font-semibold text-gray-900">Hampton ÃÂ¢ÃÂÃÂ Riverdale, Wythe, Fox Hill</p>
               <p className="text-sm text-gray-600 mt-1">Closest to Langley AFB. 10-15 min commute. Mix of starter homes and waterfront.</p>
             </div>
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <p className="font-semibold text-gray-900">Newport News Ã¢ÂÂ Hilton Village, Riverside, City Center</p>
+              <p className="font-semibold text-gray-900">Newport News ÃÂ¢ÃÂÃÂ Hilton Village, Riverside, City Center</p>
               <p className="text-sm text-gray-600 mt-1">Closest to Fort Eustis. Hilton Village is a historic walkable district.</p>
             </div>
             <div className="border border-gray-200 rounded-lg p-4 bg-white">

@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "O-3 BAH Norfolk MHA (2026): $2,694/mo with Dependents | VaHome",
   description:
     "2026 verified BAH rate for O-3 with dependents in the Norfolk Military Housing Area: $2,694/mo. See max home price, top neighborhoods, and how to use it with a VA loan.",
-  alternates: { canonical: "https://www.vahome.com/military/bah/o-3/norfolk-mha/" },
-  openGraph: { title: "O-3 BAH Norfolk MHA (2026)", description: "$2,694/mo with dependents. Max home price ~$432,000.", url: "https://www.vahome.com/military/bah/o-3/norfolk-mha/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/bah/o-3/norfolk-mha/" },
+  openGraph: { title: "O-3 BAH Norfolk MHA (2026)", description: "$2,694/mo with dependents. Max home price ~$432,000.", url: "https://vahome.com/military/bah/o-3/norfolk-mha/", type: "article" },
 };
 
 const articleSchema = {
@@ -18,18 +18,18 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/bah/o-3/norfolk-mha/",
+  mainEntityOfPage: "https://vahome.com/military/bah/o-3/norfolk-mha/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "BAH", item: "https://www.vahome.com/military/bah/" },
-    { "@type": "ListItem", position: 4, name: "O-3", item: "https://www.vahome.com/military/bah/o-3/" },
-    { "@type": "ListItem", position: 5, name: "Norfolk MHA", item: "https://www.vahome.com/military/bah/o-3/norfolk-mha/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "BAH", item: "https://vahome.com/military/bah/" },
+    { "@type": "ListItem", position: 4, name: "O-3", item: "https://vahome.com/military/bah/o-3/" },
+    { "@type": "ListItem", position: 5, name: "Norfolk MHA", item: "https://vahome.com/military/bah/o-3/norfolk-mha/" },
   ],
 };
 

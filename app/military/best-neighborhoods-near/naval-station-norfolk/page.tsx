@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   title: "8 Best Neighborhoods Near Naval Station Norfolk (2026 Ranked) | VaHome",
   description:
     "The 8 best neighborhoods for sailors stationed at Naval Station Norfolk, ranked by commute, BAH match, school quality, and resale strength. Updated for 2026.",
-  alternates: { canonical: "https://www.vahome.com/military/best-neighborhoods-near/naval-station-norfolk/" },
+  alternates: { canonical: "https://vahome.com/military/best-neighborhoods-near/naval-station-norfolk/" },
   openGraph: {
     title: "8 Best Neighborhoods Near Naval Station Norfolk",
     description: "Ranked for NSN sailors: commute, BAH, schools, resale. Updated 2026.",
-    url: "https://www.vahome.com/military/best-neighborhoods-near/naval-station-norfolk/",
+    url: "https://vahome.com/military/best-neighborhoods-near/naval-station-norfolk/",
     type: "article",
   },
 };
@@ -22,19 +22,19 @@ const articleSchema = {
     "Ranked guide to the 8 best Hampton Roads neighborhoods for sailors stationed at Naval Station Norfolk, scored on commute, BAH alignment, schools, and resale.",
   datePublished: "2026-04-28",
   dateModified: "2026-04-28",
-  author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor", url: "https://www.vahome.com/about/" },
-  publisher: { "@type": "Organization", name: "VaHome", url: "https://www.vahome.com/" },
-  mainEntityOfPage: "https://www.vahome.com/military/best-neighborhoods-near/naval-station-norfolk/",
+  author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor", url: "https://vahome.com/about/" },
+  publisher: { "@type": "Organization", name: "VaHome", url: "https://vahome.com/" },
+  mainEntityOfPage: "https://vahome.com/military/best-neighborhoods-near/naval-station-norfolk/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Best Neighborhoods", item: "https://www.vahome.com/military/best-neighborhoods-near/" },
-    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://www.vahome.com/military/best-neighborhoods-near/naval-station-norfolk/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Best Neighborhoods", item: "https://vahome.com/military/best-neighborhoods-near/" },
+    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://vahome.com/military/best-neighborhoods-near/naval-station-norfolk/" },
   ],
 };
 

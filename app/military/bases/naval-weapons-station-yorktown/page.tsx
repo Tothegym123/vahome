@@ -4,8 +4,8 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "NWS Yorktown PCS & Housing Guide | VaHome",
   description: "PCS guide for Naval Weapons Station Yorktown (NWS Yorktown) in Yorktown, VA. Top neighborhoods, BAH (Norfolk MHA), schools, commute, and VA-loan home search for Hampton Roads military families.",
-  alternates: { canonical: "https://www.vahome.com/military/bases/naval-weapons-station-yorktown/" },
-  openGraph: { title: "NWS Yorktown PCS Guide", description: "Hampton Roads housing, BAH, and neighborhoods for NWS Yorktown families.", url: "https://www.vahome.com/military/bases/naval-weapons-station-yorktown/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/bases/naval-weapons-station-yorktown/" },
+  openGraph: { title: "NWS Yorktown PCS Guide", description: "Hampton Roads housing, BAH, and neighborhoods for NWS Yorktown families.", url: "https://vahome.com/military/bases/naval-weapons-station-yorktown/", type: "article" },
 };
 
 const articleSchema = {
@@ -17,7 +17,7 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/bases/naval-weapons-station-yorktown/",
+  mainEntityOfPage: "https://vahome.com/military/bases/naval-weapons-station-yorktown/",
 };
 
 const placeSchema = {
@@ -32,10 +32,10 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Bases", item: "https://www.vahome.com/military/bases/" },
-    { "@type": "ListItem", position: 4, name: "NWS Yorktown", item: "https://www.vahome.com/military/bases/naval-weapons-station-yorktown/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Bases", item: "https://vahome.com/military/bases/" },
+    { "@type": "ListItem", position: 4, name: "NWS Yorktown", item: "https://vahome.com/military/bases/naval-weapons-station-yorktown/" },
   ],
 };
 
@@ -128,7 +128,7 @@ export default function NavalWeaponsStationYorktownPage() {
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <p className="text-xs text-gray-500">
-          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NWS-Yorktown/" target="_blank" rel="noopener noreferrer" className="underline">CNIC â NWS Yorktown</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
+          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NWS-Yorktown/" target="_blank" rel="noopener noreferrer" className="underline">CNIC Ã¢ÂÂ NWS Yorktown</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
     </main>

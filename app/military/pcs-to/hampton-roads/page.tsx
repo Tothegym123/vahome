@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   title: "PCS to Hampton Roads: 2026 Complete Playbook for Military Families | VaHome",
   description:
     "The full PCS playbook for orders to Hampton Roads, VA. Covers timing, base-by-base housing, BAH, schools, what to do months 1-6, and avoidable rookie mistakes.",
-  alternates: { canonical: "https://www.vahome.com/military/pcs-to/hampton-roads/" },
+  alternates: { canonical: "https://vahome.com/military/pcs-to/hampton-roads/" },
   openGraph: {
     title: "PCS to Hampton Roads: 2026 Complete Playbook",
     description: "Step-by-step guide for military families PCSing to Hampton Roads, VA.",
-    url: "https://www.vahome.com/military/pcs-to/hampton-roads/",
+    url: "https://vahome.com/military/pcs-to/hampton-roads/",
     type: "article",
   },
 };
@@ -22,9 +22,9 @@ const articleSchema = {
     "Step-by-step PCS guide for service members and military families relocating to Hampton Roads, Virginia. Covers all 10 installations, timing, BAH, schools, and home buying.",
   datePublished: "2026-04-28",
   dateModified: "2026-04-28",
-  author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor", url: "https://www.vahome.com/about/" },
-  publisher: { "@type": "Organization", name: "VaHome", url: "https://www.vahome.com/" },
-  mainEntityOfPage: "https://www.vahome.com/military/pcs-to/hampton-roads/",
+  author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor", url: "https://vahome.com/about/" },
+  publisher: { "@type": "Organization", name: "VaHome", url: "https://vahome.com/" },
+  mainEntityOfPage: "https://vahome.com/military/pcs-to/hampton-roads/",
 };
 
 const faqSchema = {
@@ -48,18 +48,18 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "PCS To", item: "https://www.vahome.com/military/pcs-to/" },
-    { "@type": "ListItem", position: 4, name: "Hampton Roads", item: "https://www.vahome.com/military/pcs-to/hampton-roads/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "PCS To", item: "https://vahome.com/military/pcs-to/" },
+    { "@type": "ListItem", position: 4, name: "Hampton Roads", item: "https://vahome.com/military/pcs-to/hampton-roads/" },
   ],
 };
 
 const timeline = [
   { phase: "120-90 days out", actions: ["Read the orders carefully (UIC, report date, gaining command POC)", "Apply for housing wait list at base (don't commit, just queue)", "Start a Hampton Roads listings alert", "Pull your VA Certificate of Eligibility"] },
   { phase: "90-60 days out", actions: ["Get VA loan pre-approval (NOT just pre-qual)", "Pick your duty-station-aligned city: Norfolk/VB for NSN, VB for Oceana, Hampton/Newport News for Langley/JBLE", "Schedule HHG move date", "Identify 5-10 candidate neighborhoods"] },
-  { phase: "60-30 days out", actions: ["House-hunting trip (3-5 days, 8-12 showings)", "Submit offers Ã¢ÂÂ be ready to write within 24 hours of seeing the right home", "Lock your rate when ratified", "Start school enrollment paperwork"] },
-  { phase: "30-0 days out", actions: ["Final walkthrough (in person or virtual via your Realtor)", "Closing scheduled to align with HHG arrival ÃÂ±3 days", "Set up Dominion Energy, water, internet at new address", "Forward mail to gaining command, not the new house yet"] },
+  { phase: "60-30 days out", actions: ["House-hunting trip (3-5 days, 8-12 showings)", "Submit offers ÃÂ¢ÃÂÃÂ be ready to write within 24 hours of seeing the right home", "Lock your rate when ratified", "Start school enrollment paperwork"] },
+  { phase: "30-0 days out", actions: ["Final walkthrough (in person or virtual via your Realtor)", "Closing scheduled to align with HHG arrival ÃÂÃÂ±3 days", "Set up Dominion Energy, water, internet at new address", "Forward mail to gaining command, not the new house yet"] },
   { phase: "Move week", actions: ["Inspect HHG load and unload day-of", "Check in at gaining command (don't skip the personnel office)", "Register vehicles in VA within 30 days (DMV Hampton Roads has 4 locations)"] },
   { phase: "First 90 days at command", actions: ["Get VA in-state tuition/registration paperwork to dependents", "Register for Tricare regional", "Update DEERS with new address", "Find a primary care manager (Naval Medical Center Portsmouth or Tricare network)"] },
 ];

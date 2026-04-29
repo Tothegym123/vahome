@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   title: "2026 Hampton Roads BAH Calculator | Norfolk MHA Rates by Paygrade | VaHome",
   description:
     "Official 2026 Hampton Roads (Norfolk MHA) BAH rates by paygrade with and without dependents. See max home price you can afford on your BAH with a VA loan.",
-  alternates: { canonical: "https://www.vahome.com/military/bah-calculator/hampton-roads/" },
+  alternates: { canonical: "https://vahome.com/military/bah-calculator/hampton-roads/" },
   openGraph: {
     title: "2026 Hampton Roads BAH Calculator",
     description: "Norfolk MHA rates by paygrade. Max home price on VA loan.",
-    url: "https://www.vahome.com/military/bah-calculator/hampton-roads/",
+    url: "https://vahome.com/military/bah-calculator/hampton-roads/",
     type: "website",
   },
 };
@@ -24,17 +24,17 @@ const articleSchema = {
   dateModified: "2026-04-28",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/bah-calculator/hampton-roads/",
+  mainEntityOfPage: "https://vahome.com/military/bah-calculator/hampton-roads/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "BAH Calculator", item: "https://www.vahome.com/military/bah-calculator/" },
-    { "@type": "ListItem", position: 4, name: "Hampton Roads", item: "https://www.vahome.com/military/bah-calculator/hampton-roads/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "BAH Calculator", item: "https://vahome.com/military/bah-calculator/" },
+    { "@type": "ListItem", position: 4, name: "Hampton Roads", item: "https://vahome.com/military/bah-calculator/hampton-roads/" },
   ],
 };
 
@@ -89,7 +89,7 @@ export default function BAHCalculatorPage() {
 
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade â Norfolk MHA</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade Ã¢ÂÂ Norfolk MHA</h2>
           <p className="mt-3 text-gray-700">Monthly housing allowance and the home purchase price each rate comfortably supports.</p>
           <div className="mt-6 overflow-x-auto bg-white rounded-xl border border-gray-200">
             <table className="min-w-full text-sm">

@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   title: "Homes for Sale Near NAS Oceana | VA Loan Friendly | VaHome",
   description:
     "Browse homes for sale near Naval Air Station Oceana, Virginia Beach. VA loan eligible, BAH-priced, with neighborhood corridor breakdowns for active-duty Navy buyers.",
-  alternates: { canonical: "https://www.vahome.com/military/homes-near/nas-oceana/" },
+  alternates: { canonical: "https://vahome.com/military/homes-near/nas-oceana/" },
   openGraph: {
     title: "Homes for Sale Near NAS Oceana",
     description: "VA-eligible, BAH-priced listings near NAS Oceana.",
-    url: "https://www.vahome.com/military/homes-near/nas-oceana/",
+    url: "https://vahome.com/military/homes-near/nas-oceana/",
     type: "website",
   },
 };
@@ -18,10 +18,10 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Homes Near Bases", item: "https://www.vahome.com/military/homes-near/" },
-    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://www.vahome.com/military/homes-near/nas-oceana/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Homes Near Bases", item: "https://vahome.com/military/homes-near/" },
+    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://vahome.com/military/homes-near/nas-oceana/" },
   ],
 };
 

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Military Relocation to Hampton Roads VA | VaHome 2026 Guide',
   description:
     'Complete 2026 military relocation guide to Hampton Roads. Live near Naval Station Norfolk, NAS Oceana, JBLE & more. BAH-aware home search. VA loan ready.',
-  alternates: { canonical: 'https://www.vahome.com/military/relocation/hampton-roads/' },
+  alternates: { canonical: 'https://vahome.com/military/relocation/hampton-roads/' },
 }
 
 const bases = [

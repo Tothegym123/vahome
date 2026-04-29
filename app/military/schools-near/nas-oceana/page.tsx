@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Schools Near NAS Oceana (2026 Ratings) | VaHome",
   description:
     "Top-rated public schools near Naval Air Station Oceana, Virginia Beach. VB schools rate among the highest in Hampton Roads. Sourced from GreatSchools.org April 2026.",
-  alternates: { canonical: "https://www.vahome.com/military/schools-near/nas-oceana/" },
-  openGraph: { title: "Schools Near NAS Oceana (2026)", description: "VB schools for active-duty Oceana families.", url: "https://www.vahome.com/military/schools-near/nas-oceana/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/schools-near/nas-oceana/" },
+  openGraph: { title: "Schools Near NAS Oceana (2026)", description: "VB schools for active-duty Oceana families.", url: "https://vahome.com/military/schools-near/nas-oceana/", type: "article" },
 };
 
 const articleSchema = {
@@ -18,17 +18,17 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/schools-near/nas-oceana/",
+  mainEntityOfPage: "https://vahome.com/military/schools-near/nas-oceana/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Schools Near Bases", item: "https://www.vahome.com/military/schools-near/" },
-    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://www.vahome.com/military/schools-near/nas-oceana/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Schools Near Bases", item: "https://vahome.com/military/schools-near/" },
+    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://vahome.com/military/schools-near/nas-oceana/" },
   ],
 };
 
@@ -115,10 +115,10 @@ export default function SchoolsNearOceanaPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Best School Match for Oceana Sailors</h2>
         <ul className="mt-6 space-y-3 text-gray-700 list-disc list-inside">
-          <li><strong>Princess Anne corridor</strong> — closest to Oceana&rsquo;s main gate. Princess Anne Elementary, Middle, and High School all rate 7-9.</li>
-          <li><strong>Kellam zone (south VB)</strong> — Floyd Kellam High (9), Corporate Landing Elementary (9). 15-20 min commute to Oceana.</li>
-          <li><strong>Great Neck / Linkhorn corridor</strong> — Linkhorn Park (9), John B. Dey (9), Great Neck Middle (8). North VB, 20-25 min commute.</li>
-          <li><strong>Bayside / Ocean Park area</strong> — Trantwood (9) elementary zone. Closer to Little Creek-Fort Story than Oceana.</li>
+          <li><strong>Princess Anne corridor</strong> â closest to Oceana&rsquo;s main gate. Princess Anne Elementary, Middle, and High School all rate 7-9.</li>
+          <li><strong>Kellam zone (south VB)</strong> â Floyd Kellam High (9), Corporate Landing Elementary (9). 15-20 min commute to Oceana.</li>
+          <li><strong>Great Neck / Linkhorn corridor</strong> â Linkhorn Park (9), John B. Dey (9), Great Neck Middle (8). North VB, 20-25 min commute.</li>
+          <li><strong>Bayside / Ocean Park area</strong> â Trantwood (9) elementary zone. Closer to Little Creek-Fort Story than Oceana.</li>
         </ul>
       </section>
 

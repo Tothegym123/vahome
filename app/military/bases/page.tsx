@@ -4,8 +4,8 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Hampton Roads Military Bases: Complete Installation Guide | VaHome",
   description: "Comprehensive directory of all 9 major military installations in Hampton Roads, Virginia. Naval Station Norfolk, NAS Oceana, JEB Little Creek-Fort Story, JBLE, and more. Housing, BAH, schools, commute info for each.",
-  alternates: { canonical: "https://www.vahome.com/military/bases/" },
-  openGraph: { title: "Hampton Roads Military Bases", description: "All 9 installations with housing, BAH, and PCS guides.", url: "https://www.vahome.com/military/bases/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/bases/" },
+  openGraph: { title: "Hampton Roads Military Bases", description: "All 9 installations with housing, BAH, and PCS guides.", url: "https://vahome.com/military/bases/", type: "article" },
 };
 
 const articleSchema = {
@@ -17,16 +17,16 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/bases/",
+  mainEntityOfPage: "https://vahome.com/military/bases/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Bases", item: "https://www.vahome.com/military/bases/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Bases", item: "https://vahome.com/military/bases/" },
   ],
 };
 

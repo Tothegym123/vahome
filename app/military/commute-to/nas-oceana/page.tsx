@@ -5,18 +5,18 @@ export const metadata: Metadata = {
   title: "Commute to NAS Oceana: Routes, Gates & Timing (2026) | VaHome",
   description:
     "Driving routes, gate options, and traffic timing for sailors commuting to Naval Air Station Oceana, Virginia Beach. AICUZ, I-264 patterns, and tunnel-free advantage.",
-  alternates: { canonical: "https://www.vahome.com/military/commute-to/nas-oceana/" },
-  openGraph: { title: "Commute to NAS Oceana", description: "Routes, gates, and traffic timing.", url: "https://www.vahome.com/military/commute-to/nas-oceana/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/commute-to/nas-oceana/" },
+  openGraph: { title: "Commute to NAS Oceana", description: "Routes, gates, and traffic timing.", url: "https://vahome.com/military/commute-to/nas-oceana/", type: "article" },
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Commute To", item: "https://www.vahome.com/military/commute-to/" },
-    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://www.vahome.com/military/commute-to/nas-oceana/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Commute To", item: "https://vahome.com/military/commute-to/" },
+    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://vahome.com/military/commute-to/nas-oceana/" },
   ],
 };
 
@@ -81,7 +81,7 @@ export default function CommuteOceanaPage() {
           NAS Oceana publishes Air Installation Compatible Use Zone (AICUZ) maps showing high-noise areas under the jet flight paths. Some Virginia Beach neighborhoods sit inside these contours and have meaningful aircraft noise. Lenders may flag homes in high-noise zones for disclosure. Always check the AICUZ designation for an address before writing.
         </p>
         <p className="mt-3 text-xs text-gray-500 italic">
-          Source: <a href="https://www.cnic.navy.mil/regions/cnrma/installations/nas_oceana.html" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana — AICUZ resources</a>.
+          Source: <a href="https://www.cnic.navy.mil/regions/cnrma/installations/nas_oceana.html" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana â AICUZ resources</a>.
         </p>
       </section>
 

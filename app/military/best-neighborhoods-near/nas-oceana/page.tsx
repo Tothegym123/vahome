@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   title: "Best Neighborhoods Near NAS Oceana (2026 Guide) | VaHome",
   description:
     "Top neighborhoods for sailors stationed at Naval Air Station Oceana. Compared on commute, school quality (verify on VDOE), flood risk (verify on FEMA), and resale.",
-  alternates: { canonical: "https://www.vahome.com/military/best-neighborhoods-near/nas-oceana/" },
+  alternates: { canonical: "https://vahome.com/military/best-neighborhoods-near/nas-oceana/" },
   openGraph: {
     title: "Best Neighborhoods Near NAS Oceana",
     description: "Compared for NAS Oceana sailors. Updated 2026.",
-    url: "https://www.vahome.com/military/best-neighborhoods-near/nas-oceana/",
+    url: "https://vahome.com/military/best-neighborhoods-near/nas-oceana/",
     type: "article",
   },
 };
@@ -23,17 +23,17 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/best-neighborhoods-near/nas-oceana/",
+  mainEntityOfPage: "https://vahome.com/military/best-neighborhoods-near/nas-oceana/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Best Neighborhoods", item: "https://www.vahome.com/military/best-neighborhoods-near/" },
-    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://www.vahome.com/military/best-neighborhoods-near/nas-oceana/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Best Neighborhoods", item: "https://vahome.com/military/best-neighborhoods-near/" },
+    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://vahome.com/military/best-neighborhoods-near/nas-oceana/" },
   ],
 };
 
@@ -144,7 +144,7 @@ export default function BestNeighborhoodsOceanaPage() {
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Verify These Before You Write</h2>
         <ul className="mt-6 space-y-3 text-gray-700">
           <li>
-            <strong>Per-address listing data + recent sales:</strong> <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline text-blue-700">REIN MLS</a> — Hampton Roads&rsquo; primary multiple listing service.
+            <strong>Per-address listing data + recent sales:</strong> <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline text-blue-700">REIN MLS</a> â Hampton Roads&rsquo; primary multiple listing service.
           </li>
           <li>
             <strong>School ratings and zoning:</strong> <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline text-blue-700">Virginia Department of Education school report cards</a>.

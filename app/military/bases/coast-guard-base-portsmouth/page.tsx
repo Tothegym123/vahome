@@ -4,8 +4,8 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Coast Guard Base Portsmouth: Living, Housing & PCS Guide | VaHome",
   description: "PCS guide for Coast Guard Base Portsmouth in Portsmouth, VA. Top neighborhoods, BAH (Norfolk MHA), schools, commute, and VA-loan home search for Hampton Roads military families.",
-  alternates: { canonical: "https://www.vahome.com/military/bases/coast-guard-base-portsmouth/" },
-  openGraph: { title: "CGB Portsmouth PCS Guide", description: "Hampton Roads housing, BAH, and neighborhoods for CGB Portsmouth families.", url: "https://www.vahome.com/military/bases/coast-guard-base-portsmouth/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/bases/coast-guard-base-portsmouth/" },
+  openGraph: { title: "CGB Portsmouth PCS Guide", description: "Hampton Roads housing, BAH, and neighborhoods for CGB Portsmouth families.", url: "https://vahome.com/military/bases/coast-guard-base-portsmouth/", type: "article" },
 };
 
 const articleSchema = {
@@ -17,7 +17,7 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/bases/coast-guard-base-portsmouth/",
+  mainEntityOfPage: "https://vahome.com/military/bases/coast-guard-base-portsmouth/",
 };
 
 const placeSchema = {
@@ -32,10 +32,10 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Bases", item: "https://www.vahome.com/military/bases/" },
-    { "@type": "ListItem", position: 4, name: "CGB Portsmouth", item: "https://www.vahome.com/military/bases/coast-guard-base-portsmouth/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Bases", item: "https://vahome.com/military/bases/" },
+    { "@type": "ListItem", position: 4, name: "CGB Portsmouth", item: "https://vahome.com/military/bases/coast-guard-base-portsmouth/" },
   ],
 };
 

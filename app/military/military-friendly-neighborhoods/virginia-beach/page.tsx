@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Virginia Beach (2026) | VaHome",
   description:
     "The Virginia Beach neighborhoods that work best for active-duty military families. Compared by base proximity, schools, flood zone, and resale strength.",
-  alternates: { canonical: "https://www.vahome.com/military/military-friendly-neighborhoods/virginia-beach/" },
-  openGraph: { title: "Military-Friendly Neighborhoods in Virginia Beach (2026)", description: "VB neighborhoods for active-duty military families.", url: "https://www.vahome.com/military/military-friendly-neighborhoods/virginia-beach/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/military-friendly-neighborhoods/virginia-beach/" },
+  openGraph: { title: "Military-Friendly Neighborhoods in Virginia Beach (2026)", description: "VB neighborhoods for active-duty military families.", url: "https://vahome.com/military/military-friendly-neighborhoods/virginia-beach/", type: "article" },
 };
 
 const articleSchema = {
@@ -18,22 +18,22 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/military-friendly-neighborhoods/virginia-beach/",
+  mainEntityOfPage: "https://vahome.com/military/military-friendly-neighborhoods/virginia-beach/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Military-Friendly Neighborhoods", item: "https://www.vahome.com/military/military-friendly-neighborhoods/" },
-    { "@type": "ListItem", position: 4, name: "Virginia Beach", item: "https://www.vahome.com/military/military-friendly-neighborhoods/virginia-beach/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Military-Friendly Neighborhoods", item: "https://vahome.com/military/military-friendly-neighborhoods/" },
+    { "@type": "ListItem", position: 4, name: "Virginia Beach", item: "https://vahome.com/military/military-friendly-neighborhoods/virginia-beach/" },
   ],
 };
 
 const neighborhoods = [
-  { name: "Princess Anne", bestFor: "NAS Oceana families", note: "Closest to Oceana&rsquo;s main gate. Some sections fall under AICUZ noise contours — verify per-address." },
+  { name: "Princess Anne", bestFor: "NAS Oceana families", note: "Closest to Oceana&rsquo;s main gate. Some sections fall under AICUZ noise contours â verify per-address." },
   { name: "Kempsville", bestFor: "Mid-grade enlisted/officer at Oceana or NSN-east commute", note: "Mature neighborhood, established VB schools, mid-range pricing." },
   { name: "Thalia", bestFor: "Beach-lifestyle families on a moderate budget", note: "Near I-264, mature VB neighborhood, mostly X flood zone." },
   { name: "Ocean Park / Cape Story", bestFor: "JEB Little Creek-Fort Story sailors", note: "Beach-adjacent, direct to Little Creek. Some lots in AE flood zone." },

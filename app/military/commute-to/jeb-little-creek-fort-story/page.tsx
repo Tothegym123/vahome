@@ -5,18 +5,18 @@ export const metadata: Metadata = {
   title: "Commute to JEB Little Creek-Fort Story (2026) | VaHome",
   description:
     "Driving routes, gates, and traffic timing for sailors and soldiers commuting to JEB Little Creek and Fort Story.",
-  alternates: { canonical: "https://www.vahome.com/military/commute-to/jeb-little-creek-fort-story/" },
-  openGraph: { title: "Commute to JEB Little Creek-Fort Story", description: "Routes, gates, and traffic timing.", url: "https://www.vahome.com/military/commute-to/jeb-little-creek-fort-story/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/commute-to/jeb-little-creek-fort-story/" },
+  openGraph: { title: "Commute to JEB Little Creek-Fort Story", description: "Routes, gates, and traffic timing.", url: "https://vahome.com/military/commute-to/jeb-little-creek-fort-story/", type: "article" },
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Commute To", item: "https://www.vahome.com/military/commute-to/" },
-    { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://www.vahome.com/military/commute-to/jeb-little-creek-fort-story/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Commute To", item: "https://vahome.com/military/commute-to/" },
+    { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://vahome.com/military/commute-to/jeb-little-creek-fort-story/" },
   ],
 };
 

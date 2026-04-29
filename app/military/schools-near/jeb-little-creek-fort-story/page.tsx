@@ -5,16 +5,16 @@ export const metadata: Metadata = {
   title: "Schools Near JEB Little Creek-Fort Story | VaHome",
   description:
     "Top public schools near JEB Little Creek-Fort Story in Virginia Beach. Verified GreatSchools.org ratings April 2026 for Sailors and Soldiers stationed at the Joint Expeditionary Base.",
-  alternates: { canonical: "https://www.vahome.com/military/schools-near/jeb-little-creek-fort-story/" },
-  openGraph: { title: "Schools Near JEB Little Creek-Fort Story", description: "Verified VB and Norfolk school ratings near JEB.", url: "https://www.vahome.com/military/schools-near/jeb-little-creek-fort-story/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/schools-near/jeb-little-creek-fort-story/" },
+  openGraph: { title: "Schools Near JEB Little Creek-Fort Story", description: "Verified VB and Norfolk school ratings near JEB.", url: "https://vahome.com/military/schools-near/jeb-little-creek-fort-story/", type: "article" },
 };
 
-const articleSchema = { "@context": "https://schema.org", "@type": "Article", headline: "Schools Near JEB Little Creek-Fort Story", description: "Verified school ratings near JEB across Virginia Beach and northern Norfolk.", datePublished: "2026-04-29", dateModified: "2026-04-29", author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" }, publisher: { "@type": "Organization", name: "VaHome" }, mainEntityOfPage: "https://www.vahome.com/military/schools-near/jeb-little-creek-fort-story/" };
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", headline: "Schools Near JEB Little Creek-Fort Story", description: "Verified school ratings near JEB across Virginia Beach and northern Norfolk.", datePublished: "2026-04-29", dateModified: "2026-04-29", author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" }, publisher: { "@type": "Organization", name: "VaHome" }, mainEntityOfPage: "https://vahome.com/military/schools-near/jeb-little-creek-fort-story/" };
 const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
-  { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-  { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-  { "@type": "ListItem", position: 3, name: "Schools Near", item: "https://www.vahome.com/military/schools-near/" },
-  { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://www.vahome.com/military/schools-near/jeb-little-creek-fort-story/" },
+  { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+  { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+  { "@type": "ListItem", position: 3, name: "Schools Near", item: "https://vahome.com/military/schools-near/" },
+  { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://vahome.com/military/schools-near/jeb-little-creek-fort-story/" },
 ] };
 
 export default function SchoolsNearJEB() {
@@ -34,7 +34,7 @@ export default function SchoolsNearJEB() {
           </nav>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Schools Near JEB Little Creek-Fort Story</h1>
           <p className="mt-4 text-lg sm:text-xl text-blue-100 max-w-3xl">
-            JEB Little Creek sits in northern Virginia Beach right at the Norfolk line. Most JEB families look at Virginia Beach Public Schools (avg 6.4) — broadly the strongest large district in Hampton Roads.
+            JEB Little Creek sits in northern Virginia Beach right at the Norfolk line. Most JEB families look at Virginia Beach Public Schools (avg 6.4) â broadly the strongest large district in Hampton Roads.
           </p>
         </div>
       </section>
@@ -84,10 +84,10 @@ export default function SchoolsNearJEB() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">JEB-Friendly Neighborhoods with Strong Schools</h2>
           <p className="mt-3 text-gray-700">Combine quick JEB commute with above-average school zones:</p>
           <div className="mt-4 space-y-3 text-gray-700">
-            <p><strong>Bayside / Pleasure House Point:</strong> Closest to JEB main gate. Mix of mid-range homes and waterfront. Verify school zone — boundaries split between several elementary feeders.</p>
+            <p><strong>Bayside / Pleasure House Point:</strong> Closest to JEB main gate. Mix of mid-range homes and waterfront. Verify school zone â boundaries split between several elementary feeders.</p>
             <p><strong>Aragona Village:</strong> Affordable, established neighborhood with reasonable JEB commute. Bayside Elementary and Bayside High.</p>
             <p><strong>Lake Smith / Lake Smith Heights:</strong> Quieter waterfront pockets near JEB Little Creek with mid-priced inventory.</p>
-            <p><strong>Princess Anne / Red Mill:</strong> Longer commute (15-20 min) but exceptional schools — Princess Anne, Kellam, Ocean Lakes feeders.</p>
+            <p><strong>Princess Anne / Red Mill:</strong> Longer commute (15-20 min) but exceptional schools â Princess Anne, Kellam, Ocean Lakes feeders.</p>
           </div>
         </div>
       </section>

@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Schools Near Naval Station Norfolk (2026 Ratings) | VaHome",
   description:
     "Top-rated public schools near Naval Station Norfolk for military families. Norfolk magnets and Chesapeake/VB commute alternatives, sourced from GreatSchools.org April 2026.",
-  alternates: { canonical: "https://www.vahome.com/military/schools-near/naval-station-norfolk/" },
-  openGraph: { title: "Schools Near Naval Station Norfolk (2026)", description: "Top-rated public schools for NSN families.", url: "https://www.vahome.com/military/schools-near/naval-station-norfolk/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/schools-near/naval-station-norfolk/" },
+  openGraph: { title: "Schools Near Naval Station Norfolk (2026)", description: "Top-rated public schools for NSN families.", url: "https://vahome.com/military/schools-near/naval-station-norfolk/", type: "article" },
 };
 
 const articleSchema = {
@@ -18,17 +18,17 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/schools-near/naval-station-norfolk/",
+  mainEntityOfPage: "https://vahome.com/military/schools-near/naval-station-norfolk/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Schools Near Bases", item: "https://www.vahome.com/military/schools-near/" },
-    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://www.vahome.com/military/schools-near/naval-station-norfolk/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Schools Near Bases", item: "https://vahome.com/military/schools-near/" },
+    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://vahome.com/military/schools-near/naval-station-norfolk/" },
   ],
 };
 
@@ -119,7 +119,7 @@ export default function SchoolsNearNSNPage() {
             <div key={s.name} className="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
               <div className="bg-blue-700 text-white font-bold text-lg rounded-lg w-12 h-12 flex items-center justify-center shrink-0">{s.rating}</div>
               <div>
-                <p className="font-semibold text-gray-900">{s.name} <span className="text-sm text-gray-500 font-normal">— {s.level}</span></p>
+                <p className="font-semibold text-gray-900">{s.name} <span className="text-sm text-gray-500 font-normal">â {s.level}</span></p>
                 <p className="text-sm text-gray-600 mt-1">{s.note}</p>
               </div>
             </div>

@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Norfolk (2026) | VaHome",
   description:
     "The Norfolk neighborhoods that work best for active-duty military families. Compared by base proximity, schools, flood zone, and resale strength.",
-  alternates: { canonical: "https://www.vahome.com/military/military-friendly-neighborhoods/norfolk/" },
-  openGraph: { title: "Military-Friendly Neighborhoods in Norfolk (2026)", description: "Norfolk neighborhoods for active-duty military families.", url: "https://www.vahome.com/military/military-friendly-neighborhoods/norfolk/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/military-friendly-neighborhoods/norfolk/" },
+  openGraph: { title: "Military-Friendly Neighborhoods in Norfolk (2026)", description: "Norfolk neighborhoods for active-duty military families.", url: "https://vahome.com/military/military-friendly-neighborhoods/norfolk/", type: "article" },
 };
 
 const articleSchema = {
@@ -18,17 +18,17 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/military-friendly-neighborhoods/norfolk/",
+  mainEntityOfPage: "https://vahome.com/military/military-friendly-neighborhoods/norfolk/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Military-Friendly Neighborhoods", item: "https://www.vahome.com/military/military-friendly-neighborhoods/" },
-    { "@type": "ListItem", position: 4, name: "Norfolk", item: "https://www.vahome.com/military/military-friendly-neighborhoods/norfolk/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Military-Friendly Neighborhoods", item: "https://vahome.com/military/military-friendly-neighborhoods/" },
+    { "@type": "ListItem", position: 4, name: "Norfolk", item: "https://vahome.com/military/military-friendly-neighborhoods/norfolk/" },
   ],
 };
 

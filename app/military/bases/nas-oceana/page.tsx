@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   title: "NAS Oceana Housing & Relocation Guide (2026) | VaHome",
   description:
     "Complete 2026 relocation guide for sailors stationed at Naval Air Station Oceana, Virginia Beach. Best neighborhoods, BAH, VA loans, and a local Realtor's tips.",
-  alternates: { canonical: "https://www.vahome.com/military/bases/nas-oceana/" },
+  alternates: { canonical: "https://vahome.com/military/bases/nas-oceana/" },
   openGraph: {
     title: "NAS Oceana Housing & Relocation Guide (2026)",
     description: "Best neighborhoods, BAH, VA loan tips for NAS Oceana sailors.",
-    url: "https://www.vahome.com/military/bases/nas-oceana/",
+    url: "https://vahome.com/military/bases/nas-oceana/",
     type: "article",
   },
 };
@@ -27,10 +27,10 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Bases", item: "https://www.vahome.com/military/bases/" },
-    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://www.vahome.com/military/bases/nas-oceana/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Bases", item: "https://vahome.com/military/bases/" },
+    { "@type": "ListItem", position: 4, name: "NAS Oceana", item: "https://vahome.com/military/bases/nas-oceana/" },
   ],
 };
 
@@ -84,7 +84,7 @@ export default function NASOceanaPage() {
           Naval Air Station Oceana is the U.S. Navy&rsquo;s Master Jet Base on the Atlantic Coast, home to all East Coast F/A-18 Super Hornet squadrons and F-35C Lightning II squadrons. The base is located in Virginia Beach, in the south-central section of the city, and includes the Dam Neck Annex on the Atlantic shoreline. Sailors stationed at Oceana benefit from being on the southside of Hampton Roads, which means no harbor-tunnel commute and direct access to Virginia Beach&rsquo;s beach corridor.
         </p>
         <p className="mt-3 text-xs text-gray-500 italic">
-          Source: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">Commander, Navy Region Mid-Atlantic (CNIC) — NAS Oceana</a>.
+          Source: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">Commander, Navy Region Mid-Atlantic (CNIC) â NAS Oceana</a>.
         </p>
       </section>
 

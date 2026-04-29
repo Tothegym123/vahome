@@ -5,16 +5,16 @@ export const metadata: Metadata = {
   title: "Best Neighborhoods Near JEB Little Creek-Fort Story | VaHome",
   description:
     "Top-fit neighborhoods near JEB for SEALs, EOD, EOD-MU, and amphibious sailors. Bayside, Aragona, Pleasure House, Lake Smith, with school + commute analysis.",
-  alternates: { canonical: "https://www.vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/" },
-  openGraph: { title: "Best Neighborhoods Near JEB", description: "Curated VB neighborhoods for JEB families.", url: "https://www.vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/" },
+  openGraph: { title: "Best Neighborhoods Near JEB", description: "Curated VB neighborhoods for JEB families.", url: "https://vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/", type: "article" },
 };
 
-const articleSchema = { "@context": "https://schema.org", "@type": "Article", headline: "Best Neighborhoods Near JEB Little Creek-Fort Story", description: "Curated neighborhoods for sailors and soldiers stationed at the Joint Expeditionary Base.", datePublished: "2026-04-29", dateModified: "2026-04-29", author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" }, publisher: { "@type": "Organization", name: "VaHome" }, mainEntityOfPage: "https://www.vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/" };
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", headline: "Best Neighborhoods Near JEB Little Creek-Fort Story", description: "Curated neighborhoods for sailors and soldiers stationed at the Joint Expeditionary Base.", datePublished: "2026-04-29", dateModified: "2026-04-29", author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" }, publisher: { "@type": "Organization", name: "VaHome" }, mainEntityOfPage: "https://vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/" };
 const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
-  { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-  { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-  { "@type": "ListItem", position: 3, name: "Best Neighborhoods Near", item: "https://www.vahome.com/military/best-neighborhoods-near/" },
-  { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://www.vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/" },
+  { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+  { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+  { "@type": "ListItem", position: 3, name: "Best Neighborhoods Near", item: "https://vahome.com/military/best-neighborhoods-near/" },
+  { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://vahome.com/military/best-neighborhoods-near/jeb-little-creek-fort-story/" },
 ] };
 
 export default function BestNearJEB() {
@@ -43,7 +43,7 @@ export default function BestNearJEB() {
         <div className="space-y-6">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">1. Bayside / Pleasure House Point</p>
-            <p className="text-sm text-gray-700 mt-2">Closest to JEB main gate (~5-10 min). Mix of starter homes, mid-range, and Bay-front. Strong fit for command staff who want to be close. Verify school zone — Bayside Elementary feeders.</p>
+            <p className="text-sm text-gray-700 mt-2">Closest to JEB main gate (~5-10 min). Mix of starter homes, mid-range, and Bay-front. Strong fit for command staff who want to be close. Verify school zone â Bayside Elementary feeders.</p>
             <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Some properties in Zone AE on Bay-front parcels.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
@@ -62,9 +62,9 @@ export default function BestNearJEB() {
             <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Slightly longer commute than Bayside-direct neighborhoods.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
-            <p className="font-bold text-gray-900 text-lg">5. Norfolk — Ocean View / East Beach</p>
+            <p className="font-bold text-gray-900 text-lg">5. Norfolk â Ocean View / East Beach</p>
             <p className="text-sm text-gray-700 mt-2">If you want urban energy with quick JEB commute (~10-15 min west via Shore Drive), Ocean View is the budget play and East Beach the premium new-urbanist play. Both directly on the Bay.</p>
-            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Norfolk schools — verify zone carefully.</p>
+            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Norfolk schools â verify zone carefully.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">6. North End / Cavalier Park (long-term play)</p>
@@ -78,7 +78,7 @@ export default function BestNearJEB() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-2xl font-bold">Pre-screen JEB listings against flood + schools?</p>
-            <p className="text-blue-100 mt-1">I cross-reference FEMA flood maps and school zones before sending — never just MLS dump.</p>
+            <p className="text-blue-100 mt-1">I cross-reference FEMA flood maps and school zones before sending â never just MLS dump.</p>
           </div>
           <Link href="/contact?source=best-jeb" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Send my list</Link>
         </div>

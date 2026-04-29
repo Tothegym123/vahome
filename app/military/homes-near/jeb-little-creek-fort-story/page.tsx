@@ -5,23 +5,23 @@ export const metadata: Metadata = {
   title: "Homes for Sale Near JEB Little Creek-Fort Story | VaHome",
   description:
     "Browse homes for sale near Joint Expeditionary Base Little Creek-Fort Story. VA loan eligible, BAH-priced, with neighborhood corridor breakdowns for active-duty buyers.",
-  alternates: { canonical: "https://www.vahome.com/military/homes-near/jeb-little-creek-fort-story/" },
-  openGraph: { title: "Homes for Sale Near JEB Little Creek-Fort Story", description: "VA-eligible listings near JEB.", url: "https://www.vahome.com/military/homes-near/jeb-little-creek-fort-story/", type: "website" },
+  alternates: { canonical: "https://vahome.com/military/homes-near/jeb-little-creek-fort-story/" },
+  openGraph: { title: "Homes for Sale Near JEB Little Creek-Fort Story", description: "VA-eligible listings near JEB.", url: "https://vahome.com/military/homes-near/jeb-little-creek-fort-story/", type: "website" },
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Homes Near Bases", item: "https://www.vahome.com/military/homes-near/" },
-    { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://www.vahome.com/military/homes-near/jeb-little-creek-fort-story/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Homes Near Bases", item: "https://vahome.com/military/homes-near/" },
+    { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://vahome.com/military/homes-near/jeb-little-creek-fort-story/" },
   ],
 };
 
 const corridors = [
-  { name: "Norfolk (East Beach)", note: "Newest housing stock in Norfolk. Bay-adjacent. Some lots in AE flood zone — verify per-address." },
+  { name: "Norfolk (East Beach)", note: "Newest housing stock in Norfolk. Bay-adjacent. Some lots in AE flood zone â verify per-address." },
   { name: "Norfolk (Bayview / Ocean View)", note: "Direct, short commute. Mix of historic and recent rebuild homes. Bay frontage areas have higher flood-insurance cost." },
   { name: "Norfolk (Larchmont, Ghent)", note: "Historic, tree-lined streets, ~15 min commute via Hampton Blvd or I-64." },
   { name: "Virginia Beach (Ocean Park, Cape Story)", note: "Beach-adjacent VB neighborhoods, established homes, direct to Little Creek." },

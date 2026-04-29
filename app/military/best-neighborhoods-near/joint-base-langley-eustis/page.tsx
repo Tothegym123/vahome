@@ -4,17 +4,17 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Best Neighborhoods Near Joint Base Langley-Eustis | VaHome",
   description:
-    "Curated best neighborhoods near JBLE for military families. Hampton, Newport News, Yorktown, Williamsburg — ranked by commute, schools, and BAH fit.",
-  alternates: { canonical: "https://www.vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/" },
-  openGraph: { title: "Best Neighborhoods Near JBLE", description: "Top Peninsula neighborhoods for JBLE families.", url: "https://www.vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/", type: "article" },
+    "Curated best neighborhoods near JBLE for military families. Hampton, Newport News, Yorktown, Williamsburg â ranked by commute, schools, and BAH fit.",
+  alternates: { canonical: "https://vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/" },
+  openGraph: { title: "Best Neighborhoods Near JBLE", description: "Top Peninsula neighborhoods for JBLE families.", url: "https://vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/", type: "article" },
 };
 
-const articleSchema = { "@context": "https://schema.org", "@type": "Article", headline: "Best Neighborhoods Near JBLE", description: "Detailed neighborhood guide for military families stationed at Joint Base Langley-Eustis.", datePublished: "2026-04-29", dateModified: "2026-04-29", author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" }, publisher: { "@type": "Organization", name: "VaHome" }, mainEntityOfPage: "https://www.vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/" };
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", headline: "Best Neighborhoods Near JBLE", description: "Detailed neighborhood guide for military families stationed at Joint Base Langley-Eustis.", datePublished: "2026-04-29", dateModified: "2026-04-29", author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" }, publisher: { "@type": "Organization", name: "VaHome" }, mainEntityOfPage: "https://vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/" };
 const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
-  { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-  { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-  { "@type": "ListItem", position: 3, name: "Best Neighborhoods Near", item: "https://www.vahome.com/military/best-neighborhoods-near/" },
-  { "@type": "ListItem", position: 4, name: "JBLE", item: "https://www.vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/" },
+  { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+  { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+  { "@type": "ListItem", position: 3, name: "Best Neighborhoods Near", item: "https://vahome.com/military/best-neighborhoods-near/" },
+  { "@type": "ListItem", position: 4, name: "JBLE", item: "https://vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/" },
 ] };
 
 export default function BestNearJBLE() {
@@ -47,14 +47,14 @@ export default function BestNearJBLE() {
             <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Limited inventory at lower price points.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
-            <p className="font-bold text-gray-900 text-lg">2. Hampton — Riverdale / Wythe / Fox Hill</p>
+            <p className="font-bold text-gray-900 text-lg">2. Hampton â Riverdale / Wythe / Fox Hill</p>
             <p className="text-sm text-gray-700 mt-2">Closest to Langley AFB (~10 min). Mature neighborhoods with mature trees, walkable pockets in Wythe, mid-range pricing. Bethel Manor Elementary (10/10) on the housing-area side.</p>
-            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Some flood exposure on waterfront lots — verify FEMA per address.</p>
+            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Some flood exposure on waterfront lots â verify FEMA per address.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">3. Hilton Village (Newport News)</p>
             <p className="text-sm text-gray-700 mt-2">Walkable historic district near Fort Eustis. National Register of Historic Places. Hilton Elementary (8/10). Mature character, smaller lots.</p>
-            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Newport News district avg (4.8) is lower than York/Hampton — verify zoned middle/high.</p>
+            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Newport News district avg (4.8) is lower than York/Hampton â verify zoned middle/high.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">4. Kiln Creek (Newport News)</p>

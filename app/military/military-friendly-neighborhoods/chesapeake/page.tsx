@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Chesapeake (2026) | VaHome",
   description:
     "Chesapeake neighborhoods that work best for active-duty military families. Top-rated Chesapeake Public Schools, mostly X flood zone, tunnel-free routes to NSN.",
-  alternates: { canonical: "https://www.vahome.com/military/military-friendly-neighborhoods/chesapeake/" },
-  openGraph: { title: "Military-Friendly Neighborhoods in Chesapeake (2026)", description: "Chesapeake neighborhoods for active-duty military families.", url: "https://www.vahome.com/military/military-friendly-neighborhoods/chesapeake/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/military-friendly-neighborhoods/chesapeake/" },
+  openGraph: { title: "Military-Friendly Neighborhoods in Chesapeake (2026)", description: "Chesapeake neighborhoods for active-duty military families.", url: "https://vahome.com/military/military-friendly-neighborhoods/chesapeake/", type: "article" },
 };
 
 const articleSchema = {
@@ -18,17 +18,17 @@ const articleSchema = {
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
-  mainEntityOfPage: "https://www.vahome.com/military/military-friendly-neighborhoods/chesapeake/",
+  mainEntityOfPage: "https://vahome.com/military/military-friendly-neighborhoods/chesapeake/",
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Military-Friendly Neighborhoods", item: "https://www.vahome.com/military/military-friendly-neighborhoods/" },
-    { "@type": "ListItem", position: 4, name: "Chesapeake", item: "https://www.vahome.com/military/military-friendly-neighborhoods/chesapeake/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Military-Friendly Neighborhoods", item: "https://vahome.com/military/military-friendly-neighborhoods/" },
+    { "@type": "ListItem", position: 4, name: "Chesapeake", item: "https://vahome.com/military/military-friendly-neighborhoods/chesapeake/" },
   ],
 };
 
@@ -110,7 +110,7 @@ export default function ChesapeakeNeighborhoodsPage() {
             <li>Mostly X flood zone (lower flood insurance cost than waterfront Norfolk/VB).</li>
             <li>Tunnel-free or single-tunnel routes to NSN, NAS Oceana, and JEB Little Creek-Fort Story.</li>
             <li>Newer construction available in Greenbrier and Grassfield areas.</li>
-            <li>Strong resale at next PCS — Chesapeake homes have consistent sales history.</li>
+            <li>Strong resale at next PCS â Chesapeake homes have consistent sales history.</li>
           </ul>
         </div>
       </section>

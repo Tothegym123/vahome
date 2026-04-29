@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   title: "JEB Little Creek-Fort Story Housing & Relocation Guide (2026) | VaHome",
   description:
     "Complete 2026 relocation guide for sailors and soldiers stationed at Joint Expeditionary Base Little Creek-Fort Story. Best neighborhoods, BAH, VA loans, commute.",
-  alternates: { canonical: "https://www.vahome.com/military/bases/jeb-little-creek-fort-story/" },
+  alternates: { canonical: "https://vahome.com/military/bases/jeb-little-creek-fort-story/" },
   openGraph: {
     title: "JEB Little Creek-Fort Story Housing & Relocation Guide",
     description: "Best neighborhoods, BAH, VA loan tips for JEB Little Creek-Fort Story.",
-    url: "https://www.vahome.com/military/bases/jeb-little-creek-fort-story/",
+    url: "https://vahome.com/military/bases/jeb-little-creek-fort-story/",
     type: "article",
   },
 };
@@ -27,10 +27,10 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Bases", item: "https://www.vahome.com/military/bases/" },
-    { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://www.vahome.com/military/bases/jeb-little-creek-fort-story/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Bases", item: "https://vahome.com/military/bases/" },
+    { "@type": "ListItem", position: 4, name: "JEB Little Creek-Fort Story", item: "https://vahome.com/military/bases/jeb-little-creek-fort-story/" },
   ],
 };
 
@@ -92,7 +92,7 @@ export default function JEBLittleCreekPage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Where JEB Sailors and Soldiers Live</h2>
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { city: "Norfolk (East Beach, Bayview)", note: "Direct, short commute. Beach-adjacent. Some homes in AE flood zone — verify per-address." },
+              { city: "Norfolk (East Beach, Bayview)", note: "Direct, short commute. Beach-adjacent. Some homes in AE flood zone â verify per-address." },
               { city: "Norfolk (Larchmont, Ghent)", note: "Historic Norfolk neighborhoods, walkable, ~15 min commute." },
               { city: "Virginia Beach (Ocean Park, Cape Story)", note: "North VB, beach-adjacent, established homes. Direct to Little Creek." },
               { city: "Virginia Beach (Birdneck, Lynnhaven)", note: "Inland VB, mostly X flood zone, longer commute via Shore Dr." },

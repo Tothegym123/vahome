@@ -5,18 +5,18 @@ export const metadata: Metadata = {
   title: "Commute to Naval Station Norfolk: Routes, Gates & Tunnel Timing (2026) | VaHome",
   description:
     "Driving routes, gate options, and tunnel timing for sailors commuting to Naval Station Norfolk. HRBT, MMMBT, Downtown Tunnel, and best practices.",
-  alternates: { canonical: "https://www.vahome.com/military/commute-to/naval-station-norfolk/" },
-  openGraph: { title: "Commute to Naval Station Norfolk", description: "Routes, gates, and tunnel timing.", url: "https://www.vahome.com/military/commute-to/naval-station-norfolk/", type: "article" },
+  alternates: { canonical: "https://vahome.com/military/commute-to/naval-station-norfolk/" },
+  openGraph: { title: "Commute to Naval Station Norfolk", description: "Routes, gates, and tunnel timing.", url: "https://vahome.com/military/commute-to/naval-station-norfolk/", type: "article" },
 };
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Commute To", item: "https://www.vahome.com/military/commute-to/" },
-    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://www.vahome.com/military/commute-to/naval-station-norfolk/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Commute To", item: "https://vahome.com/military/commute-to/" },
+    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://vahome.com/military/commute-to/naval-station-norfolk/" },
   ],
 };
 
@@ -86,8 +86,8 @@ export default function CommuteNSNPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Tunnel Timing Practical Tips</h2>
         <ul className="mt-6 space-y-3 text-gray-700 list-disc list-inside">
-          <li><strong>Leave before 0530</strong> if you must cross HRBT or MMMBT for first watch — past that, single-incident delays can extend the trip 30+ minutes.</li>
-          <li><strong>Friday afternoon is the worst</strong> — tunnel and bridge volume peaks Friday 1500-1800.</li>
+          <li><strong>Leave before 0530</strong> if you must cross HRBT or MMMBT for first watch â past that, single-incident delays can extend the trip 30+ minutes.</li>
+          <li><strong>Friday afternoon is the worst</strong> â tunnel and bridge volume peaks Friday 1500-1800.</li>
           <li><strong>Track 511 Virginia or VDOT.org</strong> in real time before leaving. The app shows current tunnel speeds and any incidents.</li>
           <li><strong>Liberty release (1500-1530)</strong> creates predictable congestion at NSN&rsquo;s Gate 5 onto Hampton Blvd.</li>
         </ul>

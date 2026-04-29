@@ -5,12 +5,12 @@ export const metadata: Metadata = {
   title: "Homes for Sale Near Naval Station Norfolk | VA Loan Friendly | VaHome",
   description:
     "Browse homes for sale near Naval Station Norfolk with commute times, BAH match, and VA loan eligibility. Filtered for active-duty Navy buyers stationed at NSN.",
-  alternates: { canonical: "https://www.vahome.com/military/homes-near/naval-station-norfolk/" },
+  alternates: { canonical: "https://vahome.com/military/homes-near/naval-station-norfolk/" },
   openGraph: {
     title: "Homes for Sale Near Naval Station Norfolk",
     description:
       "Listings within 30 minutes of Naval Station Norfolk Gate 5. BAH-priced, VA loan friendly, commute-ranked.",
-    url: "https://www.vahome.com/military/homes-near/naval-station-norfolk/",
+    url: "https://vahome.com/military/homes-near/naval-station-norfolk/",
     type: "website",
   },
 };
@@ -24,14 +24,14 @@ const itemListSchema = {
     "Curated listings within a 30-minute commute of Naval Station Norfolk, filtered for VA loan eligibility and BAH affordability.",
   numberOfItems: 8,
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Norfolk - East Beach", url: "https://www.vahome.com/listings?city=norfolk&neighborhood=east-beach" },
-    { "@type": "ListItem", position: 2, name: "Norfolk - Larchmont", url: "https://www.vahome.com/listings?city=norfolk&neighborhood=larchmont" },
-    { "@type": "ListItem", position: 3, name: "Virginia Beach - Thalia", url: "https://www.vahome.com/listings?city=virginia-beach&neighborhood=thalia" },
-    { "@type": "ListItem", position: 4, name: "Chesapeake - Greenbrier", url: "https://www.vahome.com/listings?city=chesapeake&neighborhood=greenbrier" },
-    { "@type": "ListItem", position: 5, name: "Portsmouth - Churchland", url: "https://www.vahome.com/listings?city=portsmouth&neighborhood=churchland" },
-    { "@type": "ListItem", position: 6, name: "Suffolk - Harbour View", url: "https://www.vahome.com/listings?city=suffolk&neighborhood=harbour-view" },
-    { "@type": "ListItem", position: 7, name: "Hampton - Phoebus", url: "https://www.vahome.com/listings?city=hampton&neighborhood=phoebus" },
-    { "@type": "ListItem", position: 8, name: "Newport News - Port Warwick", url: "https://www.vahome.com/listings?city=newport-news&neighborhood=port-warwick" },
+    { "@type": "ListItem", position: 1, name: "Norfolk - East Beach", url: "https://vahome.com/listings?city=norfolk&neighborhood=east-beach" },
+    { "@type": "ListItem", position: 2, name: "Norfolk - Larchmont", url: "https://vahome.com/listings?city=norfolk&neighborhood=larchmont" },
+    { "@type": "ListItem", position: 3, name: "Virginia Beach - Thalia", url: "https://vahome.com/listings?city=virginia-beach&neighborhood=thalia" },
+    { "@type": "ListItem", position: 4, name: "Chesapeake - Greenbrier", url: "https://vahome.com/listings?city=chesapeake&neighborhood=greenbrier" },
+    { "@type": "ListItem", position: 5, name: "Portsmouth - Churchland", url: "https://vahome.com/listings?city=portsmouth&neighborhood=churchland" },
+    { "@type": "ListItem", position: 6, name: "Suffolk - Harbour View", url: "https://vahome.com/listings?city=suffolk&neighborhood=harbour-view" },
+    { "@type": "ListItem", position: 7, name: "Hampton - Phoebus", url: "https://vahome.com/listings?city=hampton&neighborhood=phoebus" },
+    { "@type": "ListItem", position: 8, name: "Newport News - Port Warwick", url: "https://vahome.com/listings?city=newport-news&neighborhood=port-warwick" },
   ],
 };
 
@@ -39,10 +39,10 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.vahome.com/" },
-    { "@type": "ListItem", position: 2, name: "Military", item: "https://www.vahome.com/military/" },
-    { "@type": "ListItem", position: 3, name: "Homes Near Bases", item: "https://www.vahome.com/military/homes-near/" },
-    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://www.vahome.com/military/homes-near/naval-station-norfolk/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://vahome.com/" },
+    { "@type": "ListItem", position: 2, name: "Military", item: "https://vahome.com/military/" },
+    { "@type": "ListItem", position: 3, name: "Homes Near Bases", item: "https://vahome.com/military/homes-near/" },
+    { "@type": "ListItem", position: 4, name: "Naval Station Norfolk", item: "https://vahome.com/military/homes-near/naval-station-norfolk/" },
   ],
 };
 
