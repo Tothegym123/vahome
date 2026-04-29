@@ -17,9 +17,9 @@ const stats = [
 
 const cities = [
   { name: 'Norfolk', drive: '10 min', median: '$295K', summary: 'The most direct option. Ghent, Larchmont, Colonial Place. Strong walkability and downtown access.', slug: 'norfolk' },
-  { name: 'Virginia Beach', drive: '20–30 min', median: '$390K', summary: 'More space, newer construction, stronger schools. Kings Grant, Salem, Kempsville.', slug: 'virginia-beach' },
-  { name: 'Chesapeake', drive: '25–30 min', median: '$355K', summary: 'Larger lots, lower property taxes, top schools in Western Branch and Great Bridge.', slug: 'chesapeake' },
-  { name: 'Portsmouth', drive: '15–20 min via Midtown Tunnel', median: '$255K', summary: 'Most affordable. Olde Towne and Churchland are popular military neighborhoods.', slug: 'portsmouth' },
+  { name: 'Virginia Beach', drive: '20â30 min', median: '$390K', summary: 'More space, newer construction, stronger schools. Kings Grant, Salem, Kempsville.', slug: 'virginia-beach' },
+  { name: 'Chesapeake', drive: '25â30 min', median: '$355K', summary: 'Larger lots, lower property taxes, top schools in Western Branch and Great Bridge.', slug: 'chesapeake' },
+  { name: 'Portsmouth', drive: '15â20 min via Midtown Tunnel', median: '$255K', summary: 'Most affordable. Olde Towne and Churchland are popular military neighborhoods.', slug: 'portsmouth' },
 ]
 
 const bahRows = [
@@ -33,7 +33,7 @@ const neighborhoods = [
   { name: 'Ghent', city: 'Norfolk', drive: '10 min', median: '$365K', blurb: 'Historic rowhouses, walkable shops and restaurants. Popular with O-3+ without kids or with younger kids.' },
   { name: 'Larchmont', city: 'Norfolk', drive: '8 min', median: '$425K', blurb: 'Mid-century single-family homes between ODU and the Lafayette River. Top-rated schools.' },
   { name: 'Colonial Place', city: 'Norfolk', drive: '12 min', median: '$355K', blurb: 'Bungalows and craftsmen on the Lafayette River. Walkable to Granby Street.' },
-  { name: 'Edgewater', city: 'Norfolk', drive: '14 min', median: '$340K', blurb: 'Smaller historic neighborhood with tightly held inventory. Quick Hampton Blvd access.' },
+  { name: 'Edgewater', city: 'Norfolk', drive: '14 min', median: '$355K', blurb: 'Smaller historic neighborhood with tightly held inventory. Quick Hampton Blvd access.' },
   { name: 'Park Place', city: 'Norfolk', drive: '15 min', median: '$250K', blurb: 'Affordable historic Norfolk. Significant rehab activity, up-and-coming.' },
   { name: 'Kings Grant', city: 'Virginia Beach', drive: '22 min', median: '$485K', blurb: 'Mid-century cul-de-sac neighborhood off Little Neck Road. Top VB schools, large lots.' },
   { name: 'Western Branch', city: 'Chesapeake', drive: '25 min', median: '$370K', blurb: 'Established suburban with top-rated Chesapeake schools. Lower property tax than Norfolk.' },
@@ -56,7 +56,7 @@ export default function NavalStationNorfolkPage() {
       {
         '@type': 'Place',
         name: 'Naval Station Norfolk',
-        description: 'The largest naval installation in the world, home port to the Atlantic Fleet.',
+        description: 'The largest naval complex in the world, home port to the Atlantic Fleet.',
         address: { '@type': 'PostalAddress', addressLocality: 'Norfolk', addressRegion: 'VA', addressCountry: 'US' },
         geo: { '@type': 'GeoCoordinates', latitude: 36.9489, longitude: -76.3275 },
       },
@@ -98,7 +98,7 @@ export default function NavalStationNorfolkPage() {
             Naval Station Norfolk Housing &amp; Relocation Guide (2026)
           </h1>
           <p className="text-xl text-slate-200 leading-relaxed max-w-3xl">
-            The largest naval installation in the world. Find your home near NSN with the VaHome Team &mdash; military relocation
+            The largest naval complex in the world. Find your home near NSN with the VaHome Team &mdash; military relocation
             specialists in Hampton Roads since 2019.
           </p>
         </div>
@@ -121,7 +121,7 @@ export default function NavalStationNorfolkPage() {
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">About Naval Station Norfolk</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            Naval Station Norfolk (NSN) sits at the western edge of the city of Norfolk on the Hampton Roads harbor. It is the largest naval installation in the world by personnel and waterfront,
+            Naval Station Norfolk (NSN) sits at the western edge of the city of Norfolk on the Hampton Roads harbor. It is the largest naval complex in the world by personnel and waterfront,
             home port to more than 75 ships and 130 aircraft, and headquarters to the Atlantic Fleet. Roughly 75,000 active-duty Navy personnel are assigned regionally, plus tens of thousands of supporting civilian DoD and contractor employees.
           </p>
           <p className="text-gray-700 leading-relaxed mb-4">
@@ -286,6 +286,12 @@ export default function NavalStationNorfolkPage() {
             Call (757) 777-7577
           </a>
         </div>
+      </section>
+    
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-8">
+        <p className="text-xs text-gray-500">
+          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NAVSTA-Norfolk/" target="_blank" rel="noopener noreferrer" className="underline">Commander, Navy Region Mid-Atlantic (CNIC)</a> for installation facts; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH Calculator</a> for 2026 Norfolk MHA rates.
+        </p>
       </section>
     </main>
   )
