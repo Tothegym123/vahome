@@ -14,6 +14,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.vahome.com"),
   title: 'VaHome.com | Homes for Sale in Hampton Roads, Virginia Beach & Norfolk',
   description: 'Search homes for sale in Hampton Roads, Virginia Beach, Norfolk, Chesapeake & Suffolk. The VaHome Team - your trusted local real estate experts at LPT Realty.',
   keywords: 'homes for sale, Virginia Beach, Hampton Roads, Norfolk, Chesapeake, real estate, LPT Realty',
