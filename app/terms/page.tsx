@@ -55,7 +55,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-3">Privacy Policy</h2>
             <p className="text-gray-700 leading-relaxed">
-              Our <a href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</a> is incorporated into these Terms by reference and explains how we collect, use, and protect your data.
+              Our <a href="/privacy/" className="text-blue-600 hover:underline">Privacy Policy</a> is incorporated into these Terms by reference and explains how we collect, use, and protect your data.
             </p>
           </section>
 
