@@ -95,7 +95,7 @@ export default function MilitaryHomePage() {
             href="/military/relocation/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">ÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ¯ÃÂÃÂÃÂÃÂ¸ÃÂÃÂÃÂÃÂ</div>
+            <div className="text-3xl mb-3">ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¯ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¸ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Relocation guide</h2>
             <p className="text-gray-600 text-sm">
               Complete 2026 guide to Hampton Roads &mdash; every base, every city, schools, BAH, VA loans, flood zones, PCS season.
@@ -107,7 +107,7 @@ export default function MilitaryHomePage() {
             href="/military/bah-calculator/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">ÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°</div>
+            <div className="text-3xl mb-3">ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">BAH calculator</h2>
             <p className="text-gray-600 text-sm">
               2026 Norfolk MHA rates by paygrade &amp; dependents. See your max affordable home price &mdash; then jump straight to listings in range.
@@ -119,7 +119,7 @@ export default function MilitaryHomePage() {
             href="/military/va-loan-homes/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">ÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¸</div>
+            <div className="text-3xl mb-3">ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¸</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">VA loan homes</h2>
             <p className="text-gray-600 text-sm">
               $0 down. No PMI. 2026 limits, eligibility, funding fee. Browse VA-eligible homes across Hampton Roads.
@@ -181,6 +181,15 @@ export default function MilitaryHomePage() {
             Call (757) 777-7577
           </a>
         </div>
+      </section>
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Helpful Tools and Guides</h2>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <li><a href="/military/pcs-checklist/hampton-roads/" className="text-red-600 hover:text-red-700 underline font-medium">Complete Hampton Roads PCS Checklist</a></li>
+          <li><a href="/military/relocation/hampton-roads/" className="text-red-600 hover:text-red-700 underline font-medium">Military Relocation Guide</a></li>
+          <li><a href="/military/bah-calculator/hampton-roads/" className="text-red-600 hover:text-red-700 underline font-medium">2026 BAH Calculator</a></li>
+          <li><a href="/military/va-loan-homes/hampton-roads/" className="text-red-600 hover:text-red-700 underline font-medium">VA Loan Homes</a></li>
+        </ul>
       </section>
       <HamptonRoadsAreaGuide />
     </main>
