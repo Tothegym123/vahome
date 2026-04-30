@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import AuthProvider from './components/AuthProvider'
 import AuthModal from './components/AuthModal'
 import OnboardingModal from './components/OnboardingModal'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -35,6 +36,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
         </AuthProvider>
+        <GoogleAnalytics gaId="G-SJ4YWRX3RY" />
       </body>
     </html>
   )
