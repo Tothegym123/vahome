@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-import HamptonRoadsAreaGuide from '../../components/HamptonRoadsAreaGuide'
   getPostBySlug,
   getAllPosts,
   getAllCategories,
 } from "../../lib/blog-posts";
 
+import HamptonRoadsAreaGuide from '../../components/HamptonRoadsAreaGuide'
 export const revalidate = 3600;
 
 interface BlogPostPageProps {
