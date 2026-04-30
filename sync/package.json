@@ -1,0 +1,22 @@
+{
+  "name": "vahome-rein-sync",
+  "version": "1.0.0",
+  "description": "REIN MLS RETS/RESO Web API sync poller for vahome.com",
+  "type": "module",
+  "main": "sync.js",
+  "scripts": {
+    "start": "node sync.js",
+    "test-auth": "node sync.js --test-auth",
+    "full": "SYNC_FULL=true node sync.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "@vercel/blob": "^0.23.0",
+    "dotenv": "^16.4.5",
+    "pino": "^9.4.0",
+    "sharp": "^0.33.5"
+  }
+}
