@@ -89,7 +89,7 @@ export default function BAHCalculatorPage() {
 
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade Ã¢ÂÂ Norfolk MHA</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade ÃÂ¢ÃÂÃÂ Norfolk MHA</h2>
           <p className="mt-3 text-gray-700">Monthly housing allowance and the home purchase price each rate comfortably supports.</p>
           <div className="mt-6 overflow-x-auto bg-white rounded-xl border border-gray-200">
             <table className="min-w-full text-sm">
@@ -130,7 +130,7 @@ export default function BAHCalculatorPage() {
           <div>
             <h3 className="font-semibold text-gray-900">2. Add property tax + insurance into the math</h3>
             <p>Hampton Roads property tax rates run 0.97% (Virginia Beach) to 1.25% (Norfolk effective rate) depending on city. Homeowners insurance averages $1,400-$2,200/year. Flood insurance adds $0-$2,400/year depending on zone.</p>
-            <p className="text-xs text-gray-500 mt-1">Source: City tax assessor offices, 2025. <a href="https://www.katherinerobertsonrealestate.com/property-taxes" target="_blank" rel="noopener noreferrer" className="underline">Hampton Roads property tax comparison</a>.</p>
+            <p className="text-xs text-gray-500 mt-1">Source: City tax assessor offices, 2025. Hampton Roads property tax comparison.</p>
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">3. Pre-approval beats pre-qualification</h3>
