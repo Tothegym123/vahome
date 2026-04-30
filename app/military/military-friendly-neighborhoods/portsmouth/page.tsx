@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Portsmouth, VA | VaHome",
@@ -13,7 +14,7 @@ const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: "Military-Friendly Neighborhoods in Portsmouth, VA",
-  description: "Detailed guide to Portsmouth neighborhoods for military families â Olde Towne, Churchland, Western Branch, Park View, Cradock, Port Norfolk â with commute, school, and BAH context.",
+  description: "Detailed guide to Portsmouth neighborhoods for military families Ã¢ÂÂ Olde Towne, Churchland, Western Branch, Park View, Cradock, Port Norfolk Ã¢ÂÂ with commute, school, and BAH context.",
   datePublished: "2026-04-29",
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
@@ -47,7 +48,7 @@ export default function PortsmouthMilitaryNeighborhoods() {
           </nav>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Military-Friendly Neighborhoods in Portsmouth</h1>
           <p className="mt-4 text-lg sm:text-xl text-blue-100 max-w-3xl">
-            Portsmouth hosts three significant military installations â Norfolk Naval Shipyard (the Navy's oldest, despite the name), Naval Medical Center Portsmouth, and Coast Guard Base Portsmouth. Often the most affordable city in South Hampton Roads.
+            Portsmouth hosts three significant military installations Ã¢ÂÂ Norfolk Naval Shipyard (the Navy's oldest, despite the name), Naval Medical Center Portsmouth, and Coast Guard Base Portsmouth. Often the most affordable city in South Hampton Roads.
           </p>
         </div>
       </section>
@@ -77,7 +78,7 @@ export default function PortsmouthMilitaryNeighborhoods() {
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Olde Towne Portsmouth</p>
-            <p className="text-sm text-gray-700 mt-2">Historic walkable district along the Elizabeth River with cobblestone streets, ferry to Norfolk Waterside, and 18th/19th century homes. Premium address but check flood zones â many lots are AE.</p>
+            <p className="text-sm text-gray-700 mt-2">Historic walkable district along the Elizabeth River with cobblestone streets, ferry to Norfolk Waterside, and 18th/19th century homes. Premium address but check flood zones Ã¢ÂÂ many lots are AE.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> NNSY shipyard workers, history buffs, walkability priority.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
@@ -115,7 +116,7 @@ export default function PortsmouthMilitaryNeighborhoods() {
             <li><strong>Flood exposure:</strong> Portsmouth has significant low-lying waterfront. Always pull the FEMA flood map for any specific address before writing an offer. <Link href="/military/flood-zones/hampton-roads/" className="text-blue-700 underline">See our flood zones guide</Link>.</li>
             <li><strong>Schools:</strong> Portsmouth Public Schools ratings vary widely by zone. Verify per-school at <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">schoolquality.virginia.gov</a>. Western Branch (Chesapeake side) and Churchland are typically the strongest options.</li>
             <li><strong>Property tax:</strong> Portsmouth's real estate tax rate is among the higher in Hampton Roads. Factor this into your max-home-price math.</li>
-            <li><strong>BAH:</strong> Same Norfolk MHA (IZ325) as Norfolk and Virginia Beach â your BAH stretches further here because median prices are lower.</li>
+            <li><strong>BAH:</strong> Same Norfolk MHA (IZ325) as Norfolk and Virginia Beach Ã¢ÂÂ your BAH stretches further here because median prices are lower.</li>
           </ul>
           <p className="mt-4 text-xs text-gray-500 italic">
             Sources: <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA Flood Map Service Center</a>; <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
@@ -132,6 +133,7 @@ export default function PortsmouthMilitaryNeighborhoods() {
           <Link href="/contact?source=portsmouth" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Get my Portsmouth list</Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

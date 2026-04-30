@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "2026 Hampton Roads BAH Calculator | Norfolk MHA Rates by Paygrade | VaHome",
@@ -89,7 +90,7 @@ export default function BAHCalculatorPage() {
 
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade ÃÂ¢ÃÂÃÂ Norfolk MHA</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Norfolk MHA</h2>
           <p className="mt-3 text-gray-700">Monthly housing allowance and the home purchase price each rate comfortably supports.</p>
           <div className="mt-6 overflow-x-auto bg-white rounded-xl border border-gray-200">
             <table className="min-w-full text-sm">
@@ -172,6 +173,7 @@ export default function BAHCalculatorPage() {
           </Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

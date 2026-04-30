@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "8 Best Neighborhoods Near Naval Station Norfolk (2026 Ranked) | VaHome",
@@ -196,6 +197,7 @@ export default function BestNeighborhoodsPage() {
           </Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

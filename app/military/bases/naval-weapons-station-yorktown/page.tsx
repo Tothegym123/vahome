@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "NWS Yorktown PCS & Housing Guide | VaHome",
@@ -128,9 +129,10 @@ export default function NavalWeaponsStationYorktownPage() {
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <p className="text-xs text-gray-500">
-          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NWS-Yorktown/" target="_blank" rel="noopener noreferrer" className="underline">CNIC Ã¢ÂÂ NWS Yorktown</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
+          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NWS-Yorktown/" target="_blank" rel="noopener noreferrer" className="underline">CNIC ÃÂ¢ÃÂÃÂ NWS Yorktown</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Schools Near NAS Oceana (2026 Ratings) | VaHome",
@@ -115,10 +116,10 @@ export default function SchoolsNearOceanaPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Best School Match for Oceana Sailors</h2>
         <ul className="mt-6 space-y-3 text-gray-700 list-disc list-inside">
-          <li><strong>Princess Anne corridor</strong> â closest to Oceana&rsquo;s main gate. Princess Anne Elementary, Middle, and High School all rate 7-9.</li>
-          <li><strong>Kellam zone (south VB)</strong> â Floyd Kellam High (9), Corporate Landing Elementary (9). 15-20 min commute to Oceana.</li>
-          <li><strong>Great Neck / Linkhorn corridor</strong> â Linkhorn Park (9), John B. Dey (9), Great Neck Middle (8). North VB, 20-25 min commute.</li>
-          <li><strong>Bayside / Ocean Park area</strong> â Trantwood (9) elementary zone. Closer to Little Creek-Fort Story than Oceana.</li>
+          <li><strong>Princess Anne corridor</strong> Ã¢ÂÂ closest to Oceana&rsquo;s main gate. Princess Anne Elementary, Middle, and High School all rate 7-9.</li>
+          <li><strong>Kellam zone (south VB)</strong> Ã¢ÂÂ Floyd Kellam High (9), Corporate Landing Elementary (9). 15-20 min commute to Oceana.</li>
+          <li><strong>Great Neck / Linkhorn corridor</strong> Ã¢ÂÂ Linkhorn Park (9), John B. Dey (9), Great Neck Middle (8). North VB, 20-25 min commute.</li>
+          <li><strong>Bayside / Ocean Park area</strong> Ã¢ÂÂ Trantwood (9) elementary zone. Closer to Little Creek-Fort Story than Oceana.</li>
         </ul>
       </section>
 
@@ -137,6 +138,7 @@ export default function SchoolsNearOceanaPage() {
           Sources: <a href="https://www.greatschools.org/" target="_blank" rel="noopener noreferrer" className="underline">GreatSchools.org</a> (ratings, April 2026); <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOE state report cards</a>; <a href="https://www.vbschools.com/" target="_blank" rel="noopener noreferrer" className="underline">Virginia Beach City Public Schools</a>; <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

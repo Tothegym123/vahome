@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Commute to NAS Oceana: Routes, Gates & Timing (2026) | VaHome",
@@ -81,7 +82,7 @@ export default function CommuteOceanaPage() {
           NAS Oceana publishes Air Installation Compatible Use Zone (AICUZ) maps showing high-noise areas under the jet flight paths. Some Virginia Beach neighborhoods sit inside these contours and have meaningful aircraft noise. Lenders may flag homes in high-noise zones for disclosure. Always check the AICUZ designation for an address before writing.
         </p>
         <p className="mt-3 text-xs text-gray-500 italic">
-          Source: <a href="https://www.cnic.navy.mil/regions/cnrma/installations/nas_oceana.html" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana â AICUZ resources</a>.
+          Source: <a href="https://www.cnic.navy.mil/regions/cnrma/installations/nas_oceana.html" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana Ã¢ÂÂ AICUZ resources</a>.
         </p>
       </section>
 
@@ -100,6 +101,7 @@ export default function CommuteOceanaPage() {
           Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana</a>; <a href="https://www.virginiadot.org/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOT</a> for current traffic conditions and tunnel/bridge alerts.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

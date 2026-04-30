@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Joint Base Langley-Eustis (JBLE): Living, Housing & PCS Guide | VaHome",
@@ -114,15 +115,15 @@ export default function JBLEBasePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Best Neighborhoods for JBLE Families</h2>
           <p className="mt-3 text-gray-700">
-            The Peninsula offers a different cost-of-living profile than South Hampton Roads ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ generally lower median prices with strong public schools. Top-fit areas:
+            The Peninsula offers a different cost-of-living profile than South Hampton Roads ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ generally lower median prices with strong public schools. Top-fit areas:
           </p>
           <div className="mt-6 grid sm:grid-cols-2 gap-4">
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <p className="font-semibold text-gray-900">Hampton ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Riverdale, Wythe, Fox Hill</p>
+              <p className="font-semibold text-gray-900">Hampton ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Riverdale, Wythe, Fox Hill</p>
               <p className="text-sm text-gray-600 mt-1">Closest to Langley AFB. 10-15 min commute. Mix of starter homes and waterfront.</p>
             </div>
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <p className="font-semibold text-gray-900">Newport News ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Hilton Village, Riverside, City Center</p>
+              <p className="font-semibold text-gray-900">Newport News ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Hilton Village, Riverside, City Center</p>
               <p className="text-sm text-gray-600 mt-1">Closest to Fort Eustis. Hilton Village is a historic walkable district.</p>
             </div>
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
@@ -173,6 +174,7 @@ export default function JBLEBasePage() {
           Sources: <a href="https://www.jble.af.mil" target="_blank" rel="noopener noreferrer" className="underline">JBLE Official Site</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>; <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

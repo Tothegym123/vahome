@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Best Neighborhoods Near JEB Little Creek-Fort Story | VaHome",
@@ -43,7 +44,7 @@ export default function BestNearJEB() {
         <div className="space-y-6">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">1. Bayside / Pleasure House Point</p>
-            <p className="text-sm text-gray-700 mt-2">Closest to JEB main gate (~5-10 min). Mix of starter homes, mid-range, and Bay-front. Strong fit for command staff who want to be close. Verify school zone â Bayside Elementary feeders.</p>
+            <p className="text-sm text-gray-700 mt-2">Closest to JEB main gate (~5-10 min). Mix of starter homes, mid-range, and Bay-front. Strong fit for command staff who want to be close. Verify school zone Ã¢ÂÂ Bayside Elementary feeders.</p>
             <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Some properties in Zone AE on Bay-front parcels.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
@@ -62,9 +63,9 @@ export default function BestNearJEB() {
             <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Slightly longer commute than Bayside-direct neighborhoods.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
-            <p className="font-bold text-gray-900 text-lg">5. Norfolk â Ocean View / East Beach</p>
+            <p className="font-bold text-gray-900 text-lg">5. Norfolk Ã¢ÂÂ Ocean View / East Beach</p>
             <p className="text-sm text-gray-700 mt-2">If you want urban energy with quick JEB commute (~10-15 min west via Shore Drive), Ocean View is the budget play and East Beach the premium new-urbanist play. Both directly on the Bay.</p>
-            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Norfolk schools â verify zone carefully.</p>
+            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Norfolk schools Ã¢ÂÂ verify zone carefully.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">6. North End / Cavalier Park (long-term play)</p>
@@ -78,11 +79,12 @@ export default function BestNearJEB() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-2xl font-bold">Pre-screen JEB listings against flood + schools?</p>
-            <p className="text-blue-100 mt-1">I cross-reference FEMA flood maps and school zones before sending â never just MLS dump.</p>
+            <p className="text-blue-100 mt-1">I cross-reference FEMA flood maps and school zones before sending Ã¢ÂÂ never just MLS dump.</p>
           </div>
           <Link href="/contact?source=best-jeb" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Send my list</Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "VA Loan Homes in Hampton Roads (2026 Guide) | 0% Down for Veterans | VaHome",
@@ -38,7 +39,7 @@ const faqSchema = {
     { "@type": "Question", name: "Is there a max VA loan amount in Hampton Roads?",
       acceptedAnswer: { "@type": "Answer", text: "For 2026, veterans with full entitlement have no max loan amount, but the home must appraise and you must qualify based on income. For veterans with reduced entitlement, the conforming loan limit applies. 2026 baseline conforming limit is $832,750 for one-unit properties (Norfolk-Virginia Beach-Newport News MSA falls under the baseline). Veterans with FULL entitlement have NO VA-imposed maximum loan amount under the Blue Water Navy Veterans Act (effective Jan 1, 2020)." } },
     { "@type": "Question", name: "What is the VA appraisal looking for?",
-      acceptedAnswer: { "@type": "Answer", text: "The VA appraisal verifies the home meets Minimum Property Requirements (MPRs): functional roof and HVAC, no termite or moisture issues, working utilities, no peeling paint on pre-1978 homes, and safe egress. It is NOT a home inspection Ã¢ÂÂ always pay for a separate professional inspection." } },
+      acceptedAnswer: { "@type": "Answer", text: "The VA appraisal verifies the home meets Minimum Property Requirements (MPRs): functional roof and HVAC, no termite or moisture issues, working utilities, no peeling paint on pre-1978 homes, and safe egress. It is NOT a home inspection ÃÂ¢ÃÂÃÂ always pay for a separate professional inspection." } },
     { "@type": "Question", name: "Can I use a VA loan more than once?",
       acceptedAnswer: { "@type": "Answer", text: "Yes. The VA loan benefit is reusable. If your first VA-financed home is paid off, your full entitlement restores. If you still have an active VA loan, you may have partial entitlement available for a second VA loan, common with PCS moves." } },
   ],
@@ -56,7 +57,7 @@ const breadcrumbSchema = {
 };
 
 const fundingFeeTable = [
-  { down: "0% down Ã¢ÂÂ first use", regular: "2.15%", subsequent: "3.30%" },
+  { down: "0% down ÃÂ¢ÃÂÃÂ first use", regular: "2.15%", subsequent: "3.30%" },
   { down: "5%-9% down", regular: "1.50%", subsequent: "1.50%" },
   { down: "10%+ down", regular: "1.25%", subsequent: "1.25%" },
 ];
@@ -95,7 +96,7 @@ export default function VALoanHomesPage() {
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
         <p className="text-gray-700 text-lg leading-relaxed">
-          In 2024, VA loans accounted for 41% of all home-purchase loans in Hampton Roads â about 5x the national average â reflecting the region's heavy military presence. It is the right choice for most active-duty and veteran buyers because it removes the two biggest barriers to home ownership: the down payment and PMI. In a market where the median home is around $340K, a VA loan saves roughly $17K-$68K up front and $200-$400/month in PMI.
+          In 2024, VA loans accounted for 41% of all home-purchase loans in Hampton Roads Ã¢ÂÂ about 5x the national average Ã¢ÂÂ reflecting the region's heavy military presence. It is the right choice for most active-duty and veteran buyers because it removes the two biggest barriers to home ownership: the down payment and PMI. In a market where the median home is around $340K, a VA loan saves roughly $17K-$68K up front and $200-$400/month in PMI.
         </p>
         <p className="text-gray-700 text-lg leading-relaxed mt-4">
           But the VA loan is not free, and it is not the right answer in every situation. This guide walks through eligibility, the funding fee, max loan amounts, the VA appraisal process, and the real trade-offs of using your VA benefit in Hampton Roads.
@@ -217,6 +218,7 @@ export default function VALoanHomesPage() {
           Sources: <a href="https://www.tieronecoastal.com/va-loans-hampton-roads-military-buyers/" target="_blank" rel="noopener noreferrer" className="underline">2024 HMDA via Tier One Coastal</a> (VA loan share); <a href="https://www.fhfa.gov/news/news-release/fhfa-announces-conforming-loan-limit-values-for-2026" target="_blank" rel="noopener noreferrer" className="underline">FHFA 2026 Conforming Loan Limits</a>; <a href="https://www.va.gov/housing-assistance/home-loans/funding-fee-and-closing-costs/" target="_blank" rel="noopener noreferrer" className="underline">VA Funding Fee schedule</a>; <a href="https://www.va.gov/housing-assistance/home-loans/eligibility/" target="_blank" rel="noopener noreferrer" className="underline">VA Eligibility</a>; <a href="https://www.benefits.va.gov/homeloans/bwnact.asp" target="_blank" rel="noopener noreferrer" className="underline">Blue Water Navy Veterans Act</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

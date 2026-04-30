@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Norfolk Naval Shipyard (NNSY): Living, Housing & PCS Guide | VaHome",
@@ -128,9 +129,10 @@ export default function NorfolkNavalShipyardPage() {
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <p className="text-xs text-gray-500">
-          Sources: <a href="https://www.navsea.navy.mil/Home/Shipyards/Norfolk/" target="_blank" rel="noopener noreferrer" className="underline">NAVSEA â Norfolk Naval Shipyard</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
+          Sources: <a href="https://www.navsea.navy.mil/Home/Shipyards/Norfolk/" target="_blank" rel="noopener noreferrer" className="underline">NAVSEA Ã¢ÂÂ Norfolk Naval Shipyard</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

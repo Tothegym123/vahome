@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Chesapeake (2026) | VaHome",
@@ -110,7 +111,7 @@ export default function ChesapeakeNeighborhoodsPage() {
             <li>Mostly X flood zone (lower flood insurance cost than waterfront Norfolk/VB).</li>
             <li>Tunnel-free or single-tunnel routes to NSN, NAS Oceana, and JEB Little Creek-Fort Story.</li>
             <li>Newer construction available in Greenbrier and Grassfield areas.</li>
-            <li>Strong resale at next PCS â Chesapeake homes have consistent sales history.</li>
+            <li>Strong resale at next PCS Ã¢ÂÂ Chesapeake homes have consistent sales history.</li>
           </ul>
         </div>
       </section>
@@ -130,6 +131,7 @@ export default function ChesapeakeNeighborhoodsPage() {
           Sources: <a href="https://www.greatschools.org/" target="_blank" rel="noopener noreferrer" className="underline">GreatSchools.org</a> (school ratings, April 2026); <a href="https://cpschools.com/" target="_blank" rel="noopener noreferrer" className="underline">Chesapeake Public Schools</a>; <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOE</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>; <a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Virginia Beach (2026) | VaHome",
@@ -33,7 +34,7 @@ const breadcrumbSchema = {
 };
 
 const neighborhoods = [
-  { name: "Princess Anne", bestFor: "NAS Oceana families", note: "Closest to Oceana&rsquo;s main gate. Some sections fall under AICUZ noise contours â verify per-address." },
+  { name: "Princess Anne", bestFor: "NAS Oceana families", note: "Closest to Oceana&rsquo;s main gate. Some sections fall under AICUZ noise contours Ã¢ÂÂ verify per-address." },
   { name: "Kempsville", bestFor: "Mid-grade enlisted/officer at Oceana or NSN-east commute", note: "Mature neighborhood, established VB schools, mid-range pricing." },
   { name: "Thalia", bestFor: "Beach-lifestyle families on a moderate budget", note: "Near I-264, mature VB neighborhood, mostly X flood zone." },
   { name: "Ocean Park / Cape Story", bestFor: "JEB Little Creek-Fort Story sailors", note: "Beach-adjacent, direct to Little Creek. Some lots in AE flood zone." },
@@ -118,6 +119,7 @@ export default function VBNeighborhoodsPage() {
           Sources: <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>; <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOE</a>; <a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>; <a href="https://www.census.gov/quickfacts/fact/table/virginiabeachcityvirginia,US/PST045224" target="_blank" rel="noopener noreferrer" className="underline">U.S. Census Bureau</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

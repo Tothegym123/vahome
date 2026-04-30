@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "NAS Oceana Housing & Relocation Guide (2026) | VaHome",
@@ -84,7 +85,7 @@ export default function NASOceanaPage() {
           Naval Air Station Oceana is the U.S. Navy&rsquo;s Master Jet Base on the Atlantic Coast, home to all East Coast F/A-18 Super Hornet squadrons and F-35C Lightning II squadrons. The base is located in Virginia Beach, in the south-central section of the city, and includes the Dam Neck Annex on the Atlantic shoreline. Sailors stationed at Oceana benefit from being on the southside of Hampton Roads, which means no harbor-tunnel commute and direct access to Virginia Beach&rsquo;s beach corridor.
         </p>
         <p className="mt-3 text-xs text-gray-500 italic">
-          Source: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">Commander, Navy Region Mid-Atlantic (CNIC) â NAS Oceana</a>.
+          Source: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">Commander, Navy Region Mid-Atlantic (CNIC) Ã¢ÂÂ NAS Oceana</a>.
         </p>
       </section>
 
@@ -167,6 +168,7 @@ export default function NASOceanaPage() {
           Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH Calculator</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>; <a href="https://www.hrmffa.org/about-us" target="_blank" rel="noopener noreferrer" className="underline">HRMFFA</a>; <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOE</a>; <a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener noreferrer" className="underline">FEMA Flood Map Service Center</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

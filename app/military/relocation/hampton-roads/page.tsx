@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: 'Military Relocation to Hampton Roads VA | VaHome 2026 Guide',
@@ -300,6 +301,7 @@ export default function HamptonRoadsRelocationPage() {
           Sources: <a href="https://www.hrmffa.org/about-us" target="_blank" rel="noopener noreferrer" className="underline">HRMFFA</a> (installations + personnel); <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a> (Jan 2026 median); <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH Calculator</a> (2026 Norfolk MHA rates).
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   )
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Homes for Sale Near JEB Little Creek-Fort Story | VaHome",
@@ -21,7 +22,7 @@ const breadcrumbSchema = {
 };
 
 const corridors = [
-  { name: "Norfolk (East Beach)", note: "Newest housing stock in Norfolk. Bay-adjacent. Some lots in AE flood zone â verify per-address." },
+  { name: "Norfolk (East Beach)", note: "Newest housing stock in Norfolk. Bay-adjacent. Some lots in AE flood zone Ã¢ÂÂ verify per-address." },
   { name: "Norfolk (Bayview / Ocean View)", note: "Direct, short commute. Mix of historic and recent rebuild homes. Bay frontage areas have higher flood-insurance cost." },
   { name: "Norfolk (Larchmont, Ghent)", note: "Historic, tree-lined streets, ~15 min commute via Hampton Blvd or I-64." },
   { name: "Virginia Beach (Ocean Park, Cape Story)", note: "Beach-adjacent VB neighborhoods, established homes, direct to Little Creek." },
@@ -110,6 +111,7 @@ export default function HomesNearJEBPage() {
           Sources: <a href="https://cnrma.cnic.navy.mil/Installations/JEB-Little-Creek-Fort-Story/" target="_blank" rel="noopener noreferrer" className="underline">CNIC JEB Little Creek-Fort Story</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>; <a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>; <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOE</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

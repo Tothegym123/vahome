@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Commute to JEB Little Creek-Fort Story (2026) | VaHome",
@@ -100,6 +101,7 @@ export default function CommuteJEBPage() {
           Sources: <a href="https://cnrma.cnic.navy.mil/Installations/JEB-Little-Creek-Fort-Story/" target="_blank" rel="noopener noreferrer" className="underline">CNIC JEB Little Creek-Fort Story</a>; <a href="https://www.virginiadot.org/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOT</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

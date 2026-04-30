@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "E-6 BAH Norfolk MHA (2026): $2,559/mo with Dependents | VaHome",
@@ -125,6 +126,7 @@ export default function BAHPageE6() {
           Sources: <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH Calculator</a>; <a href="https://www.va.gov/housing-assistance/home-loans/" target="_blank" rel="noopener noreferrer" className="underline">VA Home Loans</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

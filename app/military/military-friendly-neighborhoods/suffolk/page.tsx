@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Suffolk, VA | VaHome",
   description:
-    "Best Suffolk neighborhoods for military families. Harbour View, Bennett's Creek, Driver, Hillpoint â strong schools, lower property taxes, and the MMMBT alternative to the HRBT.",
+    "Best Suffolk neighborhoods for military families. Harbour View, Bennett's Creek, Driver, Hillpoint Ã¢ÂÂ strong schools, lower property taxes, and the MMMBT alternative to the HRBT.",
   alternates: { canonical: "https://vahome.com/military/military-friendly-neighborhoods/suffolk/" },
   openGraph: { title: "Suffolk Military-Friendly Neighborhoods", description: "Where to live in Suffolk for Hampton Roads military families.", url: "https://vahome.com/military/military-friendly-neighborhoods/suffolk/", type: "article" },
 };
@@ -62,7 +63,7 @@ export default function SuffolkMilitaryNeighborhoods() {
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Harbour View</p>
-            <p className="text-sm text-gray-700 mt-2">North Suffolk's premier master-planned community. Manicured neighborhoods, retail at Harbour View Marketplace, walking trails. Quick I-664 access â under 25 min to NSN/Portsmouth, 25 min to JBLE/Newport News via MMMBT.</p>
+            <p className="text-sm text-gray-700 mt-2">North Suffolk's premier master-planned community. Manicured neighborhoods, retail at Harbour View Marketplace, walking trails. Quick I-664 access Ã¢ÂÂ under 25 min to NSN/Portsmouth, 25 min to JBLE/Newport News via MMMBT.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Officers and senior NCOs prioritizing dual-commute symmetry and resale.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
@@ -87,7 +88,7 @@ export default function SuffolkMilitaryNeighborhoods() {
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Downtown Suffolk / Olde Towne</p>
-            <p className="text-sm text-gray-700 mt-2">Historic downtown with revival energy â restaurants, breweries, walkable streetscape. Smaller homes, character architecture.</p>
+            <p className="text-sm text-gray-700 mt-2">Historic downtown with revival energy Ã¢ÂÂ restaurants, breweries, walkable streetscape. Smaller homes, character architecture.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Walkability priority, character-home enthusiasts.</p>
           </div>
         </div>
@@ -96,7 +97,7 @@ export default function SuffolkMilitaryNeighborhoods() {
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">The Suffolk Commute Advantage</h2>
-          <p className="mt-3 text-gray-700">North Suffolk neighborhoods sit on the I-664 corridor, giving you the MMMBT â the HRBT's much-quieter sibling tunnel. For dual-military couples where one parent is on the Peninsula and the other in Norfolk/Portsmouth, North Suffolk often delivers the most balanced commute.</p>
+          <p className="mt-3 text-gray-700">North Suffolk neighborhoods sit on the I-664 corridor, giving you the MMMBT Ã¢ÂÂ the HRBT's much-quieter sibling tunnel. For dual-military couples where one parent is on the Peninsula and the other in Norfolk/Portsmouth, North Suffolk often delivers the most balanced commute.</p>
           <p className="mt-3 text-gray-700">Approximate drive times from Harbour View: NSN ~25 min, NMCP ~20 min, JBLE/Fort Eustis ~25 min via MMMBT, NAS Oceana ~35 min.</p>
           <p className="mt-3 text-xs text-gray-500 italic">Live conditions: <a href="https://511virginia.org" target="_blank" rel="noopener noreferrer" className="underline">511virginia.org</a>.</p>
         </div>
@@ -106,7 +107,7 @@ export default function SuffolkMilitaryNeighborhoods() {
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Things to Know Before Buying in Suffolk</h2>
         <ul className="mt-4 space-y-3 text-gray-700">
           <li><strong>Geography:</strong> Suffolk is huge (~400 sq mi). North Suffolk (Harbour View area) is the commuter sweet spot; rural Suffolk south of Route 58 has long commutes.</li>
-          <li><strong>Schools:</strong> Suffolk Public Schools â verify per zone using <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a>. Strong schools include Northern Shores Elementary and Driver Elementary in North Suffolk.</li>
+          <li><strong>Schools:</strong> Suffolk Public Schools Ã¢ÂÂ verify per zone using <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a>. Strong schools include Northern Shores Elementary and Driver Elementary in North Suffolk.</li>
           <li><strong>Flood:</strong> Some Nansemond River and creek-front lots have flood exposure. Verify FEMA per address.</li>
           <li><strong>Property tax:</strong> Suffolk's real estate tax rate is generally favorable vs Norfolk and Portsmouth.</li>
         </ul>
@@ -124,6 +125,7 @@ export default function SuffolkMilitaryNeighborhoods() {
           <Link href="/contact?source=suffolk" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Get my Suffolk list</Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

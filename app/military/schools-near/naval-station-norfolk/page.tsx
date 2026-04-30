@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Schools Near Naval Station Norfolk (2026 Ratings) | VaHome",
@@ -119,7 +120,7 @@ export default function SchoolsNearNSNPage() {
             <div key={s.name} className="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
               <div className="bg-blue-700 text-white font-bold text-lg rounded-lg w-12 h-12 flex items-center justify-center shrink-0">{s.rating}</div>
               <div>
-                <p className="font-semibold text-gray-900">{s.name} <span className="text-sm text-gray-500 font-normal">â {s.level}</span></p>
+                <p className="font-semibold text-gray-900">{s.name} <span className="text-sm text-gray-500 font-normal">Ã¢ÂÂ {s.level}</span></p>
                 <p className="text-sm text-gray-600 mt-1">{s.note}</p>
               </div>
             </div>
@@ -162,6 +163,7 @@ export default function SchoolsNearNSNPage() {
           Sources: <a href="https://www.greatschools.org/" target="_blank" rel="noopener noreferrer" className="underline">GreatSchools.org</a> (ratings, April 2026); <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOE state report cards</a>; <a href="https://www.npsk12.com/" target="_blank" rel="noopener noreferrer" className="underline">Norfolk Public Schools</a>; <a href="https://cpschools.com/" target="_blank" rel="noopener noreferrer" className="underline">Chesapeake Public Schools</a>; <a href="https://www.vbschools.com/" target="_blank" rel="noopener noreferrer" className="underline">Virginia Beach City Public Schools</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Homes for Sale Near NAS Oceana | VA Loan Friendly | VaHome",
@@ -151,6 +152,7 @@ export default function HomesNearOceanaPage() {
           </Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

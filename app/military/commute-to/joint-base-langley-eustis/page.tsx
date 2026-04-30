@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Commute to Joint Base Langley-Eustis (JBLE) | VaHome",
   description:
-    "Commute times to JBLE from every major Hampton Roads neighborhood. HRBT, MMMBT, I-64, I-664 â what they mean for your daily drive to Langley AFB or Fort Eustis.",
+    "Commute times to JBLE from every major Hampton Roads neighborhood. HRBT, MMMBT, I-64, I-664 Ã¢ÂÂ what they mean for your daily drive to Langley AFB or Fort Eustis.",
   alternates: { canonical: "https://vahome.com/military/commute-to/joint-base-langley-eustis/" },
   openGraph: { title: "Commute to JBLE", description: "Drive times to Langley AFB and Fort Eustis from across Hampton Roads.", url: "https://vahome.com/military/commute-to/joint-base-langley-eustis/", type: "article" },
 };
@@ -13,7 +14,7 @@ const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: "Commute to Joint Base Langley-Eustis",
-  description: "Practical drive-time guide to JBLE â Langley AFB and Fort Eustis â from Hampton, Newport News, Williamsburg, and South Hampton Roads.",
+  description: "Practical drive-time guide to JBLE Ã¢ÂÂ Langley AFB and Fort Eustis Ã¢ÂÂ from Hampton, Newport News, Williamsburg, and South Hampton Roads.",
   datePublished: "2026-04-29",
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
@@ -81,7 +82,7 @@ export default function CommuteToJBLE() {
           </table>
         </div>
         <p className="mt-3 text-xs text-gray-500 italic">
-          *Crossings to/from South Hampton Roads via HRBT (I-64) or MMMBT (I-664) â peak congestion can substantially increase these. The HRBT expansion project is improving but not yet complete; check the <a href="https://hrbtexpansion.org" target="_blank" rel="noopener noreferrer" className="underline">HRBT Expansion Project</a> for updates.
+          *Crossings to/from South Hampton Roads via HRBT (I-64) or MMMBT (I-664) Ã¢ÂÂ peak congestion can substantially increase these. The HRBT expansion project is improving but not yet complete; check the <a href="https://hrbtexpansion.org" target="_blank" rel="noopener noreferrer" className="underline">HRBT Expansion Project</a> for updates.
         </p>
       </section>
 
@@ -89,7 +90,7 @@ export default function CommuteToJBLE() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">The HRBT Question</h2>
           <p className="mt-3 text-gray-700">
-            If you're stationed at JBLE but your spouse works in Norfolk or Virginia Beach, the HRBT (I-64) and MMMBT (I-664) are the only direct vehicle routes. These are tunnels under the harbor â they're prone to congestion, weather closures, and incident delays.
+            If you're stationed at JBLE but your spouse works in Norfolk or Virginia Beach, the HRBT (I-64) and MMMBT (I-664) are the only direct vehicle routes. These are tunnels under the harbor Ã¢ÂÂ they're prone to congestion, weather closures, and incident delays.
           </p>
           <p className="mt-3 text-gray-700">
             The Peninsula side (Hampton, Newport News, York County) avoids both crossings if both jobs are on the Peninsula. For dual-military families with one parent on each side, neighborhoods near I-664 (north Hampton, north Suffolk) often offer better commute symmetry than HRBT-dependent areas.
@@ -101,11 +102,12 @@ export default function CommuteToJBLE() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-2xl font-bold">Pick the right side for your JBLE commute</p>
-            <p className="text-blue-100 mt-1">I'll map listings around your daily drive â and your spouse's, if applicable.</p>
+            <p className="text-blue-100 mt-1">I'll map listings around your daily drive Ã¢ÂÂ and your spouse's, if applicable.</p>
           </div>
           <Link href="/contact?source=commute-jble" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Get tailored options</Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Hampton Roads Military Bases: Complete Installation Guide | VaHome",
@@ -117,6 +118,7 @@ export default function MilitaryBasesIndexPage() {
           <Link href="/contact?source=bases-index" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Get my PCS plan</Link>
         </div>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

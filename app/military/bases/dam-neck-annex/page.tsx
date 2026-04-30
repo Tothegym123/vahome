@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Dam Neck Annex: Living, Housing & PCS Guide | VaHome",
@@ -83,7 +84,7 @@ export default function DamNeckAnnexPage() {
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Best Neighborhoods for Dam Neck Families</h2>
-        <p className="mt-3 text-gray-700">Sandbridge (oceanfront, flood-zone caveats), Red Mill, Strawbridge, Salem, Ocean Lakes â all southern VB.</p>
+        <p className="mt-3 text-gray-700">Sandbridge (oceanfront, flood-zone caveats), Red Mill, Strawbridge, Salem, Ocean Lakes Ã¢ÂÂ all southern VB.</p>
         <div className="mt-5 grid sm:grid-cols-2 gap-3 text-sm">
           <Link href="/military/military-friendly-neighborhoods/virginia-beach/" className="border border-gray-200 rounded-lg p-4 hover:border-blue-600">
             <p className="font-semibold text-gray-900">Virginia Beach neighborhood guide</p>
@@ -128,9 +129,10 @@ export default function DamNeckAnnexPage() {
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <p className="text-xs text-gray-500">
-          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/About/Installation-Guide/Dam-Neck-Annex/" target="_blank" rel="noopener noreferrer" className="underline">CNIC â Dam Neck Annex</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
+          Sources: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/About/Installation-Guide/Dam-Neck-Annex/" target="_blank" rel="noopener noreferrer" className="underline">CNIC Ã¢ÂÂ Dam Neck Annex</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

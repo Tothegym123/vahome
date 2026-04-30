@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Hampton Roads PCS Checklist: 90 Days Before You Move | VaHome",
   description:
-    "Step-by-step PCS checklist for military families relocating to Hampton Roads. 90 days out through arrival â orders, BAH, schools, lease vs buy, lender, agent, and inspection essentials.",
+    "Step-by-step PCS checklist for military families relocating to Hampton Roads. 90 days out through arrival Ã¢ÂÂ orders, BAH, schools, lease vs buy, lender, agent, and inspection essentials.",
   alternates: { canonical: "https://vahome.com/military/pcs-checklist/hampton-roads/" },
   openGraph: { title: "Hampton Roads PCS Checklist", description: "90-day countdown checklist for moving to Hampton Roads.", url: "https://vahome.com/military/pcs-checklist/hampton-roads/", type: "article" },
 };
@@ -60,7 +61,7 @@ export default function PCSChecklist() {
           <ul className="mt-4 space-y-3 text-gray-700">
             <li><strong>Get pre-approved with a VA-specialist lender.</strong> Not all lenders handle VA equally; use one familiar with Norfolk MHA and military overlays.</li>
             <li><strong>Pick your target neighborhoods.</strong> 3-5 areas based on installation, school priority, BAH, and commute. See city guides: <Link href="/military/military-friendly-neighborhoods/virginia-beach/" className="text-blue-700 underline">VB</Link>, <Link href="/military/military-friendly-neighborhoods/norfolk/" className="text-blue-700 underline">Norfolk</Link>, <Link href="/military/military-friendly-neighborhoods/chesapeake/" className="text-blue-700 underline">Chesapeake</Link>, <Link href="/military/military-friendly-neighborhoods/portsmouth/" className="text-blue-700 underline">Portsmouth</Link>, <Link href="/military/military-friendly-neighborhoods/hampton/" className="text-blue-700 underline">Hampton</Link>, <Link href="/military/military-friendly-neighborhoods/newport-news/" className="text-blue-700 underline">Newport News</Link>, <Link href="/military/military-friendly-neighborhoods/suffolk/" className="text-blue-700 underline">Suffolk</Link>.</li>
-            <li><strong>Verify schools per zone.</strong> Use <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a> for ratings. Don't trust city averages â zoning matters.</li>
+            <li><strong>Verify schools per zone.</strong> Use <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a> for ratings. Don't trust city averages Ã¢ÂÂ zoning matters.</li>
             <li><strong>Schedule HHG counseling.</strong> Through your installation TMO/PPSO. Decide PPM (DITY) vs full government move.</li>
             <li><strong>Book your house-hunting trip (HHT).</strong> 3-5 days minimum. Plan to see 8-12 properties.</li>
           </ul>
@@ -75,7 +76,7 @@ export default function PCSChecklist() {
           <li><strong>Get FEMA flood maps for any candidate address.</strong> <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>. <Link href="/military/flood-zones/hampton-roads/" className="text-blue-700 underline">Hampton Roads flood zones guide</Link>.</li>
           <li><strong>Lock interest rate or float.</strong> Discuss with your lender. Most VA lenders offer free re-locks if rates drop.</li>
           <li><strong>Update vehicle registration and DEERS.</strong> Notify TRICARE region of your move.</li>
-          <li><strong>Inspection checklist:</strong> Hampton Roads has high humidity â prioritize moisture/mold inspection, HVAC age, roof age, and crawlspace if applicable.</li>
+          <li><strong>Inspection checklist:</strong> Hampton Roads has high humidity Ã¢ÂÂ prioritize moisture/mold inspection, HVAC age, roof age, and crawlspace if applicable.</li>
         </ul>
       </section>
 
@@ -83,10 +84,10 @@ export default function PCSChecklist() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">House-Hunting Trip (Days 0)</h2>
           <ul className="mt-4 space-y-3 text-gray-700">
-            <li><strong>Drive the actual commute</strong> from each target neighborhood at peak hours. The HRBT and MMMBT are tunnel chokepoints â drive them at 0700-0800 to feel the real impact.</li>
+            <li><strong>Drive the actual commute</strong> from each target neighborhood at peak hours. The HRBT and MMMBT are tunnel chokepoints Ã¢ÂÂ drive them at 0700-0800 to feel the real impact.</li>
             <li><strong>Tour 8-12 properties</strong> across 2-3 days. Take photos and notes; properties blur fast.</li>
             <li><strong>Re-visit your top 2-3</strong> on the last day before writing offers.</li>
-            <li><strong>Write strong offers fast</strong> on your favorite. Hampton Roads sub-markets can move quickly. VA loans can compete â your lender's pre-approval letter and a local-agent submission help.</li>
+            <li><strong>Write strong offers fast</strong> on your favorite. Hampton Roads sub-markets can move quickly. VA loans can compete Ã¢ÂÂ your lender's pre-approval letter and a local-agent submission help.</li>
             <li><strong>Verify FEMA flood zone</strong> on the contract address before removing financing contingency.</li>
           </ul>
         </div>
@@ -98,8 +99,8 @@ export default function PCSChecklist() {
           <li><strong>Update DD Form 2058</strong> for state of legal residence if changing.</li>
           <li><strong>Register VA vehicle within 30 days</strong> (or claim non-resident exemption if maintaining home-state residency under SCRA).</li>
           <li><strong>Schedule sponsor checkin</strong> at your new command.</li>
-          <li><strong>Enroll kids in schools</strong> â bring orders, immunization records, prior school transcripts. Some districts offer interstate compact accommodations for military kids.</li>
-          <li><strong>Establish flood insurance</strong> if applicable â required for VA loans in SFHAs (Zones A* or V*).</li>
+          <li><strong>Enroll kids in schools</strong> Ã¢ÂÂ bring orders, immunization records, prior school transcripts. Some districts offer interstate compact accommodations for military kids.</li>
+          <li><strong>Establish flood insurance</strong> if applicable Ã¢ÂÂ required for VA loans in SFHAs (Zones A* or V*).</li>
         </ul>
       </section>
 
@@ -118,6 +119,7 @@ export default function PCSChecklist() {
           Sources: <a href="https://www.va.gov/housing-assistance/home-loans/" target="_blank" rel="noopener noreferrer" className="underline">VA Home Loans</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>; <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

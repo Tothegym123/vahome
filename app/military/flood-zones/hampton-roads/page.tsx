@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Hampton Roads Flood Zones: Buyer's Guide for Military Families | VaHome",
@@ -87,7 +88,7 @@ export default function FloodZonesHamptonRoads() {
           </div>
         </div>
         <p className="mt-3 text-xs text-gray-500 italic">
-          Source: <a href="https://www.fema.gov/glossary/flood-zones" target="_blank" rel="noopener noreferrer" className="underline">FEMA â Flood Zones</a>.
+          Source: <a href="https://www.fema.gov/glossary/flood-zones" target="_blank" rel="noopener noreferrer" className="underline">FEMA Ã¢ÂÂ Flood Zones</a>.
         </p>
       </section>
 
@@ -95,20 +96,20 @@ export default function FloodZonesHamptonRoads() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">VA Loan Flood Insurance Rules</h2>
           <p className="mt-3 text-gray-700">
-            If the property is in an SFHA (Zones A* or V*), federally-backed lenders â including VA â must require flood insurance for the life of the loan. The premium is escrowed with your monthly mortgage payment. Outside SFHAs, flood insurance is optional but commonly recommended.
+            If the property is in an SFHA (Zones A* or V*), federally-backed lenders Ã¢ÂÂ including VA Ã¢ÂÂ must require flood insurance for the life of the loan. The premium is escrowed with your monthly mortgage payment. Outside SFHAs, flood insurance is optional but commonly recommended.
           </p>
           <p className="mt-3 text-gray-700">
             FEMA's Risk Rating 2.0 (effective 2021-2023) replaced the legacy zone-based premium structure with a per-property model. Two homes on the same street can now have very different premiums based on elevation, distance to water, and rebuild cost.
           </p>
           <p className="mt-3 text-xs text-gray-500 italic">
-            Source: <a href="https://www.fema.gov/flood-insurance/risk-rating" target="_blank" rel="noopener noreferrer" className="underline">FEMA â Risk Rating 2.0</a>; <a href="https://www.va.gov/housing-assistance/home-loans/" target="_blank" rel="noopener noreferrer" className="underline">VA Home Loans</a>.
+            Source: <a href="https://www.fema.gov/flood-insurance/risk-rating" target="_blank" rel="noopener noreferrer" className="underline">FEMA Ã¢ÂÂ Risk Rating 2.0</a>; <a href="https://www.va.gov/housing-assistance/home-loans/" target="_blank" rel="noopener noreferrer" className="underline">VA Home Loans</a>.
           </p>
         </div>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Higher-Risk Hampton Roads Areas to Verify Carefully</h2>
-        <p className="mt-3 text-gray-700">These neighborhoods commonly include parcels in AE or VE â never assume from address alone, always check the specific lot:</p>
+        <p className="mt-3 text-gray-700">These neighborhoods commonly include parcels in AE or VE Ã¢ÂÂ never assume from address alone, always check the specific lot:</p>
         <ul className="mt-4 space-y-2 text-gray-700 list-disc list-inside">
           <li>Norfolk: Hague, Larchmont, Ocean View, Willoughby Spit, Riverview, parts of Ghent</li>
           <li>Portsmouth: Olde Towne, Port Norfolk, Park View riverfront</li>
@@ -117,7 +118,7 @@ export default function FloodZonesHamptonRoads() {
           <li>Newport News: Hilton Village riverfront lots</li>
           <li>Chesapeake: Deep Creek-area properties along waterways</li>
         </ul>
-        <p className="mt-4 text-gray-700">Higher-elevation alternatives â typically Zone X â include Greenbrier (Chesapeake), Princess Anne (VB), Riverdale (Hampton), and Kiln Creek (Newport News).</p>
+        <p className="mt-4 text-gray-700">Higher-elevation alternatives Ã¢ÂÂ typically Zone X Ã¢ÂÂ include Greenbrier (Chesapeake), Princess Anne (VB), Riverdale (Hampton), and Kiln Creek (Newport News).</p>
       </section>
 
       <section className="bg-gray-50 border-y border-gray-200">
@@ -127,7 +128,7 @@ export default function FloodZonesHamptonRoads() {
             <li>Go to <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA Flood Map Service Center</a>.</li>
             <li>Enter the property address; the system zooms to the parcel and shows the FIRM panel.</li>
             <li>Note the zone designation (X, AE, VE, etc.) and any Base Flood Elevation.</li>
-            <li>For AE/VE properties, request the seller's <strong>Elevation Certificate</strong> â it materially affects insurance pricing under Risk Rating 2.0.</li>
+            <li>For AE/VE properties, request the seller's <strong>Elevation Certificate</strong> Ã¢ÂÂ it materially affects insurance pricing under Risk Rating 2.0.</li>
             <li>Get a flood insurance quote before removing the financing contingency.</li>
           </ol>
           <p className="mt-3 text-xs text-gray-500 italic">
@@ -151,6 +152,7 @@ export default function FloodZonesHamptonRoads() {
           Sources: <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA Flood Map Service Center</a>; <a href="https://www.fema.gov/flood-insurance/risk-rating" target="_blank" rel="noopener noreferrer" className="underline">FEMA Risk Rating 2.0</a>; <a href="https://www.va.gov/housing-assistance/home-loans/" target="_blank" rel="noopener noreferrer" className="underline">VA Home Loans</a>; <a href="https://www.vims.edu" target="_blank" rel="noopener noreferrer" className="underline">VIMS</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

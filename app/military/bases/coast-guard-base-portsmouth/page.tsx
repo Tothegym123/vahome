@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Coast Guard Base Portsmouth: Living, Housing & PCS Guide | VaHome",
@@ -131,6 +132,7 @@ export default function CoastGuardBasePortsmouthPage() {
           Sources: <a href="https://www.atlanticarea.uscg.mil" target="_blank" rel="noopener noreferrer" className="underline">USCG Atlantic Area</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Norfolk (2026) | VaHome",
@@ -114,6 +115,7 @@ export default function NorfolkNeighborhoodsPage() {
           Sources: <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>; <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline">Virginia DOE</a>; <a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>; <a href="https://cnrma.cnic.navy.mil/Installations/NAVSTA-Norfolk/" target="_blank" rel="noopener noreferrer" className="underline">CNIC NSN</a>.
         </p>
       </section>
+      <HamptonRoadsAreaGuide />
     </main>
   );
 }
