@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
+import HamptonRoadsAreaGuide from '../../components/HamptonRoadsAreaGuide'
   getPostBySlug,
   getAllPosts,
   getAllCategories,
@@ -279,6 +280,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
           </aside>
         </div>
       </div>
+      <HamptonRoadsAreaGuide />
     </div>
   );
 }
