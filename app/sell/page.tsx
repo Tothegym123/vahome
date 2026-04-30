@@ -24,21 +24,21 @@ export default function SellPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-            <div className="text-3xl mb-3">ð</div>
+            <div className="text-3xl mb-3">=</div>
             <h3 className="font-bold text-gray-900 mb-2">Free Home Valuation</h3>
             <p className="text-sm text-gray-600">
               Real comps, real numbers, no AI guesses. We tour your home and price it to sell fast.
             </p>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-            <div className="text-3xl mb-3">ð¸</div>
+            <div className="text-3xl mb-3">=</div>
             <h3 className="font-bold text-gray-900 mb-2">Pro Photography &amp; Marketing</h3>
             <p className="text-sm text-gray-600">
               HDR photography, drone footage, video tours, and full MLS + Zillow + Realtor.com syndication.
             </p>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-            <div className="text-3xl mb-3">ð¤</div>
+            <div className="text-3xl mb-3">></div>
             <h3 className="font-bold text-gray-900 mb-2">Negotiation &amp; Closing</h3>
             <p className="text-sm text-gray-600">
               We handle every offer, inspection, and contingency to get you to a smooth closing.
