@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
+import BaseCompanionLinks from '../../../components/BaseCompanionLinks'
 
 export const metadata: Metadata = {
   title: "JEB Little Creek-Fort Story Housing & Relocation Guide (2026) | VaHome",
@@ -93,7 +94,7 @@ export default function JEBLittleCreekPage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Where JEB Sailors and Soldiers Live</h2>
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { city: "Norfolk (East Beach, Bayview)", note: "Direct, short commute. Beach-adjacent. Some homes in AE flood zone Ã¢ÂÂ verify per-address." },
+              { city: "Norfolk (East Beach, Bayview)", note: "Direct, short commute. Beach-adjacent. Some homes in AE flood zone ÃÂ¢ÃÂÃÂ verify per-address." },
               { city: "Norfolk (Larchmont, Ghent)", note: "Historic Norfolk neighborhoods, walkable, ~15 min commute." },
               { city: "Virginia Beach (Ocean Park, Cape Story)", note: "North VB, beach-adjacent, established homes. Direct to Little Creek." },
               { city: "Virginia Beach (Birdneck, Lynnhaven)", note: "Inland VB, mostly X flood zone, longer commute via Shore Dr." },
@@ -162,6 +163,7 @@ export default function JEBLittleCreekPage() {
         </p>
       </section>
       <HamptonRoadsAreaGuide />
+      <BaseCompanionLinks baseSlug="jeb-little-creek-fort-story" baseName="JEB Little Creek-Fort Story" />
     </main>
   );
 }
