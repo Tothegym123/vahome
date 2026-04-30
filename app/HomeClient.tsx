@@ -7,7 +7,8 @@ import Link from 'next/link'
 import { useAuth } from './components/AuthProvider'
 import MortgageCalculator from './components/mortgage/MortgageCalculator'
 import PremiumTeaser from './components/P
-import HamptonRoadsAreaGuide from './components/HamptonRoadsAreaGuide'remiumTeaser'
+remiumTeaser'
+import HamptonRoadsAreaGuide from './components/HamptonRoadsAreaGuide'
 
 declare global {
   interface Window {
