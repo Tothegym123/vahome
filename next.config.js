@@ -10,7 +10,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     
     // Cache optimized images for 60 days (immutable photos rarely change)
-    minimumCacheTTL: 5184000,
+    minimumCacheTTL: 31536000,
     
     // Allowed image sources
     remotePatterns: [
