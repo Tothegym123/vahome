@@ -6,8 +6,7 @@ import { getDutyStation } from './data/duty-stations'
 import Link from 'next/link'
 import { useAuth } from './components/AuthProvider'
 import MortgageCalculator from './components/mortgage/MortgageCalculator'
-import PremiumTeaser from './components/P
-remiumTeaser'
+import PremiumTeaser from './components/PremiumTeaser'
 import HamptonRoadsAreaGuide from './components/HamptonRoadsAreaGuide'
 
 declare global {
