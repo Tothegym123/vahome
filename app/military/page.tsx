@@ -95,7 +95,7 @@ export default function MilitaryHomePage() {
             href="/military/relocation/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">🗺️</div>
+            <div className="text-3xl mb-3">ð—ºï¸—</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Relocation guide</h2>
             <p className="text-gray-600 text-sm">
               Complete 2026 guide to Hampton Roads &mdash; every base, every city, schools, BAH, VA loans, flood zones, PCS season.
@@ -107,7 +107,7 @@ export default function MilitaryHomePage() {
             href="/military/bah-calculator/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">🧮</div>
+            <div className="text-3xl mb-3">ð—§®</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">BAH calculator</h2>
             <p className="text-gray-600 text-sm">
               2026 Norfolk MHA rates by paygrade &amp; dependents. See your max affordable home price &mdash; then jump straight to listings in range.
@@ -119,7 +119,7 @@ export default function MilitaryHomePage() {
             href="/military/va-loan-homes/hampton-roads/"
             className="block border border-gray-200 rounded-2xl p-6 hover:border-blue-500 hover:shadow-md transition"
           >
-            <div className="text-3xl mb-3">🏡</div>
+            <div className="text-3xl mb-3">ð—¡</div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">VA loan homes</h2>
             <p className="text-gray-600 text-sm">
               $0 down. No PMI. 2026 limits, eligibility, funding fee. Browse VA-eligible homes across Hampton Roads.
