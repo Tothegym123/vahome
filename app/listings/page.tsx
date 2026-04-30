@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import HamptonRoadsAreaGuide from '../components/HamptonRoadsAreaGuide'
 
 const CITY_INTROS: Record<string, string> = {
   "virginia-beach": "Virginia Beach is the largest city in Hampton Roads and one of Virginia's most desirable real estate markets. Home buyers here can choose from oceanfront condos along the boardwalk, golf-course communities in Kempsville, established family neighborhoods in Great Neck, and waterfront properties along the Lynnhaven River. The city's combination of strong public schools, mild coastal climate, and proximity to Naval Air Station Oceana keeps housing demand consistent year-round. The median home price in Virginia Beach typically tracks slightly above the regional average, with active inventory ranging from sub-$300K starter homes to multi-million-dollar luxury estates. The VaHome team specializes in Virginia Beach real estate and can help you navigate everything from VA loan eligibility to school zone boundaries.",
@@ -102,7 +103,8 @@ export default function ListingsPage({
             Property listings from REIN MLS will appear here once the data feed is connected.
           </p>
         </div>
-      </div>
+      </div>      <HamptonRoadsAreaGuide />
+
     </div>
   )
 }
