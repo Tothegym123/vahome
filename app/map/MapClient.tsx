@@ -399,7 +399,7 @@ export default function MapClient() {
     fetchMapDataRef.current = fetchMapData;
   }, [fetchMapData]);
 
-  // Create marker SVG icon - returns data URI
+  // Create marker SVG icon - returns data URI (used for video markers)
   const createMarkerIcon = (color: string, isVideo = false): string => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
       <circle cx="16" cy="16" r="12" fill="${color}" stroke="white" stroke-width="2"/>
@@ -407,6 +407,32 @@ export default function MapClient() {
     </svg>`;
     const encoded = encodeURIComponent(svg);
     return `data:image/svg+xml,${encoded}`;
+  };
+
+  // Build a pill-shaped marker icon. When `price` is provided, the pill is
+  // wider and contains the price label centered inside.
+  const buildPillIcon = (color: string, price?: string): any => {
+    if (price && typeof google !== 'undefined' && google.maps) {
+      const w = Math.max(48, price.length * 8 + 14);
+      const h = 22;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect x="1" y="1" width="${w-2}" height="${h-2}" rx="10" fill="${color}" stroke="white" stroke-width="1.5"/><text x="${w/2}" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle">${price}</text></svg>`;
+      return {
+        url: `data:image/svg+xml,${encodeURIComponent(svg)}`,
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, h / 2),
+      };
+    }
+    // Compact pill (no price text) for zoomed-out views
+    const w = 28, h = 14;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect x="1" y="1" width="${w-2}" height="${h-2}" rx="6" fill="${color}" stroke="white" stroke-width="2"/></svg>`;
+    if (typeof google !== 'undefined' && google.maps) {
+      return {
+        url: `data:image/svg+xml,${encodeURIComponent(svg)}`,
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, h / 2),
+      };
+    }
+    return `data:image/svg+xml,${encodeURIComponent(svg)}`;
   };
 
   // Google Maps API key for Script component
@@ -537,13 +563,17 @@ export default function MapClient() {
     infoWindowsRef.current.forEach((iw) => iw.close());
     infoWindowsRef.current.clear();
 
+    const PRICE_ZOOM_THRESHOLD = 13;
+    const initialZoom = mapRef.current?.getZoom?.() ?? 10;
+    const showPriceInitially = initialZoom >= PRICE_ZOOM_THRESHOLD;
+
     // Create new markers for each listing
     listings.forEach((listing) => {
       const color = getStatusColor(listing.status);
       const marker = new google.maps.Marker({
         position: { lat: listing.lat, lng: listing.lng },
         map: mapRef.current,
-        icon: createMarkerIcon(color),
+        icon: buildPillIcon(color, showPriceInitially ? listing.priceFormatted : undefined),
         title: listing.address,
       });
 
@@ -582,6 +612,24 @@ export default function MapClient() {
         setSelectedListing(listing);
       });
     });
+
+    // Update pill icons when zoom crosses the price threshold
+    const zoomListener = mapRef.current.addListener('zoom_changed', () => {
+      const z = mapRef.current?.getZoom?.() ?? 10;
+      const showPrice = z >= PRICE_ZOOM_THRESHOLD;
+      markersRef.current.forEach((m, id) => {
+        const l = listings.find((x) => x.id === id);
+        if (!l) return;
+        const c = getStatusColor(l.status);
+        m.setIcon(buildPillIcon(c, showPrice ? l.priceFormatted : undefined));
+      });
+    });
+
+    return () => {
+      if (zoomListener && typeof google !== 'undefined' && google.maps) {
+        google.maps.event.removeListener(zoomListener);
+      }
+    };
   }, [listings]);
 
   // Render video markers
