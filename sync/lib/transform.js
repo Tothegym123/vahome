@@ -144,13 +144,13 @@ export function transformRecord(rec) {
     // HOA / financial
     hoa_fee: num(pick(rec, 'AssociationFee', 'HOAFee')),
     hoa_frequency: pick(rec, 'AssociationFeeFrequency'),
-    annual_taxes: num(pick(rec, 'TaxAnnualAmount', 'TaxAmount')),
+    annual_taxes: num(pick(rec, 'TaxAmountApprox', 'TaxAnnualAmount', 'TaxAmount')),
     tax_year: num(pick(rec, 'TaxYear')),
 
     // Schools
-    elementary_school: pick(rec, 'ElementarySchool'),
-    middle_school: pick(rec, 'MiddleOrJuniorSchool', 'MiddleSchool'),
-    high_school: pick(rec, 'HighSchool'),
+    elementary_school: pick(rec, 'SchoolElementary', 'ElementarySchool'),
+    middle_school: pick(rec, 'SchoolMiddle', 'MiddleOrJuniorSchool', 'MiddleSchool'),
+    high_school: pick(rec, 'SchoolHighSchool', 'HighSchool'),
     school_district: pick(rec, 'SchoolDistrict'),
 
     // Listing meta
@@ -158,7 +158,7 @@ export function transformRecord(rec) {
     days_on_market: num(pick(rec, 'DaysOnMarket', 'DOM')),
     list_agent_name: pick(rec, 'ListAgentFullName', 'ListAgentName'),
     list_agent_mls_id: pick(rec, 'ListAgentMlsId'),
-    list_office_name: pick(rec, 'ListOfficeName'),
+    list_office_name: pick(rec, 'ListOfficeMain', 'ListOfficeName'),
     list_office_mls_id: pick(rec, 'ListOfficeMlsId'),
     co_list_agent_name: pick(rec, 'CoListAgentFullName'),
     buyer_agent_compensation: pick(rec, 'BuyerAgentCompensation'),
