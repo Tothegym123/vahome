@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { getListingByIdAsync, formatPriceFull } from '../../../lib/listings';
 import PropertyDetailClient from './PropertyDetailClient';
 
-export const revalidate = 60;
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: {
