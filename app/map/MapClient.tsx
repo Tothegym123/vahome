@@ -553,7 +553,7 @@ export default function MapClient() {
 
       const photoHtml = (listing as any).photo
         ? `<a href="/listings/${listing.id}/${listing.slug}" style="display:block;width:100%;height:160px;overflow:hidden;background:#f3f4f6;"><img src="${(listing as any).photo}" alt="${listing.address}" style="width:100%;height:100%;object-fit:cover;display:block;" /></a>`
-        : '';
+        : `<div style="width:100%;height:160px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:13px;font-style:italic;border-bottom:1px solid #e5e7eb;">No photos provided</div>`;
       const infoWindow = new google.maps.InfoWindow({
         content: `
           <div style="width:280px;font-family:sans-serif;">
