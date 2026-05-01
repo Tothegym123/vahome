@@ -1,5 +1,7 @@
 // Hampton Roads military installations
-// All in Norfolk/Portsmouth, VA MHA (code VA058) for BAH purposes.
+// MHA codes per DTMO 2026 BAH rate table:
+//   VA297 = Hampton/Newport News (Peninsula) — JBLE only
+//   VA298 = Norfolk/Portsmouth (Southside) — all other Hampton Roads bases
 // Coordinates verified via official base PCS guides and Google Maps; rounded to 4 decimals.
 
 export type DutyStation = {
@@ -20,7 +22,7 @@ export const DUTY_STATIONS: DutyStation[] = [
     branch: 'Navy',
     lat: 36.9476,
     lng: -76.3309,
-    mhaCode: 'VA058',
+    mhaCode: 'VA298',
   },
   {
     id: 'joint-base-langley-eustis',
@@ -31,7 +33,7 @@ export const DUTY_STATIONS: DutyStation[] = [
     // Using midpoint between the two installations for "near JBLE" search behavior.
     lat: 37.1112,
     lng: -76.4776,
-    mhaCode: 'VA058',
+    mhaCode: 'VA297',
   },
   {
     id: 'naval-air-station-oceana',
@@ -40,7 +42,7 @@ export const DUTY_STATIONS: DutyStation[] = [
     branch: 'Navy',
     lat: 36.8208,
     lng: -76.0331,
-    mhaCode: 'VA058',
+    mhaCode: 'VA298',
   },
   {
     id: 'naval-medical-center-portsmouth',
@@ -49,7 +51,7 @@ export const DUTY_STATIONS: DutyStation[] = [
     branch: 'Navy',
     lat: 36.8350,
     lng: -76.3025,
-    mhaCode: 'VA058',
+    mhaCode: 'VA298',
   },
   {
     id: 'coast-guard-base-portsmouth',
@@ -58,7 +60,7 @@ export const DUTY_STATIONS: DutyStation[] = [
     branch: 'Coast Guard',
     lat: 36.8211,
     lng: -76.2967,
-    mhaCode: 'VA058',
+    mhaCode: 'VA298',
   },
   {
     id: 'naval-support-activity-hampton-roads',
@@ -67,7 +69,7 @@ export const DUTY_STATIONS: DutyStation[] = [
     branch: 'Navy',
     lat: 36.9445,
     lng: -76.3220,
-    mhaCode: 'VA058',
+    mhaCode: 'VA298',
   },
   {
     id: 'naval-amphibious-base-little-creek',
@@ -76,7 +78,7 @@ export const DUTY_STATIONS: DutyStation[] = [
     branch: 'Navy',
     lat: 36.9226,
     lng: -76.1697,
-    mhaCode: 'VA058',
+    mhaCode: 'VA298',
   },
 ]
 
@@ -99,6 +101,4 @@ export function distanceMiles(lat1: number, lng1: number, lat2: number, lng2: nu
 // Approximate drive time (in minutes) from straight-line distance.
 // Hampton Roads metro: ~30 mph average door-to-door including arterial + interstate.
 // Multiply straight-line by 1.3 for typical road-network detour, then divide by 30 mph.
-export function approxDriveMinutes(straightLineMiles: number): number {
-  return Math.round((straightLineMiles * 1.3) / (30 / 60))
-}
+export function appr

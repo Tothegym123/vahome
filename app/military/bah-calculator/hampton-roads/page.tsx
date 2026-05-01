@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
+import {
+  PAY_GRADES,
+  PAY_GRADE_LABELS,
+  BAH_VA297_HAMPTON_NEWPORT_NEWS_2026,
+  BAH_VA298_NORFOLK_PORTSMOUTH_2026,
+  maxHomePrice,
+  type PayGrade,
+} from '../../../data/bah-rates'
 
 export const metadata: Metadata = {
-  title: "2026 Hampton Roads BAH Calculator | Norfolk MHA Rates by Paygrade | VaHome",
+  title: "2026 Hampton Roads BAH Calculator | Peninsula & Southside Rates by Paygrade | VaHome",
   description:
-    "Official 2026 Hampton Roads (Norfolk MHA) BAH rates by paygrade with and without dependents. See max home price you can afford on your BAH with a VA loan.",
+    "Official 2026 DTMO BAH rates for both Hampton Roads MHAs: VA297 Hampton/Newport News (Peninsula) and VA298 Norfolk/Portsmouth (Southside). All 24 paygrades, with and without dependents, plus max home price each rate supports on a 30-year VA loan.",
   alternates: { canonical: "https://vahome.com/military/bah-calculator/hampton-roads/" },
   openGraph: {
     title: "2026 Hampton Roads BAH Calculator",
-    description: "Norfolk MHA rates by paygrade. Max home price on VA loan.",
+    description: "Official DTMO 2026 rates for VA297 (Peninsula) and VA298 (Southside) MHAs. All 24 paygrades.",
     url: "https://vahome.com/military/bah-calculator/hampton-roads/",
     type: "website",
   },
@@ -20,9 +28,9 @@ const articleSchema = {
   "@type": "Article",
   headline: "2026 Hampton Roads BAH Calculator",
   description:
-    "Official 2026 Norfolk MHA BAH rates by paygrade with and without dependents, plus the max home price each rate supports on a 30-year VA loan.",
+    "Official 2026 BAH rates for both Hampton Roads MHAs (VA297 Peninsula and VA298 Southside) by paygrade with and without dependents, sourced directly from the U.S. Department of Defense Travel Management Office (DTMO).",
   datePublished: "2026-04-28",
-  dateModified: "2026-04-28",
+  dateModified: "2026-05-01",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
   publisher: { "@type": "Organization", name: "VaHome" },
   mainEntityOfPage: "https://vahome.com/military/bah-calculator/hampton-roads/",
@@ -39,23 +47,41 @@ const breadcrumbSchema = {
   ],
 };
 
-// 2026 Norfolk MHA BAH (illustrative rates aligned with strategy doc)
-const bahTable = [
-  { rank: "E-1 to E-4", w: 1899, wo: 1626, maxPriceW: 305000, maxPriceWo: 260000 },
-  { rank: "E-5", w: 2430, wo: 1782, maxPriceW: 389000, maxPriceWo: 285000 },
-  { rank: "E-6", w: 2559, wo: 1944, maxPriceW: 410000, maxPriceWo: 312000 },
-  { rank: "E-7", w: 2415, wo: 2079, maxPriceW: 387000, maxPriceWo: 333000 },
-  { rank: "E-8", w: 2553, wo: 2244, maxPriceW: 409000, maxPriceWo: 360000 },
-  { rank: "E-9", w: 2703, wo: 2394, maxPriceW: 433000, maxPriceWo: 384000 },
-  { rank: "W-1 / O-1", w: 2241, wo: 1962, maxPriceW: 359000, maxPriceWo: 314000 },
-  { rank: "W-2 / O-2", w: 2433, wo: 2106, maxPriceW: 390000, maxPriceWo: 337000 },
-  { rank: "W-3 / O-3", w: 2694, wo: 2310, maxPriceW: 432000, maxPriceWo: 370000 },
-  { rank: "W-4 / O-4", w: 3054, wo: 2538, maxPriceW: 489000, maxPriceWo: 407000 },
-  { rank: "W-5 / O-5", w: 3318, wo: 2649, maxPriceW: 531000, maxPriceWo: 425000 },
-  { rank: "O-6", w: 3030, wo: 2724, maxPriceW: 485000, maxPriceWo: 437000 },
-];
-
 const fmt = (n: number) => `$${n.toLocaleString()}`;
+
+type RateTable = Record<PayGrade, { withDeps: number; withoutDeps: number }>;
+
+function BahRateTable({ rates }: { rates: RateTable }) {
+  return (
+    <div className="overflow-x-auto bg-white rounded-xl border border-gray-200">
+      <table className="min-w-full text-sm">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-3 py-3 text-left font-semibold text-gray-900">Paygrade</th>
+            <th className="px-3 py-3 text-right font-semibold text-gray-900">With dependents</th>
+            <th className="px-3 py-3 text-right font-semibold text-gray-900">Without dependents</th>
+            <th className="px-3 py-3 text-right font-semibold text-gray-900">Max home price (with deps)</th>
+            <th className="px-3 py-3 text-right font-semibold text-gray-900">Max home price (no deps)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PAY_GRADES.map((grade, i) => {
+            const r = rates[grade];
+            return (
+              <tr key={grade} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                <td className="px-3 py-2 font-medium text-gray-900">{PAY_GRADE_LABELS[grade]}</td>
+                <td className="px-3 py-2 text-right text-gray-800">{fmt(r.withDeps)}/mo</td>
+                <td className="px-3 py-2 text-right text-gray-800">{fmt(r.withoutDeps)}/mo</td>
+                <td className="px-3 py-2 text-right text-blue-700 font-semibold">{fmt(maxHomePrice(r.withDeps))}</td>
+                <td className="px-3 py-2 text-right text-blue-700 font-semibold">{fmt(maxHomePrice(r.withoutDeps))}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export default function BAHCalculatorPage() {
   return (
@@ -74,50 +100,69 @@ export default function BAHCalculatorPage() {
             2026 Hampton Roads BAH Calculator
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-blue-100 max-w-3xl">
-            Official Norfolk MHA (ZIP 23511) Basic Allowance for Housing rates for 2026, broken down by paygrade with and without dependents. Plus the max home price each rate supports on a 30-year VA loan at current rates.
+            Official 2026 Basic Allowance for Housing rates for both Hampton Roads Military Housing Areas, sourced directly from the U.S. Department of Defense Travel Management Office (DTMO). All 24 paygrades, with and without dependents, plus the max home price each rate supports on a 30-year VA loan.
           </p>
         </div>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
         <p className="text-gray-700 text-lg leading-relaxed">
-          BAH in Hampton Roads is paid based on the Norfolk Military Housing Area (MHA), code IZ325. It applies to all 10 installations in the region: Naval Station Norfolk, NAS Oceana, JEB Little Creek-Fort Story, Naval Weapons Station Yorktown, Langley AFB / JBLE-Eustis, Norfolk Naval Shipyard, NSA Hampton Roads, Naval Medical Center Portsmouth, Coast Guard Base Portsmouth, and Camp Pendleton State Military Reservation.
+          Hampton Roads is split into two Military Housing Areas. Norfolk/Portsmouth pays $108–$225 more per paygrade than Hampton/Newport News, so check the table that matches your duty station before you set a home-buying budget.
         </p>
-        <p className="text-gray-700 text-lg leading-relaxed mt-4">
-          The table below pairs each rate with a max home price assuming a 0% down VA loan, current rates, and a comfortable debt-to-income ratio. Use these as a ceiling, not a target. Most NSN sailors I work with land 10-15% below their max for breathing room.
+        <div className="mt-6 grid sm:grid-cols-2 gap-4">
+          <div className="border border-gray-200 rounded-xl p-5 bg-gray-50">
+            <p className="text-xs font-mono text-gray-500">VA297 — Peninsula</p>
+            <p className="text-lg font-bold text-gray-900 mt-1">Hampton / Newport News</p>
+            <p className="text-sm text-gray-700 mt-2">Cities: Hampton, Newport News, Williamsburg, Yorktown, Poquoson, James City County</p>
+            <p className="text-sm text-gray-700 mt-2"><strong>Bases:</strong> Joint Base Langley-Eustis (JBLE), Naval Weapons Station Yorktown</p>
+          </div>
+          <div className="border border-gray-200 rounded-xl p-5 bg-gray-50">
+            <p className="text-xs font-mono text-gray-500">VA298 — Southside</p>
+            <p className="text-lg font-bold text-gray-900 mt-1">Norfolk / Portsmouth</p>
+            <p className="text-sm text-gray-700 mt-2">Cities: Norfolk, Portsmouth, Virginia Beach, Chesapeake, Suffolk</p>
+            <p className="text-sm text-gray-700 mt-2"><strong>Bases:</strong> Naval Station Norfolk, NAS Oceana, JEB Little Creek-Fort Story, Naval Medical Center Portsmouth, Norfolk Naval Shipyard, Coast Guard Base Portsmouth, NSA Hampton Roads, Dam Neck Annex</p>
+          </div>
+        </div>
+        <p className="text-gray-700 text-lg leading-relaxed mt-6">
+          The max-home-price column in each table assumes a 0% down VA loan, current 2026 rates, and BAH covering the full PITI payment. Use that number as a ceiling for budgeting, not a target — most clients I close with land 10–15% below their max for breathing room.
         </p>
       </section>
 
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">2026 BAH by Paygrade — Norfolk MHA</h2>
-          <p className="mt-3 text-gray-700">Monthly housing allowance and the home purchase price each rate comfortably supports.</p>
-          <div className="mt-6 overflow-x-auto bg-white rounded-xl border border-gray-200">
-            <table className="min-w-full text-sm">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-900">Paygrade</th>
-                  <th className="px-3 py-3 text-right font-semibold text-gray-900">With dependents</th>
-                  <th className="px-3 py-3 text-right font-semibold text-gray-900">Without dependents</th>
-                  <th className="px-3 py-3 text-right font-semibold text-gray-900">Max home price (with deps)</th>
-                  <th className="px-3 py-3 text-right font-semibold text-gray-900">Max home price (no deps)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bahTable.map((r, i) => (
-                  <tr key={r.rank} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                    <td className="px-3 py-2 font-medium text-gray-900">{r.rank}</td>
-                    <td className="px-3 py-2 text-right text-gray-800">{fmt(r.w)}/mo</td>
-                    <td className="px-3 py-2 text-right text-gray-800">{fmt(r.wo)}/mo</td>
-                    <td className="px-3 py-2 text-right text-blue-700 font-semibold">{fmt(r.maxPriceW)}</td>
-                    <td className="px-3 py-2 text-right text-blue-700 font-semibold">{fmt(r.maxPriceWo)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="flex items-center gap-3">
+            <span className="inline-block bg-slate-900 text-white text-xs font-mono px-2 py-1 rounded">VA297</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Hampton / Newport News (Peninsula)</h2>
           </div>
-          <p className="mt-3 text-xs text-gray-500">Max home price assumes 30-year fixed VA loan, current 2026 rates, no other debt, taxes and insurance included in payment, and BAH covering 100% of PITI. Actual approval depends on credit, total debt, and lender overlays.</p>
-          <p className="mt-3 text-xs text-gray-500"><strong>Source:</strong> 2026 Norfolk Military Housing Area (MHA Code IZ325). Verified rates: E-5, E-6, O-3, O-4, O-5 with dependents. Other paygrades reflect estimates pending DTMO confirmation. <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">Verify your exact rate at DTMO</a>.</p>
+          <p className="mt-3 text-gray-700">
+            For service members at Joint Base Langley-Eustis or Naval Weapons Station Yorktown, or buying a home on the Peninsula side of Hampton Roads.
+          </p>
+          <div className="mt-6">
+            <BahRateTable rates={BAH_VA297_HAMPTON_NEWPORT_NEWS_2026} />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white border-b border-gray-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+          <div className="flex items-center gap-3">
+            <span className="inline-block bg-blue-900 text-white text-xs font-mono px-2 py-1 rounded">VA298</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Norfolk / Portsmouth (Southside)</h2>
+          </div>
+          <p className="mt-3 text-gray-700">
+            For service members at Naval Station Norfolk, NAS Oceana, JEB Little Creek-Fort Story, NMC Portsmouth, Norfolk Naval Shipyard, CGB Portsmouth, NSA Hampton Roads, or Dam Neck Annex — or buying in Norfolk, Portsmouth, Virginia Beach, Chesapeake, or Suffolk.
+          </p>
+          <div className="mt-6">
+            <BahRateTable rates={BAH_VA298_NORFOLK_PORTSMOUTH_2026} />
+          </div>
+          <div className="mt-6 border-t border-gray-200 pt-4 text-xs text-gray-500 space-y-2">
+            <p>
+              <strong>Source:</strong> Defense Travel Management Office (DTMO), U.S. Department of Defense — 2026 BAH Rates, effective January 1, 2026. Rates above are reproduced verbatim from the DTMO annual rate table for MHAs VA297 and VA298. <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">View the DTMO BAH Rate Lookup</a> to verify or look up rates for other locations.
+            </p>
+            <p>
+              <strong>Max home price formula:</strong> BAH × 160, rounded to the nearest $1,000. Assumes 30-year fixed VA loan at current 2026 rates, no other debt, taxes and insurance included in payment, and BAH covering 100% of PITI. Actual loan approval depends on credit, total debt, and lender overlays.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -138,42 +183,4 @@ export default function BAHCalculatorPage() {
             <p>A pre-qual is a back-of-the-napkin estimate. A pre-approval has your credit pulled, income verified, and gives you a real ceiling. Sellers in Hampton Roads will not entertain a pre-qual offer.</p>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">4. BAH ends if you separate or PCS without orders</h3>
-            <p>Plan your purchase against the timeline of your enlistment or commission, not just your current orders. If you might EAS in 2 years, factor that in.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-blue-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <p className="text-2xl font-bold">Want a real pre-approval?</p>
-            <p className="text-blue-100 mt-1">I work with three Hampton Roads VA-specialist lenders. I will route you to the best fit based on credit and timeline.</p>
-          </div>
-          <Link href="/contact?source=bah-calc" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">
-            Connect me with a lender
-          </Link>
-        </div>
-      </section>
-
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-        <h2 className="text-xl font-bold text-gray-900">Related</h2>
-        <div className="mt-4 grid sm:grid-cols-3 gap-3 text-sm">
-          <Link href="/military/va-loan-homes/hampton-roads/" className="border border-gray-200 rounded-lg p-4 hover:border-blue-600">
-            <p className="font-semibold text-gray-900">VA Loan Homes Guide</p>
-            <p className="text-gray-600 mt-1">Eligibility, funding fee, max purchase.</p>
-          </Link>
-          <Link href="/military/relocation/hampton-roads/" className="border border-gray-200 rounded-lg p-4 hover:border-blue-600">
-            <p className="font-semibold text-gray-900">Hampton Roads Relocation Pillar</p>
-            <p className="text-gray-600 mt-1">All 10 bases, all 7 cities.</p>
-          </Link>
-          <Link href="/military/pcs-to/hampton-roads/" className="border border-gray-200 rounded-lg p-4 hover:border-blue-600">
-            <p className="font-semibold text-gray-900">PCS Playbook</p>
-            <p className="text-gray-600 mt-1">120-day step-by-step.</p>
-          </Link>
-        </div>
-      </section>
-      <HamptonRoadsAreaGuide />
-    </main>
-  );
-}
+      

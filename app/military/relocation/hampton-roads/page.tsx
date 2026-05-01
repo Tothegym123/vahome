@@ -41,7 +41,7 @@ const bahTable = [
 
 const faqs = [
   { q: 'How many military bases are in Hampton Roads?', a: 'There are 10 major military installations in Hampton Roads: Naval Station Norfolk, NAS Oceana, JEB Little Creek-Fort Story, Joint Base Langley-Eustis (which includes both Langley AFB and Fort Eustis), Naval Medical Center Portsmouth, Norfolk Naval Shipyard, Coast Guard Base Portsmouth, Dam Neck Annex, and Naval Weapons Station Yorktown.' },
-  { q: 'What\'s the BAH for Hampton Roads in 2026?', a: 'The Norfolk MHA (military housing area code VA058) covers all of Hampton Roads. 2026 BAH ranges from approximately $1,758/month (E-1 with dependents) to $3,729/month (O-7+ with dependents). An E-5 with dependents receives $2,430/month; an O-3 with dependents receives $3,003/month.' },
+  { q: 'What\'s the BAH for Hampton Roads in 2026?', a: 'Hampton Roads is split into TWO Military Housing Areas per DTMO. VA298 Norfolk/Portsmouth (Southside — covers Norfolk, Portsmouth, Virginia Beach, Chesapeake, Suffolk; bases NSN, Oceana, Little Creek, NMCP, NSY, CGB Portsmouth) pays $108-225/mo more than VA297 Hampton/Newport News (Peninsula — covers Hampton, Newport News, Williamsburg, York County; bases JBLE and NWS Yorktown). 2026 examples with dependents: E-5 Southside $2,430 vs Peninsula $2,274; O-3 Southside $2,694 vs Peninsula $2,475. See the BAH calculator page for the full DTMO-sourced rate tables.' },
   { q: 'Can I use a VA loan in Hampton Roads?', a: 'Yes. Hampton Roads is one of the most VA-loan-friendly markets in the country. The 2026 county loan limit for most of the region is $766,550. Most sellers accept VA offers without issue.' },
   { q: 'Which Hampton Roads cities have the best schools for military families?', a: 'By overall public school ranking: York County, Williamsburg-James City, and Virginia Beach City Public Schools are typically the top three. Portsmouth, Norfolk, and Hampton have improving districts with strong magnet programs.' },
   { q: 'How early should I start my Hampton Roads PCS home search?', a: '90 days before your report-no-later date is ideal, especially for summer PCS season (May-August). Start with VA loan pre-approval, then connect with a Hampton Roads agent who handles military relocations regularly.' },
@@ -191,7 +191,7 @@ export default function HamptonRoadsRelocationPage() {
         <section className="mb-12 bg-gray-50 rounded-2xl p-6">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Hampton Roads BAH 2026: what it covers</h2>
           <p className="text-gray-700 mb-4">
-            The Norfolk Military Housing Area (MHA, code VA058) covers all of Hampton Roads. Selected 2026 BAH rates:
+            Hampton Roads is split into two Military Housing Areas per DTMO: <strong>VA298 Norfolk/Portsmouth</strong> (Southside — Norfolk, Portsmouth, Virginia Beach, Chesapeake, Suffolk) and <strong>VA297 Hampton/Newport News</strong> (Peninsula — Hampton, Newport News, Williamsburg, York County). Norfolk/Portsmouth pays $108-225 more per paygrade. Selected 2026 Southside (VA298) BAH rates with dependents:
           </p>
           <div className="overflow-x-auto mb-4">
             <table className="w-full text-sm">
@@ -297,11 +297,4 @@ export default function HamptonRoadsRelocationPage() {
       </section>
     
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-8">
-        <p className="text-xs text-gray-500">
-          Sources: <a href="https://www.hrmffa.org/about-us" target="_blank" rel="noopener noreferrer" className="underline">HRMFFA</a> (installations + personnel); <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a> (Jan 2026 median); <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH Calculator</a> (2026 Norfolk MHA rates).
-        </p>
-      </section>
-      <HamptonRoadsAreaGuide />
-    </main>
-  )
-}
+        <p className="text-xs te

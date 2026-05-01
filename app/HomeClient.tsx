@@ -106,7 +106,7 @@ export default function HomeClient() {
   const [withDependents, setWithDependents] = useState(true)
   const bahCap = useMemo(() => {
     const station = getDutyStation(dutyStation)
-    return getBah(station?.mhaCode || 'VA058', payGrade, withDependents)
+    return getBah(station?.mhaCode || 'VA298', payGrade, withDependents)
   }, [dutyStation, payGrade, withDependents])
 
   const handleMilitarySearch = () => {

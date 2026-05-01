@@ -45,7 +45,7 @@ const neighborhoods = [
 const faqs = [
   { q: 'What\'s the average commute time to Naval Station Norfolk?', a: 'From central Norfolk, 10 minutes. From central Virginia Beach, 25 minutes. From Chesapeake, 25 minutes. From Portsmouth via Midtown Tunnel, 20 minutes (longer during peak hours).' },
   { q: 'Where do most NSN officers and senior enlisted live?', a: 'The most popular neighborhoods are Ghent and Larchmont in Norfolk (close-in, walkable), Kings Grant and Great Neck in Virginia Beach (better schools, longer commute), and Western Branch in Chesapeake (suburban, top-rated schools).' },
-  { q: 'What\'s the BAH for Naval Station Norfolk in 2026?', a: 'NSN is in the Norfolk MHA (VA058). 2026 BAH ranges from $1,758/month (E-1 with deps) to $3,729/month (O-7+ with deps). Use the BAH calculator for your specific paygrade.' },
+  { q: 'What\'s the BAH for Naval Station Norfolk in 2026?', a: 'NSN is in the Norfolk/Portsmouth MHA (DTMO code VA298). 2026 BAH with dependents ranges from $2,229/month (E-1 to E-4) to $3,366/month (O-7+); without dependents, $1,707 to $2,718. See the BAH calculator page for the full DTMO-sourced rate table by paygrade.' },
   { q: 'Can I use a VA loan to buy a home near Naval Station Norfolk?', a: 'Yes. About 60% of buyers near NSN use VA loans. The 2026 county loan limit is $766,550. Most NSN-area sellers are comfortable with VA offers.' },
   { q: 'Should I buy or rent for my Naval Station Norfolk tour?', a: 'Most E-5+ with dependents on a 24+ month tour come out ahead financially by buying with a VA loan, especially given Hampton Roads\' generally appreciating market.' },
   { q: 'How early should I start my NSN home search?', a: '90 days before your report-no-later date is ideal. Summer PCS season (May-August) inventory tightens fast.' },
@@ -158,7 +158,7 @@ export default function NavalStationNorfolkPage() {
         {/* BAH */}
         <section className="mb-12 bg-gray-50 rounded-2xl p-6">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">BAH near Naval Station Norfolk: what your paygrade covers</h2>
-          <p className="text-gray-700 mb-4">NSN is in the Norfolk MHA (VA058). Selected 2026 BAH rates and approximate home prices covered:</p>
+          <p className="text-gray-700 mb-4">NSN is in the Norfolk/Portsmouth MHA (DTMO code VA298). Selected 2026 BAH rates and approximate home prices covered:</p>
           <div className="overflow-x-auto mb-4">
             <table className="w-full text-sm bg-white rounded-lg overflow-hidden">
               <thead className="bg-gray-100">
@@ -296,7 +296,4 @@ export default function NavalStationNorfolkPage() {
         </p>
       </section>
       <HamptonRoadsAreaGuide />
-      <BaseCompanionLinks baseSlug="naval-station-norfolk" baseName="Naval Station Norfolk" />
-    </main>
-  )
-}
+   
