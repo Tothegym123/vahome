@@ -126,7 +126,9 @@ export async function GET(request: NextRequest) {
 
     // Edge cache: 60s fresh, 5m stale-while-revalidate. The map fires this on
     // every pan/zoom; cache absorbs the burst without hammering Supabase.
-    res.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
+    // Cache disabled while listings table is being seeded with real REIN data.
+    // Re-enable as 'public, s-maxage=60, stale-while-revalidate=300' once feed is reliably flowing.
+    res.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate')
     return res
   } catch (e) {
     console.error('[map-listings] exception', e)
