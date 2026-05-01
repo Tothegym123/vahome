@@ -1,5 +1,75 @@
 import { Metadata } from "next";
+import { createClient } from '@supabase/supabase-js';
 import HamptonRoadsAreaGuide from '../components/HamptonRoadsAreaGuide'
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+const PAGE_SIZE = 60;
+const VISIBLE_STATUSES = ['Active', 'Pending', 'Contingent'];
+
+function generateSlug(address: string, city: string, state: string, zip: string): string {
+  return [address, city, state, zip]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
+
+function sb() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error('Supabase env vars missing');
+  return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
+}
+
+async function fetchListings(searchParams: { city?: string; q?: string; page?: string }) {
+  const supabase = sb();
+  const page = Math.max(1, parseInt(searchParams.page || '1', 10) || 1);
+  const offset = (page - 1) * PAGE_SIZE;
+
+  let q = supabase
+    .from('listings')
+    .select('id, address, city, state, zip, price, beds, baths, sqft, status, photos, mls_number', { count: 'exact' })
+    .in('status', VISIBLE_STATUSES)
+    .eq('excluded', false)
+    .is('removed_at', null)
+    .gt('price', 0)
+    .order('price', { ascending: false })
+    .range(offset, offset + PAGE_SIZE - 1);
+
+  if (searchParams.city) {
+    q = q.ilike('city', searchParams.city.replace(/-/g, ' '));
+  }
+  if (searchParams.q) {
+    const term = `%${searchParams.q}%`;
+    q = q.or(`address.ilike.${term},city.ilike.${term},zip.ilike.${term},mls_number.ilike.${term}`);
+  }
+
+  const { data, count, error } = await q;
+  if (error) {
+    console.error('[/listings] supabase error', error);
+    return { listings: [], total: 0, page };
+  }
+  const listings = (data || []).map((r: any) => ({
+    id: r.id,
+    address: r.address,
+    city: r.city,
+    state: r.state,
+    zip: r.zip,
+    price: r.price ?? 0,
+    beds: r.beds ?? 0,
+    baths: r.baths != null ? Number(r.baths) : 0,
+    sqft: r.sqft ?? 0,
+    status: r.status,
+    photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : null,
+    mls_number: r.mls_number,
+    slug: generateSlug(r.address, r.city, r.state, r.zip),
+  }));
+  return { listings, total: count || 0, page };
+}
 
 const CITY_INTROS: Record<string, string> = {
   "virginia-beach": "Virginia Beach is the largest city in Hampton Roads and one of Virginia's most desirable real estate markets. Home buyers here can choose from oceanfront condos along the boardwalk, golf-course communities in Kempsville, established family neighborhoods in Great Neck, and waterfront properties along the Lynnhaven River. The city's combination of strong public schools, mild coastal climate, and proximity to Naval Air Station Oceana keeps housing demand consistent year-round. The median home price in Virginia Beach typically tracks slightly above the regional average, with active inventory ranging from sub-$300K starter homes to multi-million-dollar luxury estates. The VaHome team specializes in Virginia Beach real estate and can help you navigate everything from VA loan eligibility to school zone boundaries.",
@@ -41,11 +111,21 @@ export function generateMetadata({ searchParams }: { searchParams: { city?: stri
   };
 }
 
-export default function ListingsPage({
+export default async function ListingsPage({
   searchParams,
 }: {
-  searchParams: { city?: string; q?: string };
+  searchParams: { city?: string; q?: string; page?: string };
 }) {
+  const { listings, total, page } = await fetchListings(searchParams);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const buildPageUrl = (n: number) => {
+    const params = new URLSearchParams();
+    if (searchParams.city) params.set('city', searchParams.city);
+    if (searchParams.q) params.set('q', searchParams.q);
+    if (n > 1) params.set('page', String(n));
+    const qs = params.toString();
+    return qs ? `/listings?${qs}` : '/listings';
+  };
   return (
     <div className="pt-20 min-h-screen">
       {/* Search / Filter Bar */}
@@ -90,19 +170,59 @@ export default function ListingsPage({
               </section>
             );
           })()}
-          <span className="text-sm text-gray-500">0 results</span>
+          <span className="text-sm text-gray-500">{total.toLocaleString()} {total === 1 ? 'result' : 'results'}</span>
         </div>
 
-        {/* Placeholder for listings grid */}
-        <div className="bg-gray-50 rounded-2xl p-16 text-center">
-          <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-          </svg>
-          <h2 className="text-xl font-semibold text-gray-600 mb-2">MLS Integration Coming Soon</h2>
-          <p className="text-gray-400 max-w-md mx-auto">
-            Property listings from REIN MLS will appear here once the data feed is connected.
-          </p>
-        </div>
+        {listings.length === 0 ? (
+          <div className="bg-gray-50 rounded-2xl p-16 text-center">
+            <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+            <h2 className="text-xl font-semibold text-gray-600 mb-2">No listings found</h2>
+            <p className="text-gray-400 max-w-md mx-auto">Try adjusting your search or browse all <a className="text-blue-600 hover:underline" href="/listings">Hampton Roads listings</a>.</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {listings.map((l) => (
+                <a key={l.id} href={`/listings/${l.id}/${l.slug}`} className="block bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+                  <div className="aspect-[4/3] bg-gray-100 relative">
+                    {l.photo ? (
+                      <img src={l.photo} alt={l.address} className="w-full h-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm italic">No photo provided</div>
+                    )}
+                    {l.status && l.status !== 'Active' && (
+                      <span className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">{l.status}</span>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <p className="text-2xl font-bold text-gray-900">${l.price.toLocaleString()}</p>
+                    <p className="text-sm text-gray-700 mt-1 line-clamp-1">{l.address}</p>
+                    <p className="text-xs text-gray-500">{l.city}, {l.state} {l.zip}</p>
+                    <div className="flex gap-3 mt-2 text-xs text-gray-600">
+                      {l.beds > 0 && <span><span className="font-semibold text-gray-900">{l.beds}</span> bd</span>}
+                      {l.baths > 0 && <span><span className="font-semibold text-gray-900">{l.baths}</span> ba</span>}
+                      {l.sqft > 0 && <span><span className="font-semibold text-gray-900">{l.sqft.toLocaleString()}</span> sqft</span>}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-10">
+                {page > 1 ? (
+                  <a href={buildPageUrl(page - 1)} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">← Previous</a>
+                ) : <span />}
+                <span className="text-sm text-gray-500">Page {page} of {totalPages.toLocaleString()}</span>
+                {page < totalPages ? (
+                  <a href={buildPageUrl(page + 1)} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">Next →</a>
+                ) : <span />}
+              </div>
+            )}
+          </>
+        )}
       </div>      <HamptonRoadsAreaGuide />
 
     </div>
