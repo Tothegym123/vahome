@@ -57,13 +57,31 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await put(path, buffer, {
-      contentType: contentType || 'image/webp',
-      access: 'public',
-      addRandomSuffix: false,
-      allowOverwrite: true,
-      cacheControlMaxAge: 31536000,
-    });
+    let result;
+    try {
+      result = await put(path, buffer, {
+        contentType: contentType || 'image/webp',
+        access: 'public',
+        addRandomSuffix: false,
+        cacheControlMaxAge: 31536000,
+      });
+    } catch (putErr: any) {
+      // If the blob already exists at the same path, treat as success
+      // and synthesize the public URL. (put() throws when overwriting on
+      // some @vercel/blob versions.)
+      const msg = putErr?.message || String(putErr);
+      if (msg.toLowerCase().includes('already exists') || msg.toLowerCase().includes('duplicate')) {
+        // Construct the public URL from the store's base URL pattern
+        const storeUrl = process.env.BLOB_STORE_URL ||
+          'https://ygt5tyjqhiu1adp2.public.blob.vercel-storage.com';
+        return NextResponse.json({
+          url: `${storeUrl}/${path}`,
+          pathname: path,
+          overwritten: true,
+        });
+      }
+      throw putErr;
+    }
     return NextResponse.json({ url: result.url, pathname: result.pathname });
   } catch (err: any) {
     return NextResponse.json(
