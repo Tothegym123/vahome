@@ -21,6 +21,7 @@ import {
   startIngestionRun,
   finishIngestionRun,
   getLastSuccessfulSyncCursor,
+  fetchExistingByMls,
 } from './lib/upsert-supabase.js';
 
 const args = process.argv.slice(2);
@@ -107,20 +108,26 @@ async function main() {
     }
 
     // ---- Fetch + upload photos ----------------------------------------
-    // Photos within a listing upload in concurrent batches to keep latency
-    // bounded without overwhelming Vercel Blob or REIN.
-    //   - PHOTO_CONCURRENCY: parallelism per listing (5 = ~5x speedup,
-    //     well below Vercel function concurrent-execution caps)
-    //   - PHOTO_TIMEOUT_MS: hard cap per upload (uploadPhoto already has
-    //     3 internal retries; this is the wall-clock backstop)
-    //   - LISTING_TIMEOUT_MS: bail on a listing if its full pipeline (fetch
-    //     + optimize + upload-all-photos) takes too long; one bad listing
-    //     cannot stall the run
-    const PHOTO_CONCURRENCY = 5;
+    // Three-layer optimization:
+    //   1. SKIP: if a listing's PhotoModificationTimestamp matches what's in
+    //      the DB AND we already have its photos, reuse the existing URLs.
+    //   2. PARALLEL: process LISTING_CONCURRENCY listings concurrently
+    //      (each runs its own fetch + optimize + upload pipeline).
+    //   3. CONCURRENT UPLOADS: within a listing, upload PHOTO_CONCURRENCY
+    //      photos in parallel batches.
+    // All bounded by per-photo and per-listing timeouts so no single bad
+    // listing or stuck upload can stall the run.
+    const LISTING_CONCURRENCY = parseInt(process.env.LISTING_CONCURRENCY || '3', 10);
+    const PHOTO_CONCURRENCY = parseInt(process.env.PHOTO_CONCURRENCY || '5', 10);
     const PHOTO_TIMEOUT_MS = 90_000;
     const LISTING_TIMEOUT_MS = 5 * 60_000;
     const PROGRESS_EVERY = 25;
     const photoUrlMap = new Map();
+
+    // Pre-fetch existing listings for the photo-reuse check
+    const existingForPhotos = await fetchExistingByMls(rows.map((r) => r.mls_number));
+    let stats_skipped = 0;
+    let stats_reused_photos = 0;
 
     const withTimeout = (promise, ms, label) =>
       Promise.race([
@@ -133,11 +140,43 @@ async function main() {
         ),
       ]);
 
-    let listingIdx = 0;
-    for (const row of rows) {
-      listingIdx++;
+    // Worker function — handles one listing end-to-end
+    const processListing = async (row, listingIdx) => {
       const listingStart = Date.now();
       try {
+        // SKIP CHECK: if photo_modified_at is unchanged and we already have
+        // photos in the DB, reuse them (no fetch, no upload).
+        const existing = existingForPhotos.get(row.mls_number);
+        const existingPMT = existing?.photo_modified_at;
+        const newPMT = row.photo_modified_at;
+        const existingPhotos = existing?.photos;
+        const pmtMatches =
+          existingPMT &&
+          newPMT &&
+          new Date(existingPMT).getTime() === new Date(newPMT).getTime();
+        if (
+          pmtMatches &&
+          Array.isArray(existingPhotos) &&
+          existingPhotos.length > 0
+        ) {
+          photoUrlMap.set(row.mls_number, existingPhotos);
+          stats_skipped++;
+          stats_reused_photos += existingPhotos.length;
+          if (listingIdx % PROGRESS_EVERY === 0) {
+            logger.info(
+              {
+                progress: `${listingIdx}/${rows.length}`,
+                totalUploaded: stats.photosUploaded,
+                totalFailed: stats.photoFailures,
+                listingsSkipped: stats_skipped,
+                photosReused: stats_reused_photos,
+              },
+              'sync progress'
+            );
+          }
+          return;
+        }
+
         const photos = await withTimeout(
           fetchAndProcessPhotos(row.matrix_unique_id || row.mls_number),
           LISTING_TIMEOUT_MS,
@@ -151,11 +190,12 @@ async function main() {
                 progress: `${listingIdx}/${rows.length}`,
                 totalUploaded: stats.photosUploaded,
                 totalFailed: stats.photoFailures,
+                listingsSkipped: stats_skipped,
               },
               'sync progress'
             );
           }
-          continue;
+          return;
         }
 
         const urls = new Array(photos.length);
@@ -225,7 +265,25 @@ async function main() {
         );
         stats.photoFailures++;
       }
+    };
+
+    // Run listings in concurrent batches
+    for (let i = 0; i < rows.length; i += LISTING_CONCURRENCY) {
+      const batch = rows.slice(i, i + LISTING_CONCURRENCY);
+      await Promise.all(
+        batch.map((row, j) => processListing(row, i + j + 1))
+      );
     }
+
+    logger.info(
+      {
+        listingsSkipped: stats_skipped,
+        photosReused: stats_reused_photos,
+        photosUploaded: stats.photosUploaded,
+        photosFailed: stats.photoFailures,
+      },
+      'photo phase complete'
+    );
 
     // ---- Upsert -------------------------------------------------------
     const upsertResult = await upsertListings(rows, photoUrlMap);

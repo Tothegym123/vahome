@@ -26,6 +26,7 @@ const VALID_COLUMNS = new Set([
   'hoa_fee','hoa_frequency','elementary_school','middle_school','high_school',
   'tax_amount','tax_year','price_per_sqft','excluded','raw','mls_modified','last_seen_at',
   'coordinate_source','geocoded_at','geocode_status','address_hash',
+  'photo_modified_at',
 ]);
 
 // Map transform-emitted field names to the actual schema column names.
@@ -80,7 +81,7 @@ export async function fetchExistingByMls(mlsNumbers) {
     const slice = mlsNumbers.slice(i, i + 1000);
     const { data, error } = await supabase
       .from('listings')
-      .select('mls_number, price, status, photos')
+      .select('mls_number, price, status, photos, photo_modified_at')
       .in('mls_number', slice);
     if (error) throw new Error(`Supabase fetch existing failed: ${error.message}`);
     for (const r of (data || [])) out.set(r.mls_number, r);

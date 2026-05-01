@@ -168,6 +168,7 @@ export function transformRecord(rec) {
 
     // Timestamps
     modification_timestamp: dateOrNull(pick(rec, 'MatrixModifiedDT', 'ModificationTimestamp', 'ModificationTime', 'ListingModificationTimestamp')),
+    photo_modified_at: dateOrNull(pick(rec, 'PhotoModificationTimestamp', 'PhotoModified')),
     status_change_timestamp: dateOrNull(pick(rec, 'StatusChangeTimestamp')),
     close_date: dateOrNull(pick(rec, 'CloseDate')),
     close_price: num(pick(rec, 'ClosePrice')),
