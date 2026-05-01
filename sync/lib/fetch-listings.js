@@ -5,6 +5,9 @@ import { logger } from './logger.js';
 
 export async function fetchAllListings({ modifiedAfter = null, pageSize = 200 } = {}) {
   const authType = (process.env.REIN_AUTH_TYPE || 'reso').toLowerCase();
+  // MAX_RECORDS env var caps the total number of listings fetched. Useful
+  // for smoke tests without pulling the entire feed (~7k listings).
+  const maxRecords = parseInt(process.env.MAX_RECORDS || '0', 10);
   const all = [];
   let page = 0;
 
@@ -29,16 +32,6 @@ export async function fetchAllListings({ modifiedAfter = null, pageSize = 200 } 
     if (!batch || batch.length === 0) break;
     all.push(...batch);
     logger.info({ page, fetched: batch.length, total: all.length }, 'listings page fetched');
-    if (batch.length < pageSize) break;
-    page++;
 
-    // Safety stop — should never hit this with a real feed but prevents
-    // an infinite loop if pagination metadata is wrong
-    if (page > 500) {
-      logger.warn({ page }, 'pagination safety stop hit');
-      break;
-    }
-  }
-
-  return all;
-}
+    // Stop early if MAX_RECORDS cap reached
+    if (maxRecords > 0 && all.length >= maxRecor

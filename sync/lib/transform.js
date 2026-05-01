@@ -66,31 +66,31 @@ export function transformRecord(rec) {
 
   return {
     mls_number: mlsNumber,
-    address: pick(rec, 'UnparsedAddress', 'StreetAddress', 'Address', 'L_Address'),
-    street_number: pick(rec, 'StreetNumber'),
-    street_name: pick(rec, 'StreetName'),
+    address: pick(rec, 'UnparsedAddress', 'AddressLine', 'AddressWebsite', 'StreetAddress', 'Address', 'L_Address'),
+    street_number: pick(rec, 'StreetNumber', 'AddressStreetNumWebsite'),
+    street_name: pick(rec, 'StreetName', 'AddressStreetNameWebsite'),
     unit: pick(rec, 'UnitNumber', 'Unit'),
     city: pick(rec, 'City', 'L_City'),
     state: pick(rec, 'StateOrProvince', 'State') || 'VA',
     zip: pick(rec, 'PostalCode', 'Zip', 'ZipCode'),
     county: pick(rec, 'CountyOrParish', 'County'),
     subdivision: pick(rec, 'SubdivisionName', 'Subdivision'),
-    neighborhood: pick(rec, 'MLSAreaMajor', 'Neighborhood'),
+    neighborhood: pick(rec, 'NeighborhoodName', 'MLSAreaMajor', 'Neighborhood'),
 
-    price: num(pick(rec, 'ListPrice', 'L_AskingPrice')) ?? 0,
+    price: num(pick(rec, 'CurrentPrice', 'ListPrice', 'L_AskingPrice')) ?? 0,
     original_price: num(pick(rec, 'OriginalListPrice')),
-    beds: num(pick(rec, 'BedroomsTotal', 'Beds', 'Bedrooms')),
-    baths: num(pick(rec, 'BathroomsTotalInteger', 'BathroomsTotalDecimal', 'BathroomsTotal', 'Baths')),
-    half_baths: num(pick(rec, 'BathroomsHalf', 'HalfBaths')),
-    sqft: num(pick(rec, 'LivingArea', 'BuildingAreaTotal', 'Sqft', 'SqFtTotal')),
-    lot_size: pick(rec, 'LotSizeArea', 'LotSize', 'LotSizeAcres', 'LotSizeDimensions'),
-    year_built: num(pick(rec, 'YearBuilt')),
-    stories: num(pick(rec, 'StoriesTotal', 'Stories')),
-    garage: pick(rec, 'GarageSpaces', 'Garage'),
+    beds: num(pick(rec, 'BedsTotal', 'BedroomsTotal', 'Beds', 'Bedrooms')),
+    baths: num(pick(rec, 'BathsTotal', 'BathroomsTotalInteger', 'BathroomsTotalDecimal', 'BathroomsTotal', 'Baths')),
+    half_baths: num(pick(rec, 'BathsHalf', 'BathroomsHalf', 'HalfBaths')),
+    sqft: num(pick(rec, 'SqFtTotal', 'LivingArea', 'BuildingAreaTotal', 'Sqft')),
+    lot_size: pick(rec, 'AcresApprox', 'LotSizeArea', 'LotSize', 'LotSizeAcres', 'LotSizeDimensions'),
+    year_built: num(pick(rec, 'YearBuiltApprox', 'YearBuilt')),
+    stories: num(pick(rec, 'StoriesNumber', 'StoriesTotal', 'Stories')),
+    garage: pick(rec, 'GarageSpaces', 'GarageSquareFeet', 'Garage'),
 
-    property_type: pick(rec, 'PropertyType', 'PropertySubType', 'L_PropertyType'),
+    property_type: pick(rec, 'PropertyType', 'PropertyTypeCrossProp', 'PropertySubType', 'L_PropertyType'),
     property_subtype: pick(rec, 'PropertySubType'),
-    status: pick(rec, 'StandardStatus', 'MlsStatus', 'Status', 'L_Status') || 'Active',
+    status: pick(rec, 'PublicStatus', 'StandardStatus', 'MlsStatus', 'Status', 'L_Status') || 'Active',
 
     description: pick(rec, 'PublicRemarks', 'Remarks', 'Description', 'L_Remarks'),
     private_remarks: pick(rec, 'PrivateRemarks'),
@@ -149,7 +149,7 @@ export function transformRecord(rec) {
     excluded: isWebExcluded(rec),
 
     // Timestamps
-    modification_timestamp: dateOrNull(pick(rec, 'ModificationTimestamp', 'ModificationTime', 'ListingModificationTimestamp')),
+    modification_timestamp: dateOrNull(pick(rec, 'MatrixModifiedDT', 'ModificationTimestamp', 'ModificationTime', 'ListingModificationTimestamp')),
     status_change_timestamp: dateOrNull(pick(rec, 'StatusChangeTimestamp')),
     close_date: dateOrNull(pick(rec, 'CloseDate')),
     close_price: num(pick(rec, 'ClosePrice')),
@@ -190,10 +190,4 @@ export function extractOpenHouses(rec) {
   if (!Array.isArray(list)) return [];
   return list.map(oh => ({
     mls_number: String(pick(rec, 'ListingId', 'ListingKey', 'MLSNumber') || ''),
-    open_house_id: pick(oh, 'OpenHouseKey', 'OpenHouseId'),
-    starts_at: dateOrNull(pick(oh, 'OpenHouseStartTime', 'StartTime')),
-    ends_at: dateOrNull(pick(oh, 'OpenHouseEndTime', 'EndTime')),
-    type: pick(oh, 'OpenHouseType', 'Type'),
-    remarks: pick(oh, 'OpenHouseRemarks', 'Remarks'),
-  })).filter(o => o.mls_number && o.starts_at);
-}
+    open_house_id: pick(oh, 'OpenHouseKey', 'OpenHo
