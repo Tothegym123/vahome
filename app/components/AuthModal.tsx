@@ -14,6 +14,8 @@ export default function AuthModal() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [infoMessage, setInfoMessage] = useState<string | null>(null)
+  const [showResetForm, setShowResetForm] = useState(false)
 
   const supabase = createClient()
 
@@ -22,27 +24,87 @@ export default function AuthModal() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setSuccessMessage(null)
+    setInfoMessage(null)
     setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setError(error.message)
+    if (error) {
+      const msg = (error.message || '').toLowerCase()
+      if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
+        setError('That email and password did not match. If you forgot your password, use the reset link below — or create a new account if this is your first time.')
+      } else if (msg.includes('email not confirmed')) {
+        setError('Please confirm your email first — check your inbox for the confirmation link we sent when you registered.')
+      } else {
+        setError(error.message)
+      }
+    }
     setLoading(false)
   }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setSuccessMessage(null)
+    setInfoMessage(null)
     setLoading(true)
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email, password,
       options: { data: { first_name: firstName, last_name: lastName, phone } },
     })
     if (error) {
+      const msg = (error.message || '').toLowerCase()
+      if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('user already')) {
+        // Some Supabase configurations return an explicit error for existing users.
+        setAuthView('login')
+        setPassword('')
+        setShowResetForm(false)
+        setInfoMessage('An account with this email already exists. Sign in below, or use the reset link if you forgot your password.')
+      } else {
+        setError(error.message)
+      }
+      setLoading(false)
+      return
+    }
+
+    // Supabase obfuscates "email already exists" by default to prevent enumeration.
+    // The signal is: data.user is returned, but data.user.identities is an empty array.
+    // (For new users, identities contains at least one entry.)
+    const identities = data?.user?.identities
+    if (data?.user && Array.isArray(identities) && identities.length === 0) {
+      setAuthView('login')
+      setPassword('')
+      setShowResetForm(false)
+      setInfoMessage('An account with this email already exists. Sign in below, or use the reset link if you forgot your password.')
+      setLoading(false)
+      return
+    }
+
+    setSuccessMessage('Account created! Check your email to confirm, then sign in.')
+    setAuthView('login')
+    setPassword('')
+    setLoading(false)
+  }
+
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setInfoMessage(null)
+    setSuccessMessage(null)
+    if (!email) {
+      setError('Enter your email above first, then click "Send reset link" again.')
+      return
+    }
+    setLoading(true)
+    const redirectTo = typeof window !== 'undefined' ? `${window.location.origin}/auth/reset-password` : undefined
+    const { error } = await supabase.auth.resetPasswordForEmail(email, redirectTo ? { redirectTo } : undefined)
+    setLoading(false)
+    if (error) {
       setError(error.message)
     } else {
-      setSuccessMessage('Account created! You can now sign in.')
-      setAuthView('login')
+      // Don't confirm whether the email exists — just say we sent it if applicable.
+      setInfoMessage('If an account exists for that email, a password reset link is on its way. Check your inbox.')
+      setShowResetForm(false)
     }
-    setLoading(false)
   }
 
   const handleGoogleLogin = async () => {
@@ -54,7 +116,7 @@ export default function AuthModal() {
 
   const resetForm = () => {
     setEmail(''); setPassword(''); setFirstName(''); setLastName(''); setPhone('')
-    setError(null); setSuccessMessage(null)
+    setError(null); setSuccessMessage(null); setInfoMessage(null); setShowResetForm(false)
   }
 
   const switchView = (view: 'login' | 'register') => { resetForm(); setAuthView(view) }
@@ -77,6 +139,14 @@ export default function AuthModal() {
               ? 'Sign in to unlock drive times, mortgage tools, and more.'
               : 'Join VaHome for personalized home search tools.'}
           </p>
+          {authView === 'register' && (
+            <p className="mt-2 text-xs text-gray-500">
+              Returning visitor?{' '}
+              <button type="button" onClick={() => switchView('login')} className="text-red-600 font-semibold hover:underline">
+                Sign in instead
+              </button>
+            </p>
+          )}
         </div>
         <div className="px-8 pb-8">
           <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700">
@@ -94,43 +164,71 @@ export default function AuthModal() {
             <div className="flex-1 h-px bg-gray-200" />
           </div>
           {successMessage && (<div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm">{successMessage}</div>)}
+          {infoMessage && (<div className="mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-sm">{infoMessage}</div>)}
           {error && (<div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{error}</div>)}
-          <form onSubmit={authView === 'login' ? handleLogin : handleRegister}>
-            {authView === 'register' && (
-              <div className="grid grid-cols-2 gap-3 mb-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                  <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="Tom" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                  <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="Milan" />
-                </div>
-              </div>
-            )}
-            <div className="mb-3">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="you@example.com" />
-            </div>
-            <div className="mb-3">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="At least 6 characters" />
-            </div>
-            {authView === 'register' && (
+
+          {showResetForm ? (
+            <form onSubmit={handlePasswordReset}>
               <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone <span className="text-gray-400">(optional)</span></label>
-                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="(757) 555-0123" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="you@example.com" />
+                <p className="mt-1 text-xs text-gray-500">We&rsquo;ll email you a link to set a new password.</p>
               </div>
-            )}
-            <button type="submit" disabled={loading} className="w-full mt-4 px-4 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-              {loading ? 'Please wait...' : authView === 'login' ? 'Sign In' : 'Create Account'}
-            </button>
+              <button type="submit" disabled={loading} className="w-full mt-4 px-4 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                {loading ? 'Sending...' : 'Send reset link'}
+              </button>
+              <p className="mt-3 text-center text-sm">
+                <button type="button" onClick={() => { setShowResetForm(false); setError(null); setInfoMessage(null) }} className="text-gray-600 hover:underline">
+                  Back to sign in
+                </button>
+              </p>
+            </form>
+          ) : (
+            <form onSubmit={authView === 'login' ? handleLogin : handleRegister}>
+              {authView === 'register' && (
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                    <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="Tom" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="Milan" />
+                  </div>
+                </div>
+              )}
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="you@example.com" />
+              </div>
+              <div className="mb-3">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-gray-700">Password</label>
+                  {authView === 'login' && (
+                    <button type="button" onClick={() => { setShowResetForm(true); setError(null); setInfoMessage(null); setSuccessMessage(null) }} className="text-xs text-red-600 font-medium hover:underline">
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="At least 6 characters" />
+              </div>
+              {authView === 'register' && (
+                <div className="mb-3">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone <span className="text-gray-400">(optional)</span></label>
+                  <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm" placeholder="(757) 555-0123" />
+                </div>
+              )}
+              <button type="submit" disabled={loading} className="w-full mt-4 px-4 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                {loading ? 'Please wait...' : authView === 'login' ? 'Sign In' : 'Create Account'}
+              </button>
 
-            <p className="text-xs text-gray-500 mt-3 leading-snug" data-tcpa="tcpa-consent-vahome">
-            By submitting this form, you consent to be contacted by the VaHome Team and Tom &amp; Dariya Milan, LPT Realty by phone, text message, and email at the contact information provided, including via automated systems, regarding real estate inquiries and listings. Message and data rates may apply. Message frequency varies. Consent is not a condition of any purchase. Reply STOP to unsubscribe at any time. See our <a href="/privacy" className="underline">Privacy Policy</a> and <a href="/terms" className="underline">Terms</a>.
-          </p>
+              <p className="text-xs text-gray-500 mt-3 leading-snug" data-tcpa="tcpa-consent-vahome">
+              By submitting this form, you consent to be contacted by the VaHome Team and Tom &amp; Dariya Milan, LPT Realty by phone, text message, and email at the contact information provided, including via automated systems, regarding real estate inquiries and listings. Message and data rates may apply. Message frequency varies. Consent is not a condition of any purchase. Reply STOP to unsubscribe at any time. See our <a href="/privacy" className="underline">Privacy Policy</a> and <a href="/terms" className="underline">Terms</a>.
+            </p>
 
-          </form>
+            </form>
+          )}
+
           <p className="mt-6 text-center text-sm text-gray-500">
             {authView === 'login'
               ? (<>New to VaHome?{' '}<button onClick={() => switchView('register')} className="text-red-600 font-semibold hover:underline">Create an account</button></>)
