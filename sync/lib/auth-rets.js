@@ -109,10 +109,16 @@ export async function fetchListingsRets({ modifiedAfter = null, top = 200, offse
   const klass = process.env.REIN_CLASS || 'Listing';
 
   // DMQL2 query — modify timestamp filter
-  // (ModificationTimestamp=2024-04-30T12:00:00+) means >= that timestamp
-  const query = modifiedAfter
+  // REIN uses MatrixModifiedDT (Matrix-based RETS server), not the generic
+  // ModificationTimestamp. (MatrixModifiedDT=2024-04-30T12:00:00+) means >= that timestamp.
+  // Optional REIN_STATUS_FILTER appends ,(PublicStatus=<value>) — use | for OR.
+  const baseTimestamp = modifiedAfter
     ? `(MatrixModifiedDT=${modifiedAfter}+)`
     : '(MatrixModifiedDT=1900-01-01T00:00:00+)';
+  const statusFilter = process.env.REIN_STATUS_FILTER
+    ? `,(PublicStatus=${process.env.REIN_STATUS_FILTER})`
+    : '';
+  const query = `${baseTimestamp}${statusFilter}`;
 
   const params = new URLSearchParams({
     SearchType: resource,
