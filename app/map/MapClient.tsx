@@ -567,14 +567,17 @@ export default function MapClient() {
 
       infoWindowsRef.current.set(`listing-${listing.id}`, infoWindow);
 
-      marker.addListener('click', () => {
+      const openTile = () => {
         if (currentInfoWindowRef.current) {
           currentInfoWindowRef.current.close();
         }
         infoWindow.open(mapRef.current, marker);
         currentInfoWindowRef.current = infoWindow;
         setSelectedListing(listing);
-      });
+      };
+      // Open on hover (desktop) and click (mobile / persistent open)
+      marker.addListener('mouseover', openTile);
+      marker.addListener('click', openTile);
     });
   }, [listings]);
 
