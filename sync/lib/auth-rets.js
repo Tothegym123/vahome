@@ -109,8 +109,7 @@ export async function fetchListingsRets({ modifiedAfter = null, top = 200, offse
   const klass = process.env.REIN_CLASS || 'Listing';
 
   // DMQL2 query — modify timestamp filter
-  // REIN uses MatrixModifiedDT (Matrix-based RETS server), not the generic
-  // ModificationTimestamp. (MatrixModifiedDT=2024-04-30T12:00:00+) means >= that timestamp.
+  // (ModificationTimestamp=2024-04-30T12:00:00+) means >= that timestamp
   const query = modifiedAfter
     ? `(MatrixModifiedDT=${modifiedAfter}+)`
     : '(MatrixModifiedDT=1900-01-01T00:00:00+)';
@@ -201,4 +200,11 @@ export async function fetchPhotosRets(mlsId) {
         mediaKey: cidMatch?.[1]?.trim() || `${mlsId}-${order}`,
         contentType: (ctMatch?.[1] || 'image/jpeg').trim(),
         buffer: body,
-        order: orderMatch ? parseInt(orderMatch[1
+        order: orderMatch ? parseInt(orderMatch[1], 10) : order,
+      });
+      order++;
+    }
+    idx = next;
+  }
+  return parts;
+}

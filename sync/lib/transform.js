@@ -190,4 +190,10 @@ export function extractOpenHouses(rec) {
   if (!Array.isArray(list)) return [];
   return list.map(oh => ({
     mls_number: String(pick(rec, 'ListingId', 'ListingKey', 'MLSNumber') || ''),
-    open_house_id: pick(oh, 'OpenHouseKey', 'OpenHo
+    open_house_id: pick(oh, 'OpenHouseKey', 'OpenHouseId'),
+    starts_at: dateOrNull(pick(oh, 'OpenHouseStartTime', 'StartTime')),
+    ends_at: dateOrNull(pick(oh, 'OpenHouseEndTime', 'EndTime')),
+    type: pick(oh, 'OpenHouseType', 'Type'),
+    remarks: pick(oh, 'OpenHouseRemarks', 'Remarks'),
+  })).filter(o => o.mls_number && o.starts_at);
+}

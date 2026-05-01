@@ -34,4 +34,20 @@ export async function fetchAllListings({ modifiedAfter = null, pageSize = 200 } 
     logger.info({ page, fetched: batch.length, total: all.length }, 'listings page fetched');
 
     // Stop early if MAX_RECORDS cap reached
-    if (maxRecords > 0 && all.length >= maxRecor
+    if (maxRecords > 0 && all.length >= maxRecords) {
+      return all.slice(0, maxRecords);
+    }
+
+    if (batch.length < pageSize) break;
+    page++;
+
+    // Safety stop — should never hit this with a real feed but prevents
+    // an infinite loop if pagination metadata is wrong
+    if (page > 500) {
+      logger.warn({ page }, 'pagination safety stop hit');
+      break;
+    }
+  }
+
+  return all;
+}
