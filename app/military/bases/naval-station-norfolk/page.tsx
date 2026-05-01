@@ -296,4 +296,7 @@ export default function NavalStationNorfolkPage() {
         </p>
       </section>
       <HamptonRoadsAreaGuide />
-   
+      <BaseCompanionLinks baseSlug="naval-station-norfolk" baseName="Naval Station Norfolk" />
+    </main>
+  )
+}

@@ -101,4 +101,6 @@ export function distanceMiles(lat1: number, lng1: number, lat2: number, lng2: nu
 // Approximate drive time (in minutes) from straight-line distance.
 // Hampton Roads metro: ~30 mph average door-to-door including arterial + interstate.
 // Multiply straight-line by 1.3 for typical road-network detour, then divide by 30 mph.
-export function appr
+export function approxDriveMinutes(straightLineMiles: number): number {
+  return Math.round((straightLineMiles * 1.3) / (30 / 60))
+}
