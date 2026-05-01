@@ -196,11 +196,12 @@ export async function fetchPhotosRets(mlsId) {
     const ctMatch = headers.match(/Content-Type:\s*([^\r\n;]+)/i);
     const orderMatch = headers.match(/Object-ID:\s*(\d+)/i);
     if (body.length > 100) {
+      const objectId = orderMatch ? parseInt(orderMatch[1], 10) : order;
       parts.push({
-        mediaKey: cidMatch?.[1]?.trim() || `${mlsId}-${order}`,
+        mediaKey: `${mlsId}-${objectId}`,
         contentType: (ctMatch?.[1] || 'image/jpeg').trim(),
         buffer: body,
-        order: orderMatch ? parseInt(orderMatch[1], 10) : order,
+        order: objectId,
       });
       order++;
     }

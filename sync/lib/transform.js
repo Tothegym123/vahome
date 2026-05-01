@@ -66,6 +66,7 @@ export function transformRecord(rec) {
 
   return {
     mls_number: mlsNumber,
+    matrix_unique_id: pick(rec, 'Matrix_Unique_ID', 'MatrixUniqueID', 'ListingKey'),
     address: pick(rec, 'UnparsedAddress', 'AddressLine', 'AddressWebsite', 'StreetAddress', 'Address', 'L_Address'),
     street_number: pick(rec, 'StreetNumber', 'AddressStreetNumWebsite'),
     street_name: pick(rec, 'StreetName', 'AddressStreetNameWebsite'),

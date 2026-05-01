@@ -111,7 +111,7 @@ async function main() {
     const photoUrlMap = new Map();
     for (const row of rows) {
       try {
-        const photos = await fetchAndProcessPhotos(row.mls_number);
+        const photos = await fetchAndProcessPhotos(row.matrix_unique_id || row.mls_number);
         const urls = [];
         for (const p of photos) {
           try {
