@@ -50,6 +50,22 @@ function normalizeRow(row) {
   // Schema has fireplace + pool as TEXT but transform produces boolean
   if (typeof out.fireplace === 'boolean') out.fireplace = out.fireplace ? 'Yes' : null;
   if (typeof out.pool === 'boolean') out.pool = out.pool ? 'Yes' : null;
+  // Coerce smallint columns to integers (REIN returns decimals like stories=1.5)
+  const SMALLINT_COLUMNS = ['beds', 'half_baths', 'stories', 'year_built', 'tax_year'];
+  for (const col of SMALLINT_COLUMNS) {
+    if (out[col] !== undefined && out[col] !== null && out[col] !== '') {
+      const n = Number(out[col]);
+      out[col] = Number.isFinite(n) ? Math.round(n) : null;
+    }
+  }
+  // price, sqft, hoa_fee, tax_amount, days_on_market, price_per_sqft are integer too
+  const INTEGER_COLUMNS = ['price', 'sqft', 'hoa_fee', 'tax_amount', 'days_on_market', 'price_per_sqft'];
+  for (const col of INTEGER_COLUMNS) {
+    if (out[col] !== undefined && out[col] !== null && out[col] !== '') {
+      const n = Number(out[col]);
+      out[col] = Number.isFinite(n) ? Math.round(n) : null;
+    }
+  }
   // Stamp last_seen_at on every upsert so we can detect listings that drop out of the feed
   out.last_seen_at = new Date().toISOString();
   return out;
