@@ -129,7 +129,7 @@ export default function NavalMedicalCenterPortsmouthPage() {
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <p className="text-xs text-gray-500">
-          Sources: <a href="https://portsmouth.tricare.mil" target="_blank" rel="noopener noreferrer" className="underline">TRICARE ÃÂ¢ÃÂÃÂ NMCP</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
+          Sources: <a href="https://portsmouth.tricare.mil" target="_blank" rel="noopener noreferrer" className="underline">TRICARE — NMCP</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
         </p>
       </section>
       <HamptonRoadsAreaGuide />

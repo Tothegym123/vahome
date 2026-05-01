@@ -27,7 +27,7 @@ const breadcrumbSchema = {
 };
 
 const corridors = [
-  { name: "Princess Anne (Virginia Beach)", note: "Closest residential corridor to Oceana&rsquo;s main gate. Suburban, family-oriented." },
+  { name: "Princess Anne (Virginia Beach)", note: "Closest residential corridor to Oceana's main gate. Suburban, family-oriented." },
   { name: "Kempsville (Virginia Beach)", note: "Mature neighborhoods, easy commute via Princess Anne Rd." },
   { name: "Bayside / Pembroke (Virginia Beach)", note: "Town Center walkability and amenities. Slightly longer commute." },
   { name: "Aragona Village (Virginia Beach)", note: "1960s-1970s housing stock at moderate prices, reasonable VB schools." },

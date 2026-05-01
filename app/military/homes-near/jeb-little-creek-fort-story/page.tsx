@@ -22,7 +22,7 @@ const breadcrumbSchema = {
 };
 
 const corridors = [
-  { name: "Norfolk (East Beach)", note: "Newest housing stock in Norfolk. Bay-adjacent. Some lots in AE flood zone Ã¢ÂÂ verify per-address." },
+  { name: "Norfolk (East Beach)", note: "Newest housing stock in Norfolk. Bay-adjacent. Some lots in AE flood zone — verify per-address." },
   { name: "Norfolk (Bayview / Ocean View)", note: "Direct, short commute. Mix of historic and recent rebuild homes. Bay frontage areas have higher flood-insurance cost." },
   { name: "Norfolk (Larchmont, Ghent)", note: "Historic, tree-lined streets, ~15 min commute via Hampton Blvd or I-64." },
   { name: "Virginia Beach (Ocean Park, Cape Story)", note: "Beach-adjacent VB neighborhoods, established homes, direct to Little Creek." },

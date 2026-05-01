@@ -49,7 +49,7 @@ export default function WilliamsburgMilitaryNeighborhoods() {
           </nav>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Military-Friendly Neighborhoods in Williamsburg</h1>
           <p className="mt-4 text-lg sm:text-xl text-blue-100 max-w-3xl">
-            Williamsburg and James City County offer military families a unique combination of nationally-recognized public schools, deep American history, and a quieter pace than the rest of Hampton Roads Ã¢ÂÂ at a slightly longer commute to most installations.
+            Williamsburg and James City County offer military families a unique combination of nationally-recognized public schools, deep American history, and a quieter pace than the rest of Hampton Roads — at a slightly longer commute to most installations.
           </p>
         </div>
       </section>
@@ -119,14 +119,14 @@ export default function WilliamsburgMilitaryNeighborhoods() {
           </p>
           <p className="mt-3 text-gray-700">Notable schools:</p>
           <ul className="mt-3 space-y-2 text-gray-700 list-disc list-inside">
-            <li><strong>Jamestown High School</strong> Ã¢ÂÂ strong academics and athletics; serves much of southern James City County</li>
-            <li><strong>Lafayette High School</strong> Ã¢ÂÂ IB programme and strong arts; serves western Williamsburg</li>
-            <li><strong>Warhill High School</strong> Ã¢ÂÂ STEM-focused; serves northern James City County</li>
-            <li><strong>Toano Middle School</strong> and <strong>Hornsby Middle School</strong> Ã¢ÂÂ strong feeders</li>
+            <li><strong>Jamestown High School</strong> — strong academics and athletics; serves much of southern James City County</li>
+            <li><strong>Lafayette High School</strong> — IB programme and strong arts; serves western Williamsburg</li>
+            <li><strong>Warhill High School</strong> — STEM-focused; serves northern James City County</li>
+            <li><strong>Toano Middle School</strong> and <strong>Hornsby Middle School</strong> — strong feeders</li>
             <li>Multiple highly-rated elementary schools across the district</li>
           </ul>
           <p className="mt-3 text-xs text-gray-500 italic">
-            Verify per-school ratings at <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">schoolquality.virginia.gov</a> and <a href="https://www.greatschools.org" target="_blank" rel="noopener noreferrer" className="underline">GreatSchools.org</a>. Boundaries change Ã¢ÂÂ confirm zoning per address before writing an offer.
+            Verify per-school ratings at <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">schoolquality.virginia.gov</a> and <a href="https://www.greatschools.org" target="_blank" rel="noopener noreferrer" className="underline">GreatSchools.org</a>. Boundaries change — confirm zoning per address before writing an offer.
           </p>
         </div>
       </section>
@@ -147,13 +147,13 @@ export default function WilliamsburgMilitaryNeighborhoods() {
               <tr><td className="p-3 border-b border-gray-100">NWS Yorktown</td><td className="p-3 border-b border-gray-100">~15-20 min</td><td className="p-3 border-b border-gray-100">Closest install; no bridges</td></tr>
               <tr><td className="p-3 border-b border-gray-100">Fort Eustis (JBLE)</td><td className="p-3 border-b border-gray-100">~25 min</td><td className="p-3 border-b border-gray-100">Direct I-64 east</td></tr>
               <tr><td className="p-3 border-b border-gray-100">Langley AFB (JBLE)</td><td className="p-3 border-b border-gray-100">~30 min</td><td className="p-3 border-b border-gray-100">I-64 east through Hampton</td></tr>
-              <tr><td className="p-3 border-b border-gray-100">NSN / Norfolk</td><td className="p-3 border-b border-gray-100">~45-60 min*</td><td className="p-3 border-b border-gray-100">HRBT crossing Ã¢ÂÂ peak congestion adds 20-40 min</td></tr>
+              <tr><td className="p-3 border-b border-gray-100">NSN / Norfolk</td><td className="p-3 border-b border-gray-100">~45-60 min*</td><td className="p-3 border-b border-gray-100">HRBT crossing — peak congestion adds 20-40 min</td></tr>
               <tr><td className="p-3 border-b border-gray-100">NAS Oceana</td><td className="p-3 border-b border-gray-100">~60-75 min*</td><td className="p-3 border-b border-gray-100">HRBT + I-264; peak hours brutal</td></tr>
             </tbody>
           </table>
         </div>
         <p className="mt-3 text-xs text-gray-500 italic">
-          *Cross-harbor commutes via HRBT (I-64) Ã¢ÂÂ check live conditions at <a href="https://511virginia.org" target="_blank" rel="noopener noreferrer" className="underline">511virginia.org</a>. Williamsburg is best suited for JBLE, NWS Yorktown, and Fort Eustis families. Don't choose it if you commute to Norfolk/VB daily.
+          *Cross-harbor commutes via HRBT (I-64) — check live conditions at <a href="https://511virginia.org" target="_blank" rel="noopener noreferrer" className="underline">511virginia.org</a>. Williamsburg is best suited for JBLE, NWS Yorktown, and Fort Eustis families. Don't choose it if you commute to Norfolk/VB daily.
         </p>
       </section>
 
@@ -165,7 +165,7 @@ export default function WilliamsburgMilitaryNeighborhoods() {
             <li><strong>Property taxes:</strong> James City County and Williamsburg city have favorable real estate tax rates compared to Norfolk and Portsmouth. Verify current rates at <a href="https://www.jamescitycountyva.gov" target="_blank" rel="noopener noreferrer" className="underline">jamescitycountyva.gov</a> or <a href="https://www.williamsburgva.gov" target="_blank" rel="noopener noreferrer" className="underline">williamsburgva.gov</a>.</li>
             <li><strong>Flood zones:</strong> James River-adjacent and creek-front parcels have FEMA flood-zone exposure. Check <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a> per address. <Link href="/military/flood-zones/hampton-roads/" className="text-blue-700 underline">See flood zones guide</Link>.</li>
             <li><strong>HOAs:</strong> Most premier neighborhoods (Kingsmill, Ford's Colony, Stonehouse, Governor's Land) have substantial HOA fees. Factor into monthly budget.</li>
-            <li><strong>BAH:</strong> Same Norfolk MHA (IZ325) Ã¢ÂÂ your BAH is identical to NSN, NAS Oceana, JBLE, etc. Williamsburg's lower median prices than Kingsmill/Governor's Land mean BAH stretches further if you don't need amenity-heavy communities.</li>
+            <li><strong>BAH:</strong> Same Norfolk MHA (IZ325) — your BAH is identical to NSN, NAS Oceana, JBLE, etc. Williamsburg's lower median prices than Kingsmill/Governor's Land mean BAH stretches further if you don't need amenity-heavy communities.</li>
           </ul>
           <p className="mt-4 text-xs text-gray-500 italic">
             Sources: <a href="https://www.greatschools.org" target="_blank" rel="noopener noreferrer" className="underline">GreatSchools.org</a>; <a href="https://schoolquality.virginia.gov" target="_blank" rel="noopener noreferrer" className="underline">VA DOE</a>; <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.

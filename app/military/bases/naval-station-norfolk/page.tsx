@@ -19,9 +19,9 @@ const stats = [
 
 const cities = [
   { name: 'Norfolk', drive: '10 min', median: '$295K', summary: 'The most direct option. Ghent, Larchmont, Colonial Place. Strong walkability and downtown access.', slug: 'norfolk' },
-  { name: 'Virginia Beach', drive: '20ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ30 min', median: '$390K', summary: 'More space, newer construction, stronger schools. Kings Grant, Salem, Kempsville.', slug: 'virginia-beach' },
-  { name: 'Chesapeake', drive: '25ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ30 min', median: '$355K', summary: 'Larger lots, lower property taxes, top schools in Western Branch and Great Bridge.', slug: 'chesapeake' },
-  { name: 'Portsmouth', drive: '15ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ20 min via Midtown Tunnel', median: '$255K', summary: 'Most affordable. Olde Towne and Churchland are popular military neighborhoods.', slug: 'portsmouth' },
+  { name: 'Virginia Beach', drive: '20–30 min', median: '$390K', summary: 'More space, newer construction, stronger schools. Kings Grant, Salem, Kempsville.', slug: 'virginia-beach' },
+  { name: 'Chesapeake', drive: '25–30 min', median: '$355K', summary: 'Larger lots, lower property taxes, top schools in Western Branch and Great Bridge.', slug: 'chesapeake' },
+  { name: 'Portsmouth', drive: '15–20 min via Midtown Tunnel', median: '$255K', summary: 'Most affordable. Olde Towne and Churchland are popular military neighborhoods.', slug: 'portsmouth' },
 ]
 
 const bahRows = [

@@ -5,7 +5,7 @@ import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 export const metadata: Metadata = {
   title: "Best Neighborhoods Near Joint Base Langley-Eustis | VaHome",
   description:
-    "Curated best neighborhoods near JBLE for military families. Hampton, Newport News, Yorktown, Williamsburg Ã¢ÂÂ ranked by commute, schools, and BAH fit.",
+    "Curated best neighborhoods near JBLE for military families. Hampton, Newport News, Yorktown, Williamsburg — ranked by commute, schools, and BAH fit.",
   alternates: { canonical: "https://vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/" },
   openGraph: { title: "Best Neighborhoods Near JBLE", description: "Top Peninsula neighborhoods for JBLE families.", url: "https://vahome.com/military/best-neighborhoods-near/joint-base-langley-eustis/", type: "article" },
 };
@@ -48,14 +48,14 @@ export default function BestNearJBLE() {
             <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Limited inventory at lower price points.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
-            <p className="font-bold text-gray-900 text-lg">2. Hampton Ã¢ÂÂ Riverdale / Wythe / Fox Hill</p>
+            <p className="font-bold text-gray-900 text-lg">2. Hampton — Riverdale / Wythe / Fox Hill</p>
             <p className="text-sm text-gray-700 mt-2">Closest to Langley AFB (~10 min). Mature neighborhoods with mature trees, walkable pockets in Wythe, mid-range pricing. Bethel Manor Elementary (10/10) on the housing-area side.</p>
-            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Some flood exposure on waterfront lots Ã¢ÂÂ verify FEMA per address.</p>
+            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Some flood exposure on waterfront lots — verify FEMA per address.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">3. Hilton Village (Newport News)</p>
             <p className="text-sm text-gray-700 mt-2">Walkable historic district near Fort Eustis. National Register of Historic Places. Hilton Elementary (8/10). Mature character, smaller lots.</p>
-            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Newport News district avg (4.8) is lower than York/Hampton Ã¢ÂÂ verify zoned middle/high.</p>
+            <p className="text-xs text-gray-500 mt-2"><strong>Trade-off:</strong> Newport News district avg (4.8) is lower than York/Hampton — verify zoned middle/high.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900 text-lg">4. Kiln Creek (Newport News)</p>

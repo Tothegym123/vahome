@@ -86,7 +86,7 @@ export default function NASOceanaPage() {
           Naval Air Station Oceana is the U.S. Navy&rsquo;s Master Jet Base on the Atlantic Coast, home to all East Coast F/A-18 Super Hornet squadrons and F-35C Lightning II squadrons. The base is located in Virginia Beach, in the south-central section of the city, and includes the Dam Neck Annex on the Atlantic shoreline. Sailors stationed at Oceana benefit from being on the southside of Hampton Roads, which means no harbor-tunnel commute and direct access to Virginia Beach&rsquo;s beach corridor.
         </p>
         <p className="mt-3 text-xs text-gray-500 italic">
-          Source: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">Commander, Navy Region Mid-Atlantic (CNIC) ÃÂ¢ÃÂÃÂ NAS Oceana</a>.
+          Source: <a href="https://cnrma.cnic.navy.mil/Installations/NAS-Oceana/" target="_blank" rel="noopener noreferrer" className="underline">Commander, Navy Region Mid-Atlantic (CNIC) — NAS Oceana</a>.
         </p>
       </section>
 

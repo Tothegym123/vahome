@@ -48,7 +48,7 @@ interface FilterState {
   beds: string;
 }
 
-// Military base boundaries (Hampton Roads area ÃÂ¢ÃÂÃÂ within ~50 mi of Norfolk)
+// Military base boundaries (Hampton Roads area — within ~50 mi of Norfolk)
 // Easily removable: delete this array and related code to remove base overlays
 const MILITARY_BASES = [
   {
@@ -365,7 +365,7 @@ export default function MapClient() {
         const fetchedVideos: MapVideo[] =
           videosJson.videos || videosJson || [];
 
-        // Apply military filter if active (price â¤ BAH cap AND drive â¤ commute target)
+        // Apply military filter if active (price ≤ BAH cap AND drive ≤ commute target)
         const filteredListings = militaryFilter
           ? fetchedListings.filter((l: MapListing) => {
               if (militaryFilter.bahCap > 0) {

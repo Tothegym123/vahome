@@ -28,7 +28,7 @@ export default function AgentsPage() {
         </ul>
         <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Service Area</h2>
         <p className="text-gray-700 leading-relaxed text-base mb-6">
-          We work across all of Hampton Roads â Virginia Beach, Norfolk, Chesapeake, Suffolk, Hampton, Newport News, Portsmouth, Yorktown, Williamsburg, and surrounding York County, James City County, and Gloucester. Tell us your search area and we'll connect you with the team member who knows that submarket best.
+          We work across all of Hampton Roads — Virginia Beach, Norfolk, Chesapeake, Suffolk, Hampton, Newport News, Portsmouth, Yorktown, Williamsburg, and surrounding York County, James City County, and Gloucester. Tell us your search area and we'll connect you with the team member who knows that submarket best.
         </p>
         <div className="mt-8">
           <a href="/contact/" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg">Contact the Team</a>

@@ -120,7 +120,7 @@ export default function SchoolsNearNSNPage() {
             <div key={s.name} className="border border-gray-200 rounded-lg p-4 flex items-center gap-4">
               <div className="bg-blue-700 text-white font-bold text-lg rounded-lg w-12 h-12 flex items-center justify-center shrink-0">{s.rating}</div>
               <div>
-                <p className="font-semibold text-gray-900">{s.name} <span className="text-sm text-gray-500 font-normal">Ã¢ÂÂ {s.level}</span></p>
+                <p className="font-semibold text-gray-900">{s.name} <span className="text-sm text-gray-500 font-normal">— {s.level}</span></p>
                 <p className="text-sm text-gray-600 mt-1">{s.note}</p>
               </div>
             </div>

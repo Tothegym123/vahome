@@ -47,7 +47,7 @@ const faqSchema = {
     { "@type": "Question", name: "What BAH applies to JEB Little Creek-Fort Story?",
       acceptedAnswer: { "@type": "Answer", text: "JEB Little Creek-Fort Story falls within the Norfolk Military Housing Area (MHA Code IZ325). 2026 BAH rates apply uniformly across all Hampton Roads installations. Verify your specific paygrade rate at the DTMO BAH Calculator." } },
     { "@type": "Question", name: "Which neighborhoods are closest to Little Creek?",
-      acceptedAnswer: { "@type": "Answer", text: "Norfolk neighborhoods on the east side (East Beach, Larchmont, Bayview) are minutes from Little Creek&rsquo;s gate. Northern Virginia Beach (Ocean Park, Cape Story, Birdneck) is also close. Fort Story sits at Cape Henry; the Atlantic Avenue and First Landing State Park areas are immediately adjacent." } },
+      acceptedAnswer: { "@type": "Answer", text: "Norfolk neighborhoods on the east side (East Beach, Larchmont, Bayview) are minutes from Little Creek's gate. Northern Virginia Beach (Ocean Park, Cape Story, Birdneck) is also close. Fort Story sits at Cape Henry; the Atlantic Avenue and First Landing State Park areas are immediately adjacent." } },
   ],
 };
 
@@ -94,7 +94,7 @@ export default function JEBLittleCreekPage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Where JEB Sailors and Soldiers Live</h2>
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { city: "Norfolk (East Beach, Bayview)", note: "Direct, short commute. Beach-adjacent. Some homes in AE flood zone ÃÂ¢ÃÂÃÂ verify per-address." },
+              { city: "Norfolk (East Beach, Bayview)", note: "Direct, short commute. Beach-adjacent. Some homes in AE flood zone — verify per-address." },
               { city: "Norfolk (Larchmont, Ghent)", note: "Historic Norfolk neighborhoods, walkable, ~15 min commute." },
               { city: "Virginia Beach (Ocean Park, Cape Story)", note: "North VB, beach-adjacent, established homes. Direct to Little Creek." },
               { city: "Virginia Beach (Birdneck, Lynnhaven)", note: "Inland VB, mostly X flood zone, longer commute via Shore Dr." },

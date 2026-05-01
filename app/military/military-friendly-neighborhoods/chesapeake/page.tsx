@@ -111,7 +111,7 @@ export default function ChesapeakeNeighborhoodsPage() {
             <li>Mostly X flood zone (lower flood insurance cost than waterfront Norfolk/VB).</li>
             <li>Tunnel-free or single-tunnel routes to NSN, NAS Oceana, and JEB Little Creek-Fort Story.</li>
             <li>Newer construction available in Greenbrier and Grassfield areas.</li>
-            <li>Strong resale at next PCS Ã¢ÂÂ Chesapeake homes have consistent sales history.</li>
+            <li>Strong resale at next PCS — Chesapeake homes have consistent sales history.</li>
           </ul>
         </div>
       </section>

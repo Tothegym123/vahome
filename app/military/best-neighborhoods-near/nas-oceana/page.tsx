@@ -42,7 +42,7 @@ const neighborhoods = [
   {
     name: "Princess Anne", city: "Virginia Beach",
     bestFor: "Families wanting the shortest commute and reliable VB schools.",
-    pros: ["Shortest commute to Oceana&rsquo;s main gate", "Established VB Public Schools", "Mostly inland (X flood zone in many sections)"],
+    pros: ["Shortest commute to Oceana's main gate", "Established VB Public Schools", "Mostly inland (X flood zone in many sections)"],
     cons: ["Some sections fall under AICUZ noise contours", "Limited new construction"],
   },
   {
@@ -145,7 +145,7 @@ export default function BestNeighborhoodsOceanaPage() {
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Verify These Before You Write</h2>
         <ul className="mt-6 space-y-3 text-gray-700">
           <li>
-            <strong>Per-address listing data + recent sales:</strong> <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline text-blue-700">REIN MLS</a> Ã¢ÂÂ Hampton Roads&rsquo; primary multiple listing service.
+            <strong>Per-address listing data + recent sales:</strong> <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline text-blue-700">REIN MLS</a> — Hampton Roads&rsquo; primary multiple listing service.
           </li>
           <li>
             <strong>School ratings and zoning:</strong> <a href="https://schoolquality.virginia.gov/" target="_blank" rel="noopener noreferrer" className="underline text-blue-700">Virginia Department of Education school report cards</a>.

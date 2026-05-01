@@ -87,8 +87,8 @@ export default function CommuteNSNPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Tunnel Timing Practical Tips</h2>
         <ul className="mt-6 space-y-3 text-gray-700 list-disc list-inside">
-          <li><strong>Leave before 0530</strong> if you must cross HRBT or MMMBT for first watch Ã¢ÂÂ past that, single-incident delays can extend the trip 30+ minutes.</li>
-          <li><strong>Friday afternoon is the worst</strong> Ã¢ÂÂ tunnel and bridge volume peaks Friday 1500-1800.</li>
+          <li><strong>Leave before 0530</strong> if you must cross HRBT or MMMBT for first watch — past that, single-incident delays can extend the trip 30+ minutes.</li>
+          <li><strong>Friday afternoon is the worst</strong> — tunnel and bridge volume peaks Friday 1500-1800.</li>
           <li><strong>Track 511 Virginia or VDOT.org</strong> in real time before leaving. The app shows current tunnel speeds and any incidents.</li>
           <li><strong>Liberty release (1500-1530)</strong> creates predictable congestion at NSN&rsquo;s Gate 5 onto Hampton Blvd.</li>
         </ul>

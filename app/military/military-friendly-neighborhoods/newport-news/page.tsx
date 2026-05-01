@@ -5,7 +5,7 @@ import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Newport News, VA | VaHome",
   description:
-    "Best Newport News neighborhoods for military families at Fort Eustis or JBLE. Hilton Village, Kiln Creek, Riverside, Denbigh Ã¢ÂÂ verified school ratings, school zones, and flood context.",
+    "Best Newport News neighborhoods for military families at Fort Eustis or JBLE. Hilton Village, Kiln Creek, Riverside, Denbigh — verified school ratings, school zones, and flood context.",
   alternates: { canonical: "https://vahome.com/military/military-friendly-neighborhoods/newport-news/" },
   openGraph: { title: "Newport News Military-Friendly Neighborhoods", description: "Where to live in Newport News if you're at Fort Eustis or JBLE.", url: "https://vahome.com/military/military-friendly-neighborhoods/newport-news/", type: "article" },
 };
@@ -48,7 +48,7 @@ export default function NewportNewsMilitaryNeighborhoods() {
           <div>
             <p className="text-xs text-gray-500 uppercase">School avg</p>
             <p className="mt-1 text-2xl font-bold text-blue-700">4.8/10</p>
-            <p className="text-xs text-gray-600">38 schools Ã¢ÂÂ verify zone</p>
+            <p className="text-xs text-gray-600">38 schools — verify zone</p>
           </div>
           <div>
             <p className="text-xs text-gray-500 uppercase">BAH MHA</p>
@@ -60,7 +60,7 @@ export default function NewportNewsMilitaryNeighborhoods() {
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Top Newport News Neighborhoods</h2>
-        <p className="mt-3 text-gray-700 text-sm">School zoning matters a lot here Ã¢ÂÂ Newport News district average is 4.8/10 but ranges from 2 to 10 by school. Verify the specific elementary/middle/high zoning for any address.</p>
+        <p className="mt-3 text-gray-700 text-sm">School zoning matters a lot here — Newport News district average is 4.8/10 but ranges from 2 to 10 by school. Verify the specific elementary/middle/high zoning for any address.</p>
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Hilton Village</p>
@@ -80,7 +80,7 @@ export default function NewportNewsMilitaryNeighborhoods() {
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Denbigh</p>
             <p className="text-sm text-gray-700 mt-2">Large suburban area in northern Newport News close to Fort Eustis (~10 min). Mix of older ranches and 80s-90s subdivisions. Affordable.</p>
-            <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Junior enlisted Fort Eustis families, first-time buyers. Verify zoned schools Ã¢ÂÂ wide variation.</p>
+            <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Junior enlisted Fort Eustis families, first-time buyers. Verify zoned schools — wide variation.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Lee Hall / Patrick Henry</p>
@@ -99,7 +99,7 @@ export default function NewportNewsMilitaryNeighborhoods() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Things to Know Before Buying in Newport News</h2>
           <ul className="mt-4 space-y-3 text-gray-700">
-            <li><strong>Schools Ã¢ÂÂ verify per address:</strong> District avg 4.8/10 but huge variation. Top elementary: Deer Park (10), Hilton (8). Top middle: Achievable Dream M/HS (8), B.T. Washington (7). Top high: Achievable Dream M/HS (8), Woodside (6). Always verify zoning before offer.</li>
+            <li><strong>Schools — verify per address:</strong> District avg 4.8/10 but huge variation. Top elementary: Deer Park (10), Hilton (8). Top middle: Achievable Dream M/HS (8), B.T. Washington (7). Top high: Achievable Dream M/HS (8), Woodside (6). Always verify zoning before offer.</li>
             <li><strong>York County alternative:</strong> If schools are a top-3 priority, the York County district adjacent to Newport News (avg 7.8/10) is often the better play with similar JBLE commute.</li>
             <li><strong>Flood:</strong> Hilton Village and James River-adjacent lots have flood-zone exposure. <Link href="/military/flood-zones/hampton-roads/" className="text-blue-700 underline">See flood zones guide</Link>.</li>
             <li><strong>BAH:</strong> Same Norfolk MHA (IZ325). Newport News stretches BAH well due to lower median prices.</li>
@@ -114,7 +114,7 @@ export default function NewportNewsMilitaryNeighborhoods() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-2xl font-bold">Considering Newport News?</p>
-            <p className="text-blue-100 mt-1">I'll match listings to top-rated school zones Ã¢ÂÂ not just street addresses.</p>
+            <p className="text-blue-100 mt-1">I'll match listings to top-rated school zones — not just street addresses.</p>
           </div>
           <Link href="/contact?source=newport-news" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Get my list</Link>
         </div>

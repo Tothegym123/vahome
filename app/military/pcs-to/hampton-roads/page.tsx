@@ -59,8 +59,8 @@ const breadcrumbSchema = {
 const timeline = [
   { phase: "120-90 days out", actions: ["Read the orders carefully (UIC, report date, gaining command POC)", "Apply for housing wait list at base (don't commit, just queue)", "Start a Hampton Roads listings alert", "Pull your VA Certificate of Eligibility"] },
   { phase: "90-60 days out", actions: ["Get VA loan pre-approval (NOT just pre-qual)", "Pick your duty-station-aligned city: Norfolk/VB for NSN, VB for Oceana, Hampton/Newport News for Langley/JBLE", "Schedule HHG move date", "Identify 5-10 candidate neighborhoods"] },
-  { phase: "60-30 days out", actions: ["House-hunting trip (3-5 days, 8-12 showings)", "Submit offers ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ be ready to write within 24 hours of seeing the right home", "Lock your rate when ratified", "Start school enrollment paperwork"] },
-  { phase: "30-0 days out", actions: ["Final walkthrough (in person or virtual via your Realtor)", "Closing scheduled to align with HHG arrival ÃÂÃÂÃÂÃÂ±3 days", "Set up Dominion Energy, water, internet at new address", "Forward mail to gaining command, not the new house yet"] },
+  { phase: "60-30 days out", actions: ["House-hunting trip (3-5 days, 8-12 showings)", "Submit offers — be ready to write within 24 hours of seeing the right home", "Lock your rate when ratified", "Start school enrollment paperwork"] },
+  { phase: "30-0 days out", actions: ["Final walkthrough (in person or virtual via your Realtor)", "Closing scheduled to align with HHG arrival ±3 days", "Set up Dominion Energy, water, internet at new address", "Forward mail to gaining command, not the new house yet"] },
   { phase: "Move week", actions: ["Inspect HHG load and unload day-of", "Check in at gaining command (don't skip the personnel office)", "Register vehicles in VA within 30 days (DMV Hampton Roads has 4 locations)"] },
   { phase: "First 90 days at command", actions: ["Get VA in-state tuition/registration paperwork to dependents", "Register for Tricare regional", "Update DEERS with new address", "Find a primary care manager (Naval Medical Center Portsmouth or Tricare network)"] },
 ];

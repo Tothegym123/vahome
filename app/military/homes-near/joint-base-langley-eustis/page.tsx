@@ -5,7 +5,7 @@ import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 export const metadata: Metadata = {
   title: "Homes Near Joint Base Langley-Eustis (JBLE) | VaHome",
   description:
-    "Search homes near JBLE Ã¢ÂÂ Hampton, Newport News, Yorktown, and Williamsburg. Filter by VA loan eligibility, BAH, and commute to Langley AFB or Fort Eustis.",
+    "Search homes near JBLE — Hampton, Newport News, Yorktown, and Williamsburg. Filter by VA loan eligibility, BAH, and commute to Langley AFB or Fort Eustis.",
   alternates: { canonical: "https://vahome.com/military/homes-near/joint-base-langley-eustis/" },
   openGraph: { title: "Homes Near JBLE", description: "VA-loan-eligible homes on the Virginia Peninsula matched to JBLE commute and BAH.", url: "https://vahome.com/military/homes-near/joint-base-langley-eustis/", type: "article" },
 };
@@ -14,7 +14,7 @@ const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: "Homes Near Joint Base Langley-Eustis",
-  description: "Curated guide to buying near JBLE Ã¢ÂÂ neighborhoods, commute math, BAH-matched price points, and VA loan strategy.",
+  description: "Curated guide to buying near JBLE — neighborhoods, commute math, BAH-matched price points, and VA loan strategy.",
   datePublished: "2026-04-29",
   dateModified: "2026-04-29",
   author: { "@type": "Person", name: "Tom Milan", jobTitle: "Realtor" },
@@ -50,7 +50,7 @@ export default function HomesNearJBLE() {
           </nav>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Homes Near Joint Base Langley-Eustis</h1>
           <p className="mt-4 text-lg sm:text-xl text-blue-100 max-w-3xl">
-            Whether you're reporting to Langley AFB in Hampton or Fort Eustis in Newport News, the Virginia Peninsula has a different rhythm than South Hampton Roads Ã¢ÂÂ quieter, often more affordable, with strong public schools.
+            Whether you're reporting to Langley AFB in Hampton or Fort Eustis in Newport News, the Virginia Peninsula has a different rhythm than South Hampton Roads — quieter, often more affordable, with strong public schools.
           </p>
         </div>
       </section>
@@ -81,7 +81,7 @@ export default function HomesNearJBLE() {
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Peninsula vs South Hampton Roads</h2>
-          <p className="mt-3 text-gray-700">Same Norfolk MHA BAH applies on both sides Ã¢ÂÂ but Peninsula homes generally trade for less per square foot than Virginia Beach or Chesapeake. Your BAH stretches further here.</p>
+          <p className="mt-3 text-gray-700">Same Norfolk MHA BAH applies on both sides — but Peninsula homes generally trade for less per square foot than Virginia Beach or Chesapeake. Your BAH stretches further here.</p>
           <p className="mt-4 text-gray-700">Tradeoffs to know: HRBT congestion can isolate the Peninsula during peak hours; flood-zone exposure varies by waterfront proximity (verify <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA flood maps</a> per address).</p>
           <p className="mt-3 text-xs text-gray-500 italic">Median sale data: <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS market reports</a>.</p>
         </div>
@@ -91,7 +91,7 @@ export default function HomesNearJBLE() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-2xl font-bold">Want a curated JBLE home list?</p>
-            <p className="text-blue-100 mt-1">Tell me your installation, paygrade, and school priorities Ã¢ÂÂ I'll send hand-picked listings.</p>
+            <p className="text-blue-100 mt-1">Tell me your installation, paygrade, and school priorities — I'll send hand-picked listings.</p>
           </div>
           <Link href="/contact?source=homes-near-jble" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Send my list</Link>
         </div>

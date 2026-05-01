@@ -35,7 +35,7 @@ export default function SchoolsNearJEB() {
           </nav>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Schools Near JEB Little Creek-Fort Story</h1>
           <p className="mt-4 text-lg sm:text-xl text-blue-100 max-w-3xl">
-            JEB Little Creek sits in northern Virginia Beach right at the Norfolk line. Most JEB families look at Virginia Beach Public Schools (avg 6.4) Ã¢ÂÂ broadly the strongest large district in Hampton Roads.
+            JEB Little Creek sits in northern Virginia Beach right at the Norfolk line. Most JEB families look at Virginia Beach Public Schools (avg 6.4) — broadly the strongest large district in Hampton Roads.
           </p>
         </div>
       </section>
@@ -85,10 +85,10 @@ export default function SchoolsNearJEB() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">JEB-Friendly Neighborhoods with Strong Schools</h2>
           <p className="mt-3 text-gray-700">Combine quick JEB commute with above-average school zones:</p>
           <div className="mt-4 space-y-3 text-gray-700">
-            <p><strong>Bayside / Pleasure House Point:</strong> Closest to JEB main gate. Mix of mid-range homes and waterfront. Verify school zone Ã¢ÂÂ boundaries split between several elementary feeders.</p>
+            <p><strong>Bayside / Pleasure House Point:</strong> Closest to JEB main gate. Mix of mid-range homes and waterfront. Verify school zone — boundaries split between several elementary feeders.</p>
             <p><strong>Aragona Village:</strong> Affordable, established neighborhood with reasonable JEB commute. Bayside Elementary and Bayside High.</p>
             <p><strong>Lake Smith / Lake Smith Heights:</strong> Quieter waterfront pockets near JEB Little Creek with mid-priced inventory.</p>
-            <p><strong>Princess Anne / Red Mill:</strong> Longer commute (15-20 min) but exceptional schools Ã¢ÂÂ Princess Anne, Kellam, Ocean Lakes feeders.</p>
+            <p><strong>Princess Anne / Red Mill:</strong> Longer commute (15-20 min) but exceptional schools — Princess Anne, Kellam, Ocean Lakes feeders.</p>
           </div>
         </div>
       </section>

@@ -34,7 +34,7 @@ const breadcrumbSchema = {
 };
 
 const neighborhoods = [
-  { name: "Princess Anne", bestFor: "NAS Oceana families", note: "Closest to Oceana&rsquo;s main gate. Some sections fall under AICUZ noise contours Ã¢ÂÂ verify per-address." },
+  { name: "Princess Anne", bestFor: "NAS Oceana families", note: "Closest to Oceana's main gate. Some sections fall under AICUZ noise contours — verify per-address." },
   { name: "Kempsville", bestFor: "Mid-grade enlisted/officer at Oceana or NSN-east commute", note: "Mature neighborhood, established VB schools, mid-range pricing." },
   { name: "Thalia", bestFor: "Beach-lifestyle families on a moderate budget", note: "Near I-264, mature VB neighborhood, mostly X flood zone." },
   { name: "Ocean Park / Cape Story", bestFor: "JEB Little Creek-Fort Story sailors", note: "Beach-adjacent, direct to Little Creek. Some lots in AE flood zone." },

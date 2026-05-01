@@ -82,7 +82,7 @@ export default function CommuteOceanaPage() {
           NAS Oceana publishes Air Installation Compatible Use Zone (AICUZ) maps showing high-noise areas under the jet flight paths. Some Virginia Beach neighborhoods sit inside these contours and have meaningful aircraft noise. Lenders may flag homes in high-noise zones for disclosure. Always check the AICUZ designation for an address before writing.
         </p>
         <p className="mt-3 text-xs text-gray-500 italic">
-          Source: <a href="https://www.cnic.navy.mil/regions/cnrma/installations/nas_oceana.html" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana Ã¢ÂÂ AICUZ resources</a>.
+          Source: <a href="https://www.cnic.navy.mil/regions/cnrma/installations/nas_oceana.html" target="_blank" rel="noopener noreferrer" className="underline">CNIC NAS Oceana — AICUZ resources</a>.
         </p>
       </section>
 

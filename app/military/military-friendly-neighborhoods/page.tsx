@@ -4,7 +4,7 @@ import HamptonRoadsAreaGuide from '../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Hampton Roads | VaHome",
-  description: "Compare every Hampton Roads city for military families. Virginia Beach, Norfolk, Chesapeake, Portsmouth, Hampton, Newport News, Suffolk ÃÂ¢ÃÂÃÂ schools, BAH, commute, and flood-zone context for each.",
+  description: "Compare every Hampton Roads city for military families. Virginia Beach, Norfolk, Chesapeake, Portsmouth, Hampton, Newport News, Suffolk — schools, BAH, commute, and flood-zone context for each.",
   alternates: { canonical: "https://vahome.com/military/military-friendly-neighborhoods/" },
   openGraph: { title: "Military-Friendly Neighborhoods in Hampton Roads", description: "All 7 Hampton Roads cities ranked for military families.", url: "https://vahome.com/military/military-friendly-neighborhoods/", type: "article" },
 };
@@ -95,7 +95,7 @@ export default function MFNIndexPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-2xl font-bold">Need help picking?</p>
-            <p className="text-blue-100 mt-1">Tell me your installation, paygrade, and school priorities ÃÂ¢ÃÂÃÂ I'll suggest 2-3 cities to start with.</p>
+            <p className="text-blue-100 mt-1">Tell me your installation, paygrade, and school priorities — I'll suggest 2-3 cities to start with.</p>
           </div>
           <Link href="/contact?source=mfn-index" className="bg-white text-blue-900 font-semibold px-5 py-3 rounded-lg hover:bg-blue-50 self-start">Get my recommendations</Link>
         </div>

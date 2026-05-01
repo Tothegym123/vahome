@@ -5,7 +5,7 @@ import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 export const metadata: Metadata = {
   title: "Military-Friendly Neighborhoods in Hampton, VA | VaHome",
   description:
-    "Best Hampton neighborhoods for military families at Langley AFB or JBLE. Riverdale, Wythe, Phoebus, Fox Hill, Buckroe Ã¢ÂÂ verified school ratings and commute analysis.",
+    "Best Hampton neighborhoods for military families at Langley AFB or JBLE. Riverdale, Wythe, Phoebus, Fox Hill, Buckroe — verified school ratings and commute analysis.",
   alternates: { canonical: "https://vahome.com/military/military-friendly-neighborhoods/hampton/" },
   openGraph: { title: "Hampton Military-Friendly Neighborhoods", description: "Where to live in Hampton if you're at Langley AFB.", url: "https://vahome.com/military/military-friendly-neighborhoods/hampton/", type: "article" },
 };
@@ -88,7 +88,7 @@ export default function HamptonMilitaryNeighborhoods() {
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Northampton (Bethel Manor area)</p>
-            <p className="text-sm text-gray-700 mt-2">Adjacent to Langley AFB family housing area. Bethel Manor Elementary (10/10) Ã¢ÂÂ top-rated in Hampton. Quiet, family-oriented.</p>
+            <p className="text-sm text-gray-700 mt-2">Adjacent to Langley AFB family housing area. Bethel Manor Elementary (10/10) — top-rated in Hampton. Quiet, family-oriented.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Air Force families wanting top elementary school + closest commute.</p>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function HamptonMilitaryNeighborhoods() {
             <li><strong>Flood exposure:</strong> Bay-front and harbor neighborhoods (Fox Hill, Buckroe, parts of Phoebus, Salt Ponds) commonly include Zone AE/VE lots. <Link href="/military/flood-zones/hampton-roads/" className="text-blue-700 underline">See flood zones guide</Link>.</li>
             <li><strong>Schools:</strong> Hampton city avg 6.1/10. Top elementary picks: Bethel Manor (10), Tucker-Capps (10). Top middle: Francis W. Jones Magnet (10). Top high: Phoebus (7). Verify zoning per address.</li>
             <li><strong>Commute:</strong> Most Hampton neighborhoods are under 20 min to Langley AFB. HRBT crossings only matter if you're commuting to South Hampton Roads.</li>
-            <li><strong>BAH:</strong> Same Norfolk MHA (IZ325) Ã¢ÂÂ Hampton stretches BAH further than VB or Chesapeake.</li>
+            <li><strong>BAH:</strong> Same Norfolk MHA (IZ325) — Hampton stretches BAH further than VB or Chesapeake.</li>
           </ul>
           <p className="mt-4 text-xs text-gray-500 italic">
             Sources: <a href="https://www.greatschools.org" target="_blank" rel="noopener noreferrer" className="underline">GreatSchools.org</a> April 2026; <a href="https://msc.fema.gov" target="_blank" rel="noopener noreferrer" className="underline">FEMA MSC</a>; <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/" target="_blank" rel="noopener noreferrer" className="underline">DTMO BAH</a>; <a href="https://www.reinmls.com/news" target="_blank" rel="noopener noreferrer" className="underline">REIN MLS</a>.
