@@ -107,25 +107,122 @@ async function main() {
     }
 
     // ---- Fetch + upload photos ----------------------------------------
-    // (Skip on incremental runs unless price/status/key fields changed —
-    // for simplicity v1 fetches photos for every record returned.)
+    // Photos within a listing upload in concurrent batches to keep latency
+    // bounded without overwhelming Vercel Blob or REIN.
+    //   - PHOTO_CONCURRENCY: parallelism per listing (5 = ~5x speedup,
+    //     well below Vercel function concurrent-execution caps)
+    //   - PHOTO_TIMEOUT_MS: hard cap per upload (uploadPhoto already has
+    //     3 internal retries; this is the wall-clock backstop)
+    //   - LISTING_TIMEOUT_MS: bail on a listing if its full pipeline (fetch
+    //     + optimize + upload-all-photos) takes too long; one bad listing
+    //     cannot stall the run
+    const PHOTO_CONCURRENCY = 5;
+    const PHOTO_TIMEOUT_MS = 90_000;
+    const LISTING_TIMEOUT_MS = 5 * 60_000;
+    const PROGRESS_EVERY = 25;
     const photoUrlMap = new Map();
+
+    const withTimeout = (promise, ms, label) =>
+      Promise.race([
+        promise,
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error(`${label} timeout after ${ms}ms`)),
+            ms
+          )
+        ),
+      ]);
+
+    let listingIdx = 0;
     for (const row of rows) {
+      listingIdx++;
+      const listingStart = Date.now();
       try {
-        const photos = await fetchAndProcessPhotos(row.matrix_unique_id || row.mls_number);
-        const urls = [];
-        for (const p of photos) {
-          try {
-            const url = await uploadPhoto(row.mls_number, p.mediaKey, p.buffer, p.contentType);
-            urls.push(url);
-            stats.photosUploaded++;
-          } catch (err) {
-            stats.photoFailures++;
+        const photos = await withTimeout(
+          fetchAndProcessPhotos(row.matrix_unique_id || row.mls_number),
+          LISTING_TIMEOUT_MS,
+          'fetchAndProcessPhotos'
+        );
+
+        if (!photos || photos.length === 0) {
+          if (listingIdx % PROGRESS_EVERY === 0) {
+            logger.info(
+              {
+                progress: `${listingIdx}/${rows.length}`,
+                totalUploaded: stats.photosUploaded,
+                totalFailed: stats.photoFailures,
+              },
+              'sync progress'
+            );
+          }
+          continue;
+        }
+
+        const urls = new Array(photos.length);
+        let listingSuccess = 0;
+        let listingFail = 0;
+
+        for (let i = 0; i < photos.length; i += PHOTO_CONCURRENCY) {
+          const batchPhotos = photos.slice(i, i + PHOTO_CONCURRENCY);
+          const results = await Promise.allSettled(
+            batchPhotos.map((p) =>
+              withTimeout(
+                uploadPhoto(row.mls_number, p.mediaKey, p.buffer, p.contentType),
+                PHOTO_TIMEOUT_MS,
+                `upload ${p.mediaKey}`
+              )
+            )
+          );
+          for (let j = 0; j < results.length; j++) {
+            const r = results[j];
+            if (r.status === 'fulfilled') {
+              urls[i + j] = r.value;
+              stats.photosUploaded++;
+              listingSuccess++;
+            } else {
+              stats.photoFailures++;
+              listingFail++;
+              logger.warn(
+                {
+                  mls: row.mls_number,
+                  mediaKey: batchPhotos[j].mediaKey,
+                  err: r.reason?.message || String(r.reason),
+                },
+                'photo upload failed'
+              );
+            }
           }
         }
-        if (urls.length > 0) photoUrlMap.set(row.mls_number, urls);
+
+        const filteredUrls = urls.filter(Boolean);
+        if (filteredUrls.length > 0) {
+          photoUrlMap.set(row.mls_number, filteredUrls);
+        }
+
+        const elapsedMs = Date.now() - listingStart;
+        logger.info(
+          {
+            mls: row.mls_number,
+            progress: `${listingIdx}/${rows.length}`,
+            uploaded: listingSuccess,
+            failed: listingFail,
+            photoCount: photos.length,
+            elapsedMs,
+            totalUploaded: stats.photosUploaded,
+            totalFailed: stats.photoFailures,
+          },
+          'listing photos done'
+        );
       } catch (err) {
-        logger.warn({ mls: row.mls_number, err: err.message }, 'photo pipeline failed for listing');
+        logger.warn(
+          {
+            mls: row.mls_number,
+            progress: `${listingIdx}/${rows.length}`,
+            err: err.message,
+            elapsedMs: Date.now() - listingStart,
+          },
+          'photo pipeline failed for listing'
+        );
         stats.photoFailures++;
       }
     }
