@@ -46,7 +46,15 @@ function sb() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !key) throw new Error('Supabase env vars missing')
-  return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
+  return createClient(url, key, {
+    auth: { autoRefreshToken: false, persistSession: false },
+    // Bypass Next.js fetch cache — listings change frequently via REIN sync,
+    // and stale results are worse than a tiny latency hit.
+    global: {
+      fetch: (input: RequestInfo | URL, init?: RequestInit) =>
+        fetch(input as any, { ...(init || {}), cache: 'no-store' }),
+    },
+  })
 }
 
 export async function GET(request: NextRequest) {
