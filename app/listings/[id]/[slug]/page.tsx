@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getListingById, formatPriceFull } from '../../../lib/listings';
+import { getListingByIdAsync, formatPriceFull } from '../../../lib/listings';
 import PropertyDetailClient from './PropertyDetailClient';
 
 export const revalidate = 60;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const listing = getListingById(Number(params.id));
+  const listing = await getListingByIdAsync(Number(params.id));
   if (!listing) {
     return { title: 'Property Not Found' };
   }
@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function PropertyDetailPage({ params }: Props) {
-  const listing = getListingById(Number(params.id));
+export default async function PropertyDetailPage({ params }: Props) {
+  const listing = await getListingByIdAsync(Number(params.id));
 
   if (!listing) {
     notFound();

@@ -508,3 +508,116 @@ export function listingsToGeoJSON(listings: Listing[]): { type: string; features
     })),
   };
 }
+
+
+// =============================================================================
+// Supabase-backed async listing fetch (for the live REIN-synced data).
+// Falls back to the legacy sampleListings mock array when not found in DB —
+// this keeps any old hard-coded test IDs working during the transition.
+// =============================================================================
+
+import { createClient } from '@supabase/supabase-js';
+
+let _sbClient: any = null;
+function _sb() {
+  if (_sbClient) return _sbClient;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    console.warn('[listings] Supabase env vars missing — falling back to mock data only');
+    return null;
+  }
+  _sbClient = createClient(url, key, { auth: { persistSession: false } });
+  return _sbClient;
+}
+
+const _splitList = (s: string | null | undefined): string[] => {
+  if (!s) return [];
+  return String(s).split(/[,;]\s*/).map(x => x.trim()).filter(Boolean);
+};
+
+function _mapSupabaseRow(r: any): Listing {
+  return {
+    id: Number(r.id),
+    lat: r.lat ?? 0,
+    lng: r.lng ?? 0,
+    price: r.price ?? 0,
+    beds: r.beds ?? 0,
+    baths: r.baths != null ? Number(r.baths) : 0,
+    halfBaths: r.half_baths ?? 0,
+    sqft: r.sqft ?? 0,
+    address: r.address ?? '',
+    city: r.city ?? '',
+    state: r.state ?? '',
+    zip: r.zip ?? '',
+    neighborhood: r.subdivision ?? '',
+    photos: Array.isArray(r.photos) ? r.photos : [],
+    img: (Array.isArray(r.photos) && r.photos[0]) || '',
+    status: r.status ?? '',
+    propertyType: r.property_type ?? '',
+    type: r.property_type ?? '',
+    yearBuilt: r.year_built ?? 0,
+    lotSqft: 0,
+    lotSize: r.lot_size ?? '',
+    garage: 0,
+    description: r.description ?? '',
+    mlsNumber: r.mls_number ?? '',
+    style: '',
+    stories: r.stories ?? 0,
+    foundation: '',
+    exteriorFeatures: _splitList(r.exterior),
+    interiorFeatures: [],
+    heating: r.hvac ?? '',
+    cooling: r.hvac ?? '',
+    waterSource: r.water ?? '',
+    sewer: r.sewer ?? '',
+    flooring: _splitList(r.flooring),
+    roof: r.roof ?? '',
+    construction: [],
+    parkingFeatures: _splitList(r.parking),
+    appliancesIncluded: _splitList(r.appliances),
+    laundry: '',
+    fireplaces: 0,
+    pool: r.pool ?? '',
+    fencing: r.fencing ?? '',
+    waterfront: r.waterfront ?? false,
+    waterfrontDescription: '',
+    taxAmount: r.tax_amount ?? 0,
+    taxYear: r.tax_year ?? 0,
+    hoaFee: r.hoa_fee ?? 0,
+    hoaFrequency: r.hoa_frequency ?? '',
+    elementarySchool: r.elementary_school ?? '',
+    middleSchool: r.middle_school ?? '',
+    highSchool: r.high_school ?? '',
+    listingAgent: r.list_agent_name ?? '',
+    listingOffice: r.list_office_name ?? '',
+    daysOnMarket: r.days_on_market ?? 0,
+    listDate: r.list_date ?? '',
+    subdivision: r.subdivision ?? '',
+    county: r.county ?? '',
+    directions: '',
+    virtualTour: '',
+    remarks: r.description ?? '',
+  };
+}
+
+export async function getListingByIdAsync(id: number): Promise<Listing | null> {
+  // Try Supabase first
+  const supabase = _sb();
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+      if (data && !error) {
+        return _mapSupabaseRow(data);
+      }
+    } catch (e) {
+      console.warn('[listings] Supabase lookup error', e);
+    }
+  }
+  // Fall back to legacy mock data (transitional)
+  return sampleListings.find((listing) => listing.id === id) || null;
+}
