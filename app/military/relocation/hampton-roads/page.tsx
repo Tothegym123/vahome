@@ -15,7 +15,7 @@ const bases = [
   { slug: 'jeb-little-creek-fort-story', name: 'JEB Little Creek-Fort Story', tier: 'Navy Special Warfare and amphibious forces.', cities: ['Virginia Beach', 'Norfolk'] },
   { slug: 'joint-base-langley-eustis', name: 'Joint Base Langley-Eustis', tier: 'Air Combat Command HQ + Army Transportation Center.', cities: ['Hampton', 'Newport News', 'Yorktown', 'Williamsburg'] },
   { slug: 'naval-medical-center-portsmouth', name: 'Naval Medical Center Portsmouth', tier: 'Largest Navy medical facility on the East Coast.', cities: ['Portsmouth', 'Suffolk', 'Chesapeake'] },
-  { slug: 'norfolk-naval-shipyard', name: 'Norfolk Naval Shipyard', tier: 'One of the Navy's largest shipyards.', cities: ['Portsmouth', 'Chesapeake', 'Suffolk'] },
+  { slug: 'norfolk-naval-shipyard', name: 'Norfolk Naval Shipyard', tier: "One of the Navy's largest shipyards.", cities: ['Portsmouth', 'Chesapeake', 'Suffolk'] },
   { slug: 'coast-guard-base-portsmouth', name: 'Coast Guard Base Portsmouth', tier: 'Coast Guard Atlantic Area HQ.', cities: ['Portsmouth', 'Suffolk'] },
   { slug: 'dam-neck-annex', name: 'Dam Neck Annex', tier: 'NAS Oceana annex with specialized warfare units.', cities: ['Virginia Beach'] },
   { slug: 'naval-weapons-station-yorktown', name: 'Naval Weapons Station Yorktown', tier: 'Munitions storage and ordnance handling.', cities: ['Yorktown', 'Williamsburg', 'Newport News'] },
