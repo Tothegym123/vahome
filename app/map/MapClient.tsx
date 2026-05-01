@@ -551,18 +551,24 @@ export default function MapClient() {
 
       markersRef.current.set(listing.id, marker);
 
+      const photoHtml = (listing as any).photo
+        ? `<a href="/listings/${listing.id}/${listing.slug}" style="display:block;width:100%;height:160px;overflow:hidden;background:#f3f4f6;"><img src="${(listing as any).photo}" alt="${listing.address}" style="width:100%;height:100%;object-fit:cover;display:block;" /></a>`
+        : '';
       const infoWindow = new google.maps.InfoWindow({
         content: `
-          <div class="w-64 p-3 font-sans">
-            <h3 class="text-lg font-bold">${listing.priceFormatted}</h3>
-            <p class="text-sm text-gray-700">${listing.address}</p>
-            <p class="text-xs text-gray-600">${listing.city}, ${listing.state} ${listing.zip}</p>
-            <div class="flex gap-4 my-2 text-xs">
-              <span>&#x1F6CF;&#xFE0F; ${listing.beds} Beds</span>
-              <span>&#x1F6BF; ${listing.baths} Baths</span>
-              <span>&#x1F4D0; ${listing.sqft.toLocaleString()} sqft</span>
+          <div style="width:280px;font-family:sans-serif;">
+            ${photoHtml}
+            <div style="padding:12px;">
+              <h3 style="font-size:18px;font-weight:700;margin:0 0 4px 0;">${listing.priceFormatted}</h3>
+              <p style="font-size:13px;color:#374151;margin:0 0 2px 0;">${listing.address}</p>
+              <p style="font-size:11px;color:#6b7280;margin:0;">${listing.city}, ${listing.state} ${listing.zip}</p>
+              <div style="display:flex;gap:14px;margin:8px 0;font-size:12px;color:#374151;">
+                <span>${listing.beds} Beds</span>
+                <span>${listing.baths} Baths</span>
+                <span>${listing.sqft.toLocaleString()} sqft</span>
+              </div>
+              <a href="/listings/${listing.id}/${listing.slug}" style="color:#2563eb;font-size:13px;font-weight:600;text-decoration:none;">View Details &rarr;</a>
             </div>
-            <a href="/listings/${listing.id}/${listing.slug}" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">View Details &rarr;</a>
           </div>
         `,
       });

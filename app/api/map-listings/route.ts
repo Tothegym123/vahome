@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
 
     let q = supabase
       .from('listings')
-      .select('id, address, city, state, zip, price, beds, baths, sqft, lat, lng, status, property_type', {
+      .select('id, address, city, state, zip, price, beds, baths, sqft, lat, lng, status, property_type, photos', {
         count: 'exact',
       })
       .in('status', VISIBLE_STATUSES)
@@ -125,6 +125,7 @@ export async function GET(request: NextRequest) {
       lat: r.lat,
       lng: r.lng,
       slug: generateSlug(r.address, r.city, r.state, r.zip),
+      photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : '',
     }))
 
     const res = NextResponse.json({
