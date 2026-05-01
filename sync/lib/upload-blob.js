@@ -1,59 +1,81 @@
-// Upload optimized photos to Supabase Storage (vahome-photos bucket).
+// Photo upload via Vercel API proxy.
+// The droplet does NOT have BLOB_READ_WRITE_TOKEN. Instead it POSTs photo
+// bytes to a Vercel API route which uploads to Blob using its auto-injected
+// env token. This keeps the Blob token off the droplet entirely.
 //
-// Migrated from Vercel Blob → Supabase Storage on 2026-05-01.
-// Why: eliminates the need for BLOB_READ_WRITE_TOKEN and the passkey-gated
-// dashboard. Same SUPABASE_SERVICE_ROLE_KEY already used for upserts.
-//
-// Module name kept as upload-blob.js so callers don't have to change
-// (sync.js imports `uploadPhoto` from here).
-//
-// Public URL pattern: https://<project>.supabase.co/storage/v1/object/public/vahome-photos/<path>
-// 1-year cache headers (URLs are immutable; new MediaKey from REIN = new URL).
+// Required env on droplet:
+//   VAHOME_API_URL (default: https://vahome.com)
+//   ADMIN_PASSWORD (shared secret matching Vercel project env)
 
-import { createClient } from '@supabase/supabase-js';
 import { logger } from './logger.js';
 
-const BUCKET = 'vahome-photos';
+const VAHOME_API_URL = process.env.VAHOME_API_URL || 'https://vahome.com';
+const RETRY_DELAYS_MS = [200, 800, 3200];
 
-let _client = null;
-function client() {
-  if (_client) return _client;
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required');
-  _client = createClient(url, key, { auth: { persistSession: false } });
-  return _client;
+function getAdminPassword() {
+  const pwd = process.env.ADMIN_PASSWORD;
+  if (!pwd) throw new Error('ADMIN_PASSWORD env var required for photo uploads');
+  return pwd;
 }
 
 export async function uploadPhoto(mlsNumber, mediaKey, buffer, contentType) {
   const ext = (contentType?.split('/')[1] || 'webp').toLowerCase();
-  // Path is immutable: when REIN replaces a photo it gets a new MediaKey,
-  // which produces a new URL — no cache invalidation needed downstream.
   const safeKey = String(mediaKey).replace(/[^a-zA-Z0-9._-]/g, '_');
   const path = `listings/${mlsNumber}/${safeKey}.${ext}`;
 
-  const supabase = client();
+  const body = JSON.stringify({
+    path,
+    contentType: contentType || 'image/webp',
+    base64: buffer.toString('base64'),
+  });
 
-  const { data, error } = await supabase.storage
-    .from(BUCKET)
-    .upload(path, buffer, {
-      contentType: contentType || 'image/webp',
-      upsert: true,                  // idempotent: same path = overwrite (effectively no-op for same content)
-      cacheControl: '31536000',      // 1 year — paths are immutable
-    });
+  const url = `${VAHOME_API_URL}/api/admin/upload-photo`;
+  const adminPwd = getAdminPassword();
 
-  if (error) {
-    // Supabase storage occasionally returns a "Duplicate" error if upsert isn't honored.
-    // Fall back to constructing the public URL directly (object exists either way).
-    if (error.message?.toLowerCase().includes('duplicate') || error.statusCode === '409') {
-      logger.debug({ mlsNumber, mediaKey, path }, 'photo already exists, returning public URL');
-    } else {
-      logger.warn({ mlsNumber, mediaKey, err: error.message, code: error.statusCode }, 'storage upload failed');
-      throw new Error(`storage upload failed: ${error.message}`);
+  let lastError = null;
+  for (let attempt = 0; attempt < RETRY_DELAYS_MS.length; attempt++) {
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': adminPwd,
+          'Accept': 'application/json',
+        },
+        body,
+        // Generous timeout — base64 + multi-hop network can be slow
+        signal: AbortSignal.timeout ? AbortSignal.timeout(45000) : undefined,
+      });
+
+      if (resp.ok) {
+        const json = await resp.json();
+        if (!json.url) {
+          throw new Error(`upload route returned no url: ${JSON.stringify(json)}`);
+        }
+        return json.url;
+      }
+
+      // 4xx → no point retrying (auth error, bad input, etc.)
+      if (resp.status >= 400 && resp.status < 500 && resp.status !== 408 && resp.status !== 429) {
+        const text = await resp.text();
+        throw new Error(`upload route returned ${resp.status}: ${text.substring(0, 200)}`);
+      }
+
+      // 5xx or 408/429 — retry
+      const text = await resp.text();
+      lastError = `HTTP ${resp.status}: ${text.substring(0, 200)}`;
+    } catch (err) {
+      // Don't retry auth/input errors that we threw above
+      if (err.message?.includes('returned 4')) throw err;
+      lastError = err.message;
+    }
+
+    const delay = RETRY_DELAYS_MS[attempt];
+    if (attempt < RETRY_DELAYS_MS.length - 1) {
+      logger.debug({ mlsNumber, mediaKey, attempt: attempt + 1, lastError, retryInMs: delay }, 'photo upload retry');
+      await new Promise(r => setTimeout(r, delay));
     }
   }
 
-  // Construct the public URL (works whether upload succeeded or duplicate)
-  const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(path);
-  return urlData.publicUrl;
+  throw new Error(`photo upload failed after ${RETRY_DELAYS_MS.length} attempts: ${lastError}`);
 }
