@@ -29,7 +29,7 @@ export async function uploadPhoto(mlsNumber, mediaKey, buffer, contentType) {
     base64: buffer.toString('base64'),
   });
 
-  const url = `${VAHOME_API_URL}/api/admin/upload-photo`;
+  const url = `${VAHOME_API_URL}/api/admin/upload-photo/`;
   const adminPwd = getAdminPassword();
 
   let lastError = null;
