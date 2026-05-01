@@ -32,11 +32,14 @@ export async function POST(req: NextRequest) {
   }
 
   const res = NextResponse.json({ ok: true });
+  // path: '/' so the cookie is also sent to /api/admin/* routes (e.g. /api/admin/dashboard).
+  // Cookie is still httpOnly + secure + sameSite=strict, so it cannot be read by JS
+  // or sent on cross-site requests. Path widening does not weaken any of those protections.
   res.cookies.set('admin_ok', '1', {
     httpOnly: true,
     secure: true,
     sameSite: 'strict',
-    path: '/admin',
+    path: '/',
     maxAge: 60 * 60 * 4,
   });
   return res;

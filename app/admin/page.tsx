@@ -69,34 +69,34 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     setLoading(true)
-    const supabase = createClient()
 
     try {
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name, phone, updated_at')
-        .order('updated_at', { ascending: false })
+      // All admin reads now go through the server-side /api/admin/dashboard route,
+      // which uses the Supabase service role and is gated by the admin_ok cookie.
+      // The browser never holds the service role key.
+      const res = await fetch('/api/admin/dashboard', { cache: 'no-store' })
+      if (!res.ok) {
+        if (res.status === 401) {
+          setAuthenticated(false)
+          setError('Session expired \u2014 please sign in again.')
+        } else {
+          console.error('Admin dashboard fetch failed', res.status)
+        }
+        setLoading(false)
+        return
+      }
+      const dash = await res.json()
+      const profiles = dash.profiles || []
+      const tourRequests = dash.activity || []
+      const savedListings = dash.saved_listings || []
+      const waitlistData = dash.waitlist || []
+      setWaitlistRows(waitlistData)
 
-      const { data: tourRequests } = await supabase
-        .from('search_activity')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      const { data: savedListings } = await supabase
-        .from('saved_listings')
-        .select('*')
-
-      const { data: waitlistData } = await supabase
-        .from('waitlist')
-        .select('*')
-        .order('created_at', { ascending: false })
-      setWaitlistRows(waitlistData || [])
-
-      const allTours = tourRequests?.filter(t => t.action_type === 'tour_request') || []
+      const allTours = tourRequests?.filter((t: any) => t.action_type === 'tour_request') || []
 
       const leadMap = new Map<string, Lead>()
 
-      profiles?.forEach(p => {
+      profiles?.forEach((p: any) => {
         leadMap.set(p.id, {
           id: p.id,
           email: '',
@@ -110,7 +110,7 @@ export default function AdminDashboard() {
         })
       })
 
-      allTours.forEach(t => {
+      allTours.forEach((t: any) => {
         if (t.user_id && leadMap.has(t.user_id)) {
           const lead = leadMap.get(t.user_id)!
           lead.tour_requests++
@@ -138,7 +138,7 @@ export default function AdminDashboard() {
         }
       })
 
-      savedListings?.forEach(s => {
+      savedListings?.forEach((s: any) => {
         if (s.user_id && leadMap.has(s.user_id)) {
           leadMap.get(s.user_id)!.favorites++
         }
