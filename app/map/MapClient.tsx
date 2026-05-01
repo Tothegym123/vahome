@@ -284,8 +284,6 @@ export default function MapClient() {
   const videoMarkersRef = useRef<Map<string, any>>(new Map());
   const infoWindowsRef = useRef<Map<string, any>>(new Map());
   const currentInfoWindowRef = useRef<any>(null);
-  const closeTimerRef = useRef<any>(null);
-  const pinnedRef = useRef<boolean>(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const boundsRef = useRef<any>(null);
   const fetchMapDataRef = useRef<((bounds: MapBounds) => Promise<void>) | null>(null);
@@ -575,45 +573,14 @@ export default function MapClient() {
 
       infoWindowsRef.current.set(`listing-${listing.id}`, infoWindow);
 
-      const cancelClose = () => {
-        if (closeTimerRef.current) {
-          clearTimeout(closeTimerRef.current);
-          closeTimerRef.current = null;
-        }
-      };
-      const scheduleClose = () => {
-        if (pinnedRef.current) return;
-        cancelClose();
-        closeTimerRef.current = setTimeout(() => {
-          if (!pinnedRef.current && currentInfoWindowRef.current === infoWindow) {
-            infoWindow.close();
-            currentInfoWindowRef.current = null;
-          }
-        }, 220);
-      };
-      const openTile = (pinned: boolean) => {
-        cancelClose();
-        if (currentInfoWindowRef.current && currentInfoWindowRef.current !== infoWindow) {
+      marker.addListener('click', () => {
+        if (currentInfoWindowRef.current) {
           currentInfoWindowRef.current.close();
         }
-        pinnedRef.current = pinned;
         infoWindow.open(mapRef.current, marker);
         currentInfoWindowRef.current = infoWindow;
         setSelectedListing(listing);
-      };
-      // Once the InfoWindow DOM is mounted, attach mouseenter/mouseleave so
-      // the cursor can move from marker -> popup without triggering close.
-      google.maps.event.addListener(infoWindow, 'domready', () => {
-        const iw = document.querySelector('.gm-style-iw-c') as HTMLElement | null;
-        if (iw) {
-          iw.addEventListener('mouseenter', cancelClose);
-          iw.addEventListener('mouseleave', scheduleClose);
-        }
       });
-      // Hover opens (un-pinned, will auto-close); click pins it open.
-      marker.addListener('mouseover', () => openTile(false));
-      marker.addListener('mouseout', scheduleClose);
-      marker.addListener('click', () => openTile(true));
     });
   }, [listings]);
 
