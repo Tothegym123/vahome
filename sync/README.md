@@ -10,7 +10,7 @@ Supabase. Runs every 30 minutes via cron on a DigitalOcean droplet.
 REIN MLS (RETS or RESO Web API)
         │
         ▼
-[ DigitalOcean droplet 165.245.164.178 ]
+[ DigitalOcean droplet 138.197.73.206 ]
    sync.js (cron */30)
    ├── auth (RESO OAuth2 OR RETS Digest)
    ├── fetchAllListings()  ← incremental from cursor
@@ -41,7 +41,7 @@ REIN MLS (RETS or RESO Web API)
 ## One-time setup on the droplet
 
 ```bash
-ssh root@165.245.164.178
+ssh root@138.197.73.206
 curl -sSL https://raw.githubusercontent.com/Tothegym123/vahome/main/sync/setup.sh | bash
 ```
 
