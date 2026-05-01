@@ -227,40 +227,51 @@ function TourModal({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [tourType, setTourType] = useState<'in-person' | 'video'>('in-person');
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const chosenDate = allDays[page * daysPerPage + selectedDay];
 
   const handleSubmit = async () => {
+    setSubmitError(null)
+    if (!email && !phone) {
+      setSubmitError('Please provide an email or phone number so we can confirm.')
+      return
+    }
     try {
-      const supabase = createClient()
-      await supabase.from('search_activity').insert({
-        action_type: 'tour_request',
-        mls_number: listing.mlsNumber || listing.id.toString(),
-        metadata: {
-          name: name,
-          email: email,
-          phone: phone,
-          date: chosenDate,
+      const res = await fetch('/api/tour-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          date: chosenDate ? chosenDate.dayName + ' ' + chosenDate.monthDay : null,
           time: selectedTime,
           tour_type: tourType,
-          listing_address: listing.address + ', ' + listing.city + ', ' + listing.state + ' ' + listing.zip,
+          mls_number: listing.mlsNumber || listing.id.toString(),
+          listing_address: listing.address,
+          listing_city: listing.city,
+          listing_state: listing.state,
+          listing_zip: listing.zip,
           listing_price: listing.price,
+        }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        const errCode = data?.error || 'unknown'
+        if (errCode === 'contact_required') {
+          setSubmitError('Please provide an email or phone number so we can confirm.')
+        } else {
+          setSubmitError('Something went wrong. Please try again or call (757) 777-7577.')
         }
-      })
-      await supabase.from('contact_requests').insert({
-        name: name,
-        email: email,
-        phone: phone,
-        message: 'Tour request: ' + (chosenDate ? chosenDate.dayName + ' ' + chosenDate.monthDay : '') + ' at ' + selectedTime + ' (' + tourType + ') for ' + listing.address + ', ' + listing.city,
-        type: 'Buying',
-        source: 'tour_modal',
-        submitted_at: new Date().toISOString(),
-      })
-    } catch (err) {
-      console.error('Error saving tour request:', err)
+        return
+      }
+    } catch {
+      setSubmitError('Network error. Please try again or call (757) 777-7577.')
+      return
     }
-    setStep('done');
-  };
+    setStep('done')
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
@@ -438,6 +449,11 @@ function TourModal({
             <p className="text-xs text-gray-500 mt-3 leading-snug" data-tcpa="tcpa-consent-vahome">
             By submitting this form, you consent to be contacted by the VaHome Team and Tom &amp; Dariya Milan, LPT Realty by phone, text message, and email at the contact information provided, including via automated systems, regarding real estate inquiries and listings. Message and data rates may apply. Message frequency varies. Consent is not a condition of any purchase. Reply STOP to unsubscribe at any time. See our <a href="/privacy" className="underline">Privacy Policy</a> and <a href="/terms" className="underline">Terms</a>.
           </p>
+            {submitError && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+                {submitError}
+              </div>
+            )}
             <button
               onClick={handleSubmit}
               disabled={!name || !phone}
