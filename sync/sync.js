@@ -14,6 +14,7 @@ import { fetchAllListings } from './lib/fetch-listings.js';
 import { fetchAndProcessPhotos } from './lib/fetch-photos.js';
 import { uploadPhoto } from './lib/upload-blob.js';
 import { transformRecord } from './lib/transform.js';
+import { runGeocodePass } from './lib/geocode.js';
 import {
   upsertListings,
   upsertOpenHouses,
@@ -133,6 +134,21 @@ async function main() {
     const upsertResult = await upsertListings(rows, photoUrlMap);
     stats.inserted = upsertResult.inserted;
     stats.updated = upsertResult.updated;
+
+    // ---- Geocode fallback for listings without REIN coordinates ----
+    try {
+      const geoStats = await runGeocodePass();
+      stats.geocode = geoStats;
+      logger.info({
+        rein_provided: geoStats.rein,
+        google_success: geoStats.googleSuccess,
+        google_failed: geoStats.googleFailed,
+        no_address: geoStats.noAddress,
+        skipped_unchanged: geoStats.skipped,
+      }, 'coordinate sources summary');
+    } catch (err) {
+      logger.warn({ err: err.message }, 'geocode pass failed (non-fatal)');
+    }
 
     // ---- Open houses --------------------------------------------------
     if (authType === 'reso') {

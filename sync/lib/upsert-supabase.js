@@ -25,6 +25,7 @@ const VALID_COLUMNS = new Set([
   'deep_water_access','bulkhead','dock','boat_lift','water','sewer','electric','gas','internet',
   'hoa_fee','hoa_frequency','elementary_school','middle_school','high_school',
   'tax_amount','tax_year','price_per_sqft','excluded','raw','mls_modified','last_seen_at',
+  'coordinate_source','geocoded_at','geocode_status','address_hash',
 ]);
 
 // Map transform-emitted field names to the actual schema column names.

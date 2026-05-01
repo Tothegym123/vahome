@@ -5,6 +5,14 @@
 // conventions. Once REIN's data dictionary arrives, update field names below.
 // The mapping is intentionally permissive: tries multiple common names per field.
 
+import crypto from 'node:crypto';
+
+function addressHash(addr) {
+  if (!addr) return null;
+  const normalized = String(addr).toLowerCase().replace(/\s+/g, ' ').trim();
+  return crypto.createHash('sha256').update(normalized).digest('hex').substring(0, 16);
+}
+
 const pick = (rec, ...names) => {
   for (const n of names) {
     if (rec[n] !== undefined && rec[n] !== '' && rec[n] !== null) return rec[n];
@@ -98,6 +106,15 @@ export function transformRecord(rec) {
 
     latitude: num(pick(rec, 'Latitude')),
     longitude: num(pick(rec, 'Longitude')),
+    coordinate_source: (num(pick(rec, 'Latitude')) !== null && num(pick(rec, 'Longitude')) !== null) ? 'rein' : null,
+    geocode_status: (num(pick(rec, 'Latitude')) !== null && num(pick(rec, 'Longitude')) !== null) ? 'rein_provided' : null,
+    geocoded_at: (num(pick(rec, 'Latitude')) !== null && num(pick(rec, 'Longitude')) !== null) ? new Date().toISOString() : null,
+    address_hash: addressHash([
+      pick(rec, 'UnparsedAddress', 'AddressLine', 'AddressWebsite', 'StreetAddress', 'Address', 'L_Address'),
+      pick(rec, 'City', 'L_City'),
+      pick(rec, 'StateOrProvince', 'State') || 'VA',
+      pick(rec, 'PostalCode', 'Zip', 'ZipCode'),
+    ].filter(Boolean).join(', ')),
 
     waterfront,
     deep_water_access: deepWater,
