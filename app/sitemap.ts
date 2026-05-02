@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { CITY_SLUGS } from "./lib/cities";
 
 const BASE = "https://vahome.com";
 
@@ -58,6 +59,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "monthly" as const,
   }));
 
+  // City listing landing pages — clean indexable URLs (companion to /listings/?city=)
+  const cityListingUrls = CITY_SLUGS.map((slug) => ({
+    path: `/listings/${slug}/`,
+    priority: 0.85,
+    changeFrequency: "daily" as const,
+  }));
+
   // Other military pages
   const militaryOther = [
     { path: "/military/bah-calculator/hampton-roads/", priority: 0.85, changeFrequency: "monthly" as const },
@@ -70,6 +78,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const all = [
     ...marketing,
+    ...cityListingUrls,
     ...militaryHub,
     ...baseClusterUrls,
     ...cityUrls,

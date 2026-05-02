@@ -9,6 +9,23 @@ import {
   serializeFiltersToQueryString,
   type Filters,
 } from '../lib/listing-filters'
+import { citySlugFromName, CITIES } from '../lib/cities'
+
+// Returns true when ?city= is the only filter set on the URL (so we can offer
+// users + Google a redirect/canonical to the clean /listings/[city]/ page).
+function isCityOnlyFilter(f: Filters): boolean {
+  if (!f.city) return false;
+  if (f.q || f.min_price !== undefined || f.max_price !== undefined) return false;
+  if (f.beds !== undefined || f.max_beds !== undefined || f.baths !== undefined) return false;
+  if (f.type && f.type.length > 0) return false;
+  if (f.min_sqft !== undefined || f.max_sqft !== undefined) return false;
+  if (f.min_year !== undefined || f.max_year !== undefined) return false;
+  if (f.min_lot !== undefined || f.max_lot !== undefined) return false;
+  if (f.status && f.status.length > 0) return false;
+  if (f.dom_max !== undefined) return false;
+  if (f.page !== undefined && f.page > 1) return false;
+  return true;
+}
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -101,12 +118,27 @@ export function generateMetadata({ searchParams }: { searchParams: { city?: stri
   }
   title += " | VaHome.com";
 
+  // Canonical resolution:
+  //   - No filters at all -> /listings/
+  //   - ?city= on a recognized city as the ONLY filter -> point canonical at the
+  //     clean /listings/[slug]/ page so ranking signals consolidate there.
+  //   - ?city= with other filters -> self-canonical to the filter URL (still
+  //     noindexed via the robots field below).
+  let canonical: string;
+  const cityOnly = !!city && Object.keys(searchParams || {}).length === 1;
+  const knownCitySlug = city ? citySlugFromName(city) : undefined;
+  if (cityOnly && knownCitySlug) {
+    canonical = `https://vahome.com/listings/${knownCitySlug}/`;
+  } else if (city) {
+    canonical = "https://vahome.com/listings/?city=" + encodeURIComponent(city);
+  } else {
+    canonical = "https://vahome.com/listings/";
+  }
+
   return {
     title,
     description,
-    alternates: {
-      canonical: city ? "https://vahome.com/listings/?city=" + encodeURIComponent(city) : "https://vahome.com/listings/",
-    },
+    alternates: { canonical },
     robots: searchParams && Object.keys(searchParams).length > 0 ? { index: false, follow: true } : undefined,
     openGraph: { title, description, type: "website" },
   };
@@ -132,6 +164,10 @@ export default async function ListingsPage({
 
   const cityKey = (searchParams?.city || "").toString().toLowerCase().replace(/\s+/g, "-");
   const cityIntro = CITY_INTROS[cityKey];
+
+  // If the user filtered by a recognized city, surface the dedicated indexable
+  // city page. Helps both UX and SEO (consolidates ranking signals).
+  const recognizedCity = filters.city ? CITIES[citySlugFromName(filters.city) || ""] : undefined;
 
   return (
     <div className="pt-20 min-h-screen">
@@ -180,6 +216,17 @@ export default async function ListingsPage({
               </section>
             )}
           </div>
+
+          {recognizedCity && (
+            <a
+              href={`/listings/${recognizedCity.slug}/`}
+              className="block mb-4 px-4 py-3 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+            >
+              <p className="text-sm text-blue-900">
+                <span className="font-semibold">View {recognizedCity.displayName}'s dedicated homes-for-sale page</span> — neighborhoods, market notes, FAQs and more →
+              </p>
+            </a>
+          )}
 
           <FilterBar resultCount={total} />
 
