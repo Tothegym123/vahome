@@ -19,7 +19,7 @@ export interface Listing {
   photos: string[];
   img: string;
   status: string;
-  contingent: boolean;
+  contingent?: boolean;
   propertyType: string;
   type: string;
   yearBuilt: number;
