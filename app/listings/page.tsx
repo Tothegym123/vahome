@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { createClient } from '@supabase/supabase-js';
 import HamptonRoadsAreaGuide from '../components/HamptonRoadsAreaGuide'
 import FilterBar from '../components/filters/FilterBar'
-import ActiveFilterChips from '../components/filters/ActiveFilterChips'
+import FilterSidebar from '../components/filters/FilterSidebar'
 import {
   parseFiltersFromSearchParams,
   applyFiltersToSupabaseQuery,
@@ -130,113 +130,113 @@ export default async function ListingsPage({
   // Initial value for the search input — preserves typed text across reloads.
   const initialQ = filters.q || '';
 
+  const cityKey = (searchParams?.city || "").toString().toLowerCase().replace(/\s+/g, "-");
+  const cityIntro = CITY_INTROS[cityKey];
+
   return (
     <div className="pt-20 min-h-screen">
-      {/* Search / Filter Bar */}
+      {/* Sticky search bar (search input only — filters live in the sidebar / mobile sheet) */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-3">
-          <div className="flex items-center gap-4 flex-wrap">
-            <form action="/listings" method="get" className="flex-1 min-w-[240px] relative">
-              {/* Preserve other filter params across a search submit */}
-              {filters.city && <input type="hidden" name="city" value={filters.city} />}
-              {filters.min_price !== undefined && <input type="hidden" name="min_price" value={String(filters.min_price)} />}
-              {filters.max_price !== undefined && <input type="hidden" name="max_price" value={String(filters.max_price)} />}
-              {filters.beds !== undefined && <input type="hidden" name="beds" value={String(filters.beds)} />}
-              {filters.max_beds !== undefined && <input type="hidden" name="max_beds" value={String(filters.max_beds)} />}
-              {filters.baths !== undefined && <input type="hidden" name="baths" value={String(filters.baths)} />}
-              {filters.type && filters.type.length > 0 && <input type="hidden" name="type" value={filters.type.join(',')} />}
-              {filters.min_sqft !== undefined && <input type="hidden" name="min_sqft" value={String(filters.min_sqft)} />}
-              {filters.max_sqft !== undefined && <input type="hidden" name="max_sqft" value={String(filters.max_sqft)} />}
-              {filters.min_year !== undefined && <input type="hidden" name="min_year" value={String(filters.min_year)} />}
-              {filters.max_year !== undefined && <input type="hidden" name="max_year" value={String(filters.max_year)} />}
-              {filters.status && filters.status.length > 0 && <input type="hidden" name="status" value={filters.status.join(',')} />}
-              {filters.dom_max !== undefined && <input type="hidden" name="dom_max" value={String(filters.dom_max)} />}
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                name="q"
-                defaultValue={initialQ}
-                placeholder="Search by city, zip, address..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              />
-            </form>
-            <FilterBar />
-          </div>
-          <ActiveFilterChips />
+        <div className="max-w-[1400px] mx-auto px-4 py-4">
+          <form action="/listings" method="get" className="relative">
+            {/* Preserve filter params across a search submit */}
+            {filters.city && <input type="hidden" name="city" value={filters.city} />}
+            {filters.min_price !== undefined && <input type="hidden" name="min_price" value={String(filters.min_price)} />}
+            {filters.max_price !== undefined && <input type="hidden" name="max_price" value={String(filters.max_price)} />}
+            {filters.beds !== undefined && <input type="hidden" name="beds" value={String(filters.beds)} />}
+            {filters.max_beds !== undefined && <input type="hidden" name="max_beds" value={String(filters.max_beds)} />}
+            {filters.baths !== undefined && <input type="hidden" name="baths" value={String(filters.baths)} />}
+            {filters.type && filters.type.length > 0 && <input type="hidden" name="type" value={filters.type.join(',')} />}
+            {filters.min_sqft !== undefined && <input type="hidden" name="min_sqft" value={String(filters.min_sqft)} />}
+            {filters.max_sqft !== undefined && <input type="hidden" name="max_sqft" value={String(filters.max_sqft)} />}
+            {filters.min_year !== undefined && <input type="hidden" name="min_year" value={String(filters.min_year)} />}
+            {filters.max_year !== undefined && <input type="hidden" name="max_year" value={String(filters.max_year)} />}
+            {filters.status && filters.status.length > 0 && <input type="hidden" name="status" value={filters.status.join(',')} />}
+            {filters.dom_max !== undefined && <input type="hidden" name="dom_max" value={String(filters.dom_max)} />}
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              name="q"
+              defaultValue={initialQ}
+              placeholder="Search by city, zip, address..."
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+            />
+          </form>
         </div>
       </div>
 
-      {/* Results */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Homes for Sale in Hampton Roads</h1>
-          {(() => {
-            const c = (searchParams?.city || "").toString().toLowerCase().replace(/\s+/g, "-");
-            const intro = CITY_INTROS[c];
-            if (!intro) return null;
-            return (
-              <section className="max-w-4xl mx-auto px-6 py-8">
-                <p className="text-gray-700 leading-relaxed text-base">{intro}</p>
+      {/* Two-column layout: persistent sidebar + main content */}
+      <div className="max-w-[1400px] mx-auto px-4 py-6 flex gap-6">
+        <FilterSidebar />
+
+        <main className="flex-1 min-w-0">
+          <div className="mb-4">
+            <h1 className="text-2xl font-bold text-gray-900">Homes for Sale in Hampton Roads</h1>
+            {cityIntro && (
+              <section className="mt-3">
+                <p className="text-gray-700 leading-relaxed text-base">{cityIntro}</p>
               </section>
-            );
-          })()}
-          <span className="text-sm text-gray-500">{total.toLocaleString()} {total === 1 ? 'result' : 'results'}</span>
-        </div>
-
-        {listings.length === 0 ? (
-          <div className="bg-gray-50 rounded-2xl p-16 text-center">
-            <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-            </svg>
-            <h2 className="text-xl font-semibold text-gray-600 mb-2">No listings found</h2>
-            <p className="text-gray-400 max-w-md mx-auto">Try adjusting your search or browse all <a className="text-blue-600 hover:underline" href="/listings">Hampton Roads listings</a>.</p>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {listings.map((l) => (
-                <a key={l.id} href={`/listings/${l.id}/${l.slug}`} className="block bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
-                  <div className="aspect-[4/3] bg-gray-100 relative">
-                    {l.photo ? (
-                      <img src={l.photo} alt={l.address} className="w-full h-full object-cover" loading="lazy" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm italic">No photo provided</div>
-                    )}
-                    {l.status && l.status !== 'Active' && (
-                      <span className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">{l.status}</span>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <p className="text-2xl font-bold text-gray-900">${l.price.toLocaleString()}</p>
-                    <p className="text-sm text-gray-700 mt-1 line-clamp-1">{l.address}</p>
-                    <p className="text-xs text-gray-500">{l.city}, {l.state} {l.zip}</p>
-                    <div className="flex gap-3 mt-2 text-xs text-gray-600">
-                      {l.beds > 0 && <span><span className="font-semibold text-gray-900">{l.beds}</span> bd</span>}
-                      {l.baths > 0 && <span><span className="font-semibold text-gray-900">{l.baths}</span> ba</span>}
-                      {l.sqft > 0 && <span><span className="font-semibold text-gray-900">{l.sqft.toLocaleString()}</span> sqft</span>}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-10">
-                {page > 1 ? (
-                  <a href={buildPageUrl(page - 1)} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">← Previous</a>
-                ) : <span />}
-                <span className="text-sm text-gray-500">Page {page} of {totalPages.toLocaleString()}</span>
-                {page < totalPages ? (
-                  <a href={buildPageUrl(page + 1)} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">Next →</a>
-                ) : <span />}
-              </div>
             )}
-          </>
-        )}
-      </div>      <HamptonRoadsAreaGuide />
+          </div>
 
+          <FilterBar resultCount={total} />
+
+          {listings.length === 0 ? (
+            <div className="bg-gray-50 rounded-2xl p-16 text-center">
+              <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+              </svg>
+              <h2 className="text-xl font-semibold text-gray-600 mb-2">No listings found</h2>
+              <p className="text-gray-400 max-w-md mx-auto">Try adjusting your search or browse all <a className="text-blue-600 hover:underline" href="/listings">Hampton Roads listings</a>.</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                {listings.map((l) => (
+                  <a key={l.id} href={`/listings/${l.id}/${l.slug}`} className="block bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="aspect-[4/3] bg-gray-100 relative">
+                      {l.photo ? (
+                        <img src={l.photo} alt={l.address} className="w-full h-full object-cover" loading="lazy" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm italic">No photo provided</div>
+                      )}
+                      {l.status && l.status !== 'Active' && (
+                        <span className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">{l.status}</span>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <p className="text-2xl font-bold text-gray-900">${l.price.toLocaleString()}</p>
+                      <p className="text-sm text-gray-700 mt-1 line-clamp-1">{l.address}</p>
+                      <p className="text-xs text-gray-500">{l.city}, {l.state} {l.zip}</p>
+                      <div className="flex gap-3 mt-2 text-xs text-gray-600">
+                        {l.beds > 0 && <span><span className="font-semibold text-gray-900">{l.beds}</span> bd</span>}
+                        {l.baths > 0 && <span><span className="font-semibold text-gray-900">{l.baths}</span> ba</span>}
+                        {l.sqft > 0 && <span><span className="font-semibold text-gray-900">{l.sqft.toLocaleString()}</span> sqft</span>}
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-10">
+                  {page > 1 ? (
+                    <a href={buildPageUrl(page - 1)} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">← Previous</a>
+                  ) : <span />}
+                  <span className="text-sm text-gray-500">Page {page} of {totalPages.toLocaleString()}</span>
+                  {page < totalPages ? (
+                    <a href={buildPageUrl(page + 1)} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">Next →</a>
+                  ) : <span />}
+                </div>
+              )}
+            </>
+          )}
+        </main>
+      </div>
+
+      <HamptonRoadsAreaGuide />
     </div>
   )
 }
