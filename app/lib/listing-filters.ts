@@ -13,7 +13,8 @@ export type Filters = {
   city?: string;
   min_price?: number;
   max_price?: number;
-  beds?: number;
+  beds?: number;          // min beds
+  max_beds?: number;      // optional upper bound (range mode)
   baths?: number;
   type?: string[];        // ['Detached', 'Condo']
   min_sqft?: number;
@@ -76,6 +77,7 @@ export function parseFiltersFromSearchParams(
     min_price: parseInt_(get('min_price')),
     max_price: parseInt_(get('max_price')),
     beds: parseInt_(get('beds')),
+    max_beds: parseInt_(get('max_beds')),
     baths: parseFloat_(get('baths')),
     type: parseList(get('type')),
     min_sqft: parseInt_(get('min_sqft')),
@@ -97,6 +99,7 @@ export function serializeFiltersToQueryString(f: Filters): string {
   if (f.min_price !== undefined) p.set('min_price', String(f.min_price));
   if (f.max_price !== undefined) p.set('max_price', String(f.max_price));
   if (f.beds !== undefined) p.set('beds', String(f.beds));
+  if (f.max_beds !== undefined) p.set('max_beds', String(f.max_beds));
   if (f.baths !== undefined) p.set('baths', String(f.baths));
   if (f.type && f.type.length > 0) p.set('type', f.type.join(','));
   if (f.min_sqft !== undefined) p.set('min_sqft', String(f.min_sqft));
@@ -132,6 +135,7 @@ export function applyFiltersToSupabaseQuery(query: any, f: Filters): any {
   if (f.min_price !== undefined) query = query.gte('price', f.min_price);
   if (f.max_price !== undefined) query = query.lte('price', f.max_price);
   if (f.beds !== undefined) query = query.gte('beds', f.beds);
+  if (f.max_beds !== undefined) query = query.lte('beds', f.max_beds);
   if (f.baths !== undefined) query = query.gte('baths', f.baths);
   if (f.type && f.type.length > 0) {
     // Match against property_type using ilike (case-insensitive). Supabase

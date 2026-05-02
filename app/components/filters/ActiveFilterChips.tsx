@@ -37,11 +37,15 @@ function buildChips(f: Filters): Chip[] {
       clear: (curr) => ({ ...curr, min_price: undefined, max_price: undefined }),
     })
   }
-  if (f.beds !== undefined) {
+  if (f.beds !== undefined || f.max_beds !== undefined) {
+    let label: string
+    if (f.beds !== undefined && f.max_beds !== undefined) label = `${f.beds}–${f.max_beds} beds`
+    else if (f.beds !== undefined) label = `${f.beds}+ beds`
+    else label = `up to ${f.max_beds} beds`
     out.push({
       key: 'beds',
-      label: `${f.beds}+ beds`,
-      clear: (curr) => ({ ...curr, beds: undefined }),
+      label,
+      clear: (curr) => ({ ...curr, beds: undefined, max_beds: undefined }),
     })
   }
   if (f.baths !== undefined) {
@@ -130,14 +134,14 @@ export default function ActiveFilterChips() {
       {chips.map((c) => (
         <span
           key={c.key}
-          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-50 text-primary-700 border border-primary-200 text-xs font-medium"
+          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 text-xs font-medium"
         >
           {c.label}
           <button
             type="button"
             aria-label={`Remove ${c.label}`}
             onClick={() => remove(c)}
-            className="ml-1 text-primary-500 hover:text-primary-700"
+            className="ml-1 text-red-500 hover:text-red-700"
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

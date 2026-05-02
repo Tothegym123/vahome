@@ -142,6 +142,7 @@ export default async function ListingsPage({
               {filters.min_price !== undefined && <input type="hidden" name="min_price" value={String(filters.min_price)} />}
               {filters.max_price !== undefined && <input type="hidden" name="max_price" value={String(filters.max_price)} />}
               {filters.beds !== undefined && <input type="hidden" name="beds" value={String(filters.beds)} />}
+              {filters.max_beds !== undefined && <input type="hidden" name="max_beds" value={String(filters.max_beds)} />}
               {filters.baths !== undefined && <input type="hidden" name="baths" value={String(filters.baths)} />}
               {filters.type && filters.type.length > 0 && <input type="hidden" name="type" value={filters.type.join(',')} />}
               {filters.min_sqft !== undefined && <input type="hidden" name="min_sqft" value={String(filters.min_sqft)} />}
