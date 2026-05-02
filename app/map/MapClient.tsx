@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { getDisplayStatus } from '../lib/listing-status';
 import Script from 'next/script';
 import { getDutyStation, distanceMiles, type DutyStation } from '../data/duty-stations';
 import { MarkerClusterer, SuperClusterAlgorithm } from '@googlemaps/markerclusterer';
@@ -1065,7 +1066,7 @@ export default function MapClient() {
                           backgroundColor: getStatusColor(listing.status, listing.contingent),
                         }}
                       >
-                        {listing.status}
+                        {getDisplayStatus(listing.status, listing.contingent)}
                       </span>
                     </div>
                     <div className="flex gap-2 mt-2 text-xs text-gray-600">
@@ -1140,7 +1141,7 @@ export default function MapClient() {
                             backgroundColor: getStatusColor(listing.status, listing.contingent),
                           }}
                         >
-                          {listing.status}
+                          {getDisplayStatus(listing.status, listing.contingent)}
                         </span>
                       </div>
                       <div className="flex gap-2 mt-2 text-xs text-gray-600">
