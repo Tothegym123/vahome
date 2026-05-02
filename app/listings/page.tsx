@@ -11,6 +11,7 @@ import {
 } from '../lib/listing-filters'
 import { citySlugFromName, CITIES } from '../lib/cities'
 import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, isContingentFromRaw } from '../lib/listing-status'
+import { canonicalListingSlug } from '../lib/listing-slug'
 
 // Returns true when ?city= is the only filter set on the URL (so we can offer
 // users + Google a redirect/canonical to the clean /listings/[city]/ page).
@@ -287,9 +288,4 @@ export default async function ListingsPage({
             </>
           )}
         </main>
-      </div>
-
-      <HamptonRoadsAreaGuide />
-    </div>
-  )
-}
+    
