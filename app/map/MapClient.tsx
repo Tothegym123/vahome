@@ -565,6 +565,10 @@ export default function MapClient() {
     if (clustererRef.current) {
       clustererRef.current.clearMarkers();
     }
+    // Reset clusterer-active state so the next evaluateClustering() correctly
+    // re-adds the new markers (without this, the empty clusterer "remembers"
+    // it was active and never gets the fresh markers).
+    clustererActiveRef.current = false;
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current.clear();
     infoWindowsRef.current.forEach((iw) => iw.close());
@@ -682,6 +686,18 @@ export default function MapClient() {
           clustererRef.current.addMarkers(newMarkers);
         }
         clustererActiveRef.current = true;
+      } else if (shouldCluster && clustererActiveRef.current) {
+        // Already clustering — verify the clusterer has these specific markers.
+        // The library exposes getMarkers() on recent versions; if the marker
+        // array doesn't match, re-sync. Cheap insurance against stale state.
+        const cur = clustererRef.current?.getMarkers?.() ?? [];
+        if (cur.length !== newMarkers.length) {
+          if (clustererRef.current) {
+            clustererRef.current.clearMarkers();
+            for (const m of newMarkers) m.setMap(null);
+            clustererRef.current.addMarkers(newMarkers);
+          }
+        }
       } else if (!shouldCluster && clustererActiveRef.current) {
         // Switch OFF: take markers back from clusterer, add to map directly
         if (clustererRef.current) {
