@@ -23,6 +23,7 @@ import { createClient } from "@supabase/supabase-js";
 import HamptonRoadsAreaGuide from "../../components/HamptonRoadsAreaGuide";
 import { applyFiltersToSupabaseQuery } from "../../lib/listing-filters";
 import { CITIES, CITY_SLUGS, getCity, type CityData } from "../../lib/cities";
+import { getDisplayStatus, getDisplayStatusBadgeClasses, isContingentFromRaw } from "../../lib/listing-status";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -51,7 +52,7 @@ async function fetchCityListings(cityDisplayName: string) {
   let q = supabase
     .from("listings")
     .select(
-      "id, address, city, state, zip, price, beds, baths, sqft, status, photos, mls_number",
+      "id, address, city, state, zip, price, beds, baths, sqft, status, photos, mls_number, raw",
       { count: "exact" },
     )
     .gt("price", 0)
@@ -67,21 +68,26 @@ async function fetchCityListings(cityDisplayName: string) {
     console.error("[/listings/[city]] supabase error", error);
     return { listings: [], total: 0 };
   }
-  const listings = (data || []).map((r: any) => ({
-    id: r.id,
-    address: r.address,
-    city: r.city,
-    state: r.state,
-    zip: r.zip,
-    price: r.price ?? 0,
-    beds: r.beds ?? 0,
-    baths: r.baths != null ? Number(r.baths) : 0,
-    sqft: r.sqft ?? 0,
-    status: r.status,
-    photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : null,
-    mls_number: r.mls_number,
-    slug: generateSlug(r.address, r.city, r.state, r.zip),
-  }));
+  const listings = (data || []).map((r: any) => {
+    const contingent = isContingentFromRaw(r.raw);
+    return {
+      id: r.id,
+      address: r.address,
+      city: r.city,
+      state: r.state,
+      zip: r.zip,
+      price: r.price ?? 0,
+      beds: r.beds ?? 0,
+      baths: r.baths != null ? Number(r.baths) : 0,
+      sqft: r.sqft ?? 0,
+      status: r.status,
+      contingent,
+      displayStatus: getDisplayStatus(r.status, contingent),
+      photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : null,
+      mls_number: r.mls_number,
+      slug: generateSlug(r.address, r.city, r.state, r.zip),
+    };
+  });
   return { listings, total: count || 0 };
 }
 
@@ -213,9 +219,9 @@ export default async function CityListingsPage({ params }: { params: { id: strin
                         No photo provided
                       </div>
                     )}
-                    {l.status && l.status !== "Active" && (
-                      <span className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                        {l.status}
+                    {l.displayStatus !== "Active" && l.displayStatus !== "Unknown" && (
+                      <span className={`absolute top-2 left-2 px-2 py-1 rounded text-xs font-semibold ${getDisplayStatusBadgeClasses(l.displayStatus)}`}>
+                        {l.displayStatus}
                       </span>
                     )}
                   </div>

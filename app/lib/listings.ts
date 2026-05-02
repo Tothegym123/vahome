@@ -19,6 +19,7 @@ export interface Listing {
   photos: string[];
   img: string;
   status: string;
+  contingent: boolean;
   propertyType: string;
   type: string;
   yearBuilt: number;
@@ -87,6 +88,7 @@ export const sampleListings: Listing[] = [
     ],
     img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80',
     status: 'Active',
+    contingent: false,
     propertyType: 'Detached',
     type: 'Single Family',
     yearBuilt: 1988,
@@ -152,6 +154,7 @@ export const sampleListings: Listing[] = [
     ],
     img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
     status: 'Active',
+    contingent: false,
     propertyType: 'Attached/Townhouse',
     type: 'Townhouse',
     yearBuilt: 1995,
@@ -217,6 +220,7 @@ export const sampleListings: Listing[] = [
     ],
     img: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80',
     status: 'Active',
+    contingent: false,
     propertyType: 'Detached',
     type: 'Single Family',
     yearBuilt: 1990,
@@ -282,6 +286,7 @@ export const sampleListings: Listing[] = [
     ],
     img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&q=80',
     status: 'Active',
+    contingent: false,
     propertyType: 'Detached',
     type: 'Single Family',
     yearBuilt: 2004,
@@ -347,6 +352,7 @@ export const sampleListings: Listing[] = [
     ],
     img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
     status: 'Active',
+    contingent: false,
     propertyType: 'Detached',
     type: 'Single Family',
     yearBuilt: 1951,
@@ -554,6 +560,15 @@ function _mapSupabaseRow(r: any): Listing {
     photos: Array.isArray(r.photos) ? r.photos : [],
     img: (Array.isArray(r.photos) && r.photos[0]) || '',
     status: r.status ?? '',
+    contingent: (() => {
+      const raw = r.raw;
+      if (!raw) return false;
+      const exists = raw.ContingencyExists;
+      if (typeof exists === 'string' && exists.trim().toLowerCase() === 'contingent') return true;
+      const text = raw.Contingencies;
+      if (typeof text === 'string' && text.trim().length > 0) return true;
+      return false;
+    })(),
     propertyType: r.property_type ?? '',
     type: r.property_type ?? '',
     yearBuilt: r.year_built ?? 0,

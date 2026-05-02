@@ -10,6 +10,7 @@ import {
   type Filters,
 } from '../lib/listing-filters'
 import { citySlugFromName, CITIES } from '../lib/cities'
+import { getDisplayStatus, getDisplayStatusBadgeClasses, isContingentFromRaw } from '../lib/listing-status'
 
 // Returns true when ?city= is the only filter set on the URL (so we can offer
 // users + Google a redirect/canonical to the clean /listings/[city]/ page).
@@ -57,7 +58,7 @@ async function fetchListings(filters: Filters) {
   let q = supabase
     .from('listings')
     .select(
-      'id, address, city, state, zip, price, beds, baths, sqft, status, photos, mls_number',
+      'id, address, city, state, zip, price, beds, baths, sqft, status, photos, mls_number, raw',
       { count: 'exact' },
     )
     .gt('price', 0)
@@ -71,21 +72,26 @@ async function fetchListings(filters: Filters) {
     console.error('[/listings] supabase error', error);
     return { listings: [], total: 0, page };
   }
-  const listings = (data || []).map((r: any) => ({
-    id: r.id,
-    address: r.address,
-    city: r.city,
-    state: r.state,
-    zip: r.zip,
-    price: r.price ?? 0,
-    beds: r.beds ?? 0,
-    baths: r.baths != null ? Number(r.baths) : 0,
-    sqft: r.sqft ?? 0,
-    status: r.status,
-    photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : null,
-    mls_number: r.mls_number,
-    slug: generateSlug(r.address, r.city, r.state, r.zip),
-  }));
+  const listings = (data || []).map((r: any) => {
+    const contingent = isContingentFromRaw(r.raw);
+    return {
+      id: r.id,
+      address: r.address,
+      city: r.city,
+      state: r.state,
+      zip: r.zip,
+      price: r.price ?? 0,
+      beds: r.beds ?? 0,
+      baths: r.baths != null ? Number(r.baths) : 0,
+      sqft: r.sqft ?? 0,
+      status: r.status,
+      contingent,
+      displayStatus: getDisplayStatus(r.status, contingent),
+      photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : null,
+      mls_number: r.mls_number,
+      slug: generateSlug(r.address, r.city, r.state, r.zip),
+    };
+  });
   return { listings, total: count || 0, page };
 }
 
@@ -249,8 +255,8 @@ export default async function ListingsPage({
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm italic">No photo provided</div>
                       )}
-                      {l.status && l.status !== 'Active' && (
-                        <span className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">{l.status}</span>
+                      {l.displayStatus !== 'Active' && l.displayStatus !== 'Unknown' && (
+                        <span className={`absolute top-2 left-2 px-2 py-1 rounded text-xs font-semibold ${getDisplayStatusBadgeClasses(l.displayStatus)}`}>{l.displayStatus}</span>
                       )}
                     </div>
                     <div className="p-4">

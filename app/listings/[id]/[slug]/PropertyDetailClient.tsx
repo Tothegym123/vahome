@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { getDisplayStatus } from '../../../lib/listing-status';
 import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
 import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
@@ -81,7 +82,7 @@ function SchoolCard({ label, school }: { label: string; school: string }) {
 
 /* -- Listing Status Tracker -- */
 
-function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOnMarket: number }) {
+function ListingStatusTracker({ status, daysOnMarket, contingent }: { status: string; daysOnMarket: number; contingent?: boolean }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const statuses = [
@@ -97,7 +98,7 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
       desc: 'The home is available with no accepted contracts',
     },
     {
-      label: 'Contingent',
+      label: 'Under Contract',
       bg: 'bg-yellow-50',
       bgActive: 'bg-yellow-200',
       text: 'text-yellow-600',
@@ -131,7 +132,7 @@ function ListingStatusTracker({ status, daysOnMarket }: { status: string; daysOn
     },
   ];
 
-  const normalizedStatus = status.toLowerCase().trim();
+  const normalizedStatus = getDisplayStatus(status, contingent).toLowerCase();
   return (
     <div className="w-full">
       <div className="flex items-center gap-2">
@@ -570,7 +571,7 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
 
           {/* Price Bar */}
                           <div className="bg-white rounded-xl border border-gray-100 px-6 py-3 mb-2">
-                <ListingStatusTracker status={listing.status} daysOnMarket={listing.daysOnMarket} />
+                <ListingStatusTracker status={listing.status} contingent={listing.contingent} daysOnMarket={listing.daysOnMarket} />
               </div>
 
             {/* Military Analyze Button */}
