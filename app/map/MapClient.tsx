@@ -667,8 +667,8 @@ export default function MapClient() {
     // Decide clustering once per listings refresh, based on the total
     // newMarkers.length. The /api/map-listings endpoint already returns only
     // what's in the visible bbox, so this is effectively the viewport count.
-    // Above 200 -> cluster; below -> show individual pills.
-    const SHOULD_CLUSTER_THRESHOLD = 200;
+    // Above 300 -> cluster; below -> show individual pills.
+    const SHOULD_CLUSTER_THRESHOLD = 300;
     if (newMarkers.length > SHOULD_CLUSTER_THRESHOLD) {
       // Cluster: hand markers to the clusterer (it manages map membership)
       for (const m of newMarkers) m.setMap(null);
