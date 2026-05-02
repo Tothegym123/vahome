@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import Script from 'next/script';
 import { getDutyStation, distanceMiles, type DutyStation } from '../data/duty-stations';
-import { MarkerClusterer } from '@googlemaps/markerclusterer';
+import { MarkerClusterer, SuperClusterAlgorithm } from '@googlemaps/markerclusterer';
 
 declare const google: any;
 
@@ -574,6 +574,14 @@ export default function MapClient() {
     if (!clustererRef.current) {
       clustererRef.current = new MarkerClusterer({
         map: mapRef.current,
+        algorithm: new SuperClusterAlgorithm({
+          // Always cluster across our usable zoom range. The defaults can stop
+          // emitting clusters at very low zoom, which made markers disappear.
+          radius: 80,
+          minZoom: 0,
+          maxZoom: 20,
+          minPoints: 2,
+        }),
         renderer: {
           render: ({ count, position }: any) => {
             // Tiered sizes for visual hierarchy at glance
