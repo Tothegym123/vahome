@@ -25,18 +25,13 @@ import {
   parseFiltersFromSearchParams,
   applyFiltersToSupabaseQuery,
 } from '../../lib/listing-filters'
+import { canonicalListingSlug } from '../../lib/listing-slug'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-function generateSlug(address: string, city: string, state: string, zip: string): string {
-  return [address, city, state, zip]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
+function generateSlug(address: string, city: string, _state?: string, _zip?: string): string {
+  return canonicalListingSlug({ address, city })
 }
 
 function formatPriceShort(price: number): string {

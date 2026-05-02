@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, type DisplayStatus } from '../../../lib/listing-status';
+import ListingMapEmbed from './ListingMapEmbed';
+import { CITIES, citySlugFromName } from '../../../lib/cities';
 import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
 import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
@@ -79,6 +81,28 @@ function SchoolCard({ label, school }: { label: string; school: string }) {
   );
 }
 
+
+
+// Convert REIN's ALL-CAPS address strings into Title Case for display, while
+// preserving the address itself (numbers, punctuation, common suffixes work).
+function titleCaseAddress(s: string): string {
+  if (!s) return '';
+  return s
+    .toLowerCase()
+    .split(/(\s+|,|-)/)
+    .map((part) => {
+      if (/^\s+|,|-$/.test(part)) return part;
+      // Keep state abbreviations uppercase (VA, NC, MD, etc.)
+      if (/^(va|nc|md|dc|pa|ny|tn|wv|ky|sc)$/i.test(part)) return part.toUpperCase();
+      return part.replace(/\b([a-z])/g, (c) => c.toUpperCase());
+    })
+    .join('');
+}
+
+// Take just the street portion (everything before the first comma).
+function streetOnly(addr: string): string {
+  return (addr || '').split(',')[0].trim();
+}
 
 /* -- Listing Status Tracker -- */
 
@@ -640,9 +664,9 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
 
             {/* Address & MLS Info */}
             <div className="bg-white rounded-xl border border-gray-100 px-6 py-5">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{listing.address}</h1>
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">{titleCaseAddress(streetOnly(listing.address))}</h1>
               <p className="text-gray-600 text-sm">
-                {listing.city}, {listing.state} {listing.zip}
+                {titleCaseAddress(listing.city)}, {(listing.state || 'VA').length === 2 ? (listing.state || 'VA').toUpperCase() : titleCaseAddress(listing.state || 'Virginia')} {listing.zip}
               </p>
               <p className="text-gray-500 text-base mt-3">
                 MLS# {listing.mlsNumber} &middot; {listing.subdivision} &middot; {listing.county}
@@ -885,6 +909,28 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 >
                   <CommuteTimes lat={listing.lat} lng={listing.lng} />
                 </CollapsibleSection>
+
+                {/* Embedded Google Map + Street View — gives Google a strong physical-location signal */}
+                <ListingMapEmbed lat={listing.lat} lng={listing.lng} address={streetOnly(listing.address)} city={listing.city} />
+
+                {/* City context — pulled from app/lib/cities.ts so the listing detail
+                    inherits the same canonical city copy used on /listings/[city]/. */}
+                {(() => {
+                  const slug = citySlugFromName(listing.city);
+                  const c = slug ? CITIES[slug] : undefined;
+                  if (!c) return null;
+                  return (
+                    <section className="bg-white rounded-xl border border-gray-100 p-6">
+                      <h2 className="text-lg font-semibold text-gray-900 mb-2">About buying in {c.displayName}</h2>
+                      <p className="text-gray-700 leading-relaxed text-sm">{c.intro}</p>
+                      <p className="mt-3 text-sm">
+                        <a href={`/listings/${c.slug}/`} className="text-primary-600 hover:underline font-medium">
+                          See more {c.displayName} homes for sale →
+                        </a>
+                      </p>
+                    </section>
+                  );
+                })()}
             </div>
 
             {/* Footer Info */}

@@ -22,6 +22,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import HamptonRoadsAreaGuide from "../../components/HamptonRoadsAreaGuide";
 import { applyFiltersToSupabaseQuery } from "../../lib/listing-filters";
+import { canonicalListingSlug } from "../../lib/listing-slug";
 import { CITIES, CITY_SLUGS, getCity, type CityData } from "../../lib/cities";
 import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, isContingentFromRaw } from "../../lib/listing-status";
 
@@ -30,14 +31,8 @@ export const revalidate = 0;
 
 const PAGE_SIZE = 60;
 
-function generateSlug(address: string, city: string, state: string, zip: string): string {
-  return [address, city, state, zip]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
+function generateSlug(address: string, city: string, _state?: string, _zip?: string): string {
+  return canonicalListingSlug({ address, city });
 }
 
 function sb() {
