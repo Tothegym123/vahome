@@ -18,7 +18,7 @@ function client() {
 const VALID_COLUMNS = new Set([
   'mls_number','address','city','state','zip','county','subdivision','lat','lng',
   'price','status','status_changed_at','beds','baths','half_baths','sqft','lot_size',
-  'year_built','stories','garage','property_type','days_on_market','list_date',
+  'year_built','stories','garage','property_type','property_subtype','days_on_market','list_date',
   'list_agent_name','list_agent_phone','list_agent_email','list_office_name','list_office_phone',
   'description','photos','rooms','flooring','kitchen','appliances','hvac','fireplace',
   'exterior','roof','parking','pool','fencing','waterfront','waterfront_type','water_view',

@@ -31,11 +31,12 @@ export type Filters = {
 export const DEFAULT_STATUS = ['Active', 'Pending', 'Contingent'];
 
 export const PROPERTY_TYPES: { value: string; label: string }[] = [
-  { value: 'Residential', label: 'Single Family' },
-  { value: 'Multi Family Residential', label: 'Multi-Family' },
-  { value: 'Land and Farms', label: 'Land' },
-  { value: 'Rental', label: 'Rental' },
-  { value: 'Commercial/Industrial', label: 'Commercial' },
+  { value: 'single_family', label: 'Single Family' },
+  { value: 'townhome_condo', label: 'Townhome / Condo' },
+  { value: 'multi_family', label: 'Multi-Family' },
+  { value: 'land', label: 'Land' },
+  { value: 'rental', label: 'Rental' },
+  { value: 'commercial', label: 'Commercial' },
 ];
 
 export const STATUS_CHOICES: { value: string; label: string }[] = [
@@ -137,10 +138,40 @@ export function applyFiltersToSupabaseQuery(query: any, f: Filters): any {
   if (f.max_beds !== undefined) query = query.lte('beds', f.max_beds);
   if (f.baths !== undefined) query = query.gte('baths', f.baths);
   if (f.type && f.type.length > 0) {
-    // Match against property_type using ilike (case-insensitive). Supabase
-    // .or() takes a comma-joined string of expressions.
-    const orTerms = f.type.map((t) => `property_type.ilike.%${t}%`).join(',');
-    query = query.or(orTerms);
+    // Translate buyer-facing type groups into (property_type, property_subtype)
+    // OR conditions. PostgREST `or=()` syntax with nested `and(...)` is used
+    // to express "AND within a group, OR between groups".
+    const orParts: string[] = [];
+    for (const t of f.type) {
+      switch (t) {
+        case 'single_family':
+          orParts.push('and(property_type.eq.Residential,property_subtype.eq.Detached)');
+          break;
+        case 'townhome_condo':
+          orParts.push('and(property_type.eq.Residential,property_subtype.eq.Attached)');
+          break;
+        case 'multi_family':
+          orParts.push('property_type.eq.Multi Family Residential');
+          orParts.push('property_subtype.eq.Duplex');
+          orParts.push('property_subtype.eq.Quadruplex');
+          break;
+        case 'land':
+          orParts.push('property_type.eq.Land and Farms');
+          break;
+        case 'rental':
+          orParts.push('property_type.eq.Rental');
+          break;
+        case 'commercial':
+          orParts.push('property_type.eq.Commercial/Industrial');
+          break;
+        default:
+          // Legacy / pass-through: literal property_type value match
+          orParts.push(`property_type.ilike.%${t}%`);
+      }
+    }
+    if (orParts.length > 0) {
+      query = query.or(orParts.join(','));
+    }
   }
   if (f.min_sqft !== undefined) query = query.gte('sqft', f.min_sqft);
   if (f.max_sqft !== undefined) query = query.lte('sqft', f.max_sqft);
