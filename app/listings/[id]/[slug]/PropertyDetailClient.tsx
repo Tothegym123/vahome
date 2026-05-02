@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { getDisplayStatus } from '../../../lib/listing-status';
+import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, type DisplayStatus } from '../../../lib/listing-status';
 import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
 import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
@@ -85,49 +85,34 @@ function SchoolCard({ label, school }: { label: string; school: string }) {
 function ListingStatusTracker({ status, daysOnMarket, contingent }: { status: string; daysOnMarket: number; contingent?: boolean }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const statuses = [
+  // Helper: convert a saturated #rrggbb to an rgba() with the given alpha,
+  // used for the soft "inactive" tint on tracker pills (active pill keeps
+  // the full saturated hex from the central palette).
+  const withAlpha = (hex: string, alpha: number): string => {
+    const m = /^#([0-9a-f]{6})$/i.exec(hex);
+    if (!m) return hex;
+    const n = parseInt(m[1], 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+  };
+
+  // Single source of truth: status labels + their meanings. Colors are
+  // derived at render time from the central palette in app/lib/listing-status,
+  // so any palette change there propagates to this tracker automatically.
+  const statuses: { label: DisplayStatus; desc: string }[] = [
     {
       label: 'Active',
-      bg: 'bg-green-100',
-      bgActive: 'bg-green-300',
-      text: 'text-green-600',
-      textActive: 'text-green-900',
-      border: 'border-green-200',
-      borderActive: 'border-green-500',
-      ring: 'ring-green-300',
       desc: 'The home is available with no accepted contracts',
     },
     {
       label: 'Under Contract',
-      bg: 'bg-yellow-50',
-      bgActive: 'bg-yellow-200',
-      text: 'text-yellow-600',
-      textActive: 'text-yellow-900',
-      border: 'border-yellow-200',
-      borderActive: 'border-yellow-500',
-      ring: 'ring-yellow-300',
       desc: 'Under contract with conditions (inspection, financing, etc.) and may return to market',
     },
     {
       label: 'Pending',
-      bg: 'bg-orange-50',
-      bgActive: 'bg-orange-200',
-      text: 'text-orange-600',
-      textActive: 'text-orange-900',
-      border: 'border-orange-200',
-      borderActive: 'border-orange-500',
-      ring: 'ring-orange-300',
       desc: 'All contingencies removed; the sale is very likely to close',
     },
     {
       label: 'Sold',
-      bg: 'bg-red-50',
-      bgActive: 'bg-red-200',
-      text: 'text-red-600',
-      textActive: 'text-red-900',
-      border: 'border-red-200',
-      borderActive: 'border-red-500',
-      ring: 'ring-red-300',
       desc: 'The transaction has been completed',
     },
   ];
@@ -150,14 +135,21 @@ function ListingStatusTracker({ status, daysOnMarket, contingent }: { status: st
           {showTooltip && (
             <div className="absolute left-0 top-8 z-50 w-80 bg-white rounded-xl shadow-xl border border-gray-200 p-4 text-left">
               <p className="text-sm font-semibold text-gray-800 mb-3">Listing Status Guide</p>
-              {statuses.map((s) => (
-                <div key={s.label} className="mb-2.5 last:mb-0">
-                  <span className={"inline-block px-2 py-0.5 rounded text-xs font-semibold mr-2 " + s.bgActive + " " + s.textActive}>
-                    {s.label}
-                  </span>
-                  <span className="text-xs text-gray-600 leading-relaxed">{s.desc}</span>
-                </div>
-              ))}
+              {statuses.map((s) => {
+                const bg = getDisplayStatusColor(s.label);
+                const fg = getDisplayStatusTextColor(s.label);
+                return (
+                  <div key={s.label} className="mb-2.5 last:mb-0">
+                    <span
+                      className="inline-block px-2 py-0.5 rounded text-xs font-semibold mr-2"
+                      style={{ backgroundColor: bg, color: fg }}
+                    >
+                      {s.label}
+                    </span>
+                    <span className="text-xs text-gray-600 leading-relaxed">{s.desc}</span>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -166,10 +158,26 @@ function ListingStatusTracker({ status, daysOnMarket, contingent }: { status: st
         <div className="grid grid-cols-4 gap-2">
           {statuses.map((s) => {
             const isCurrent = normalizedStatus === s.label.toLowerCase();
+            const sat = getDisplayStatusColor(s.label);
+            const fg = getDisplayStatusTextColor(s.label);
+            const style: React.CSSProperties = isCurrent
+              ? {
+                  backgroundColor: sat,
+                  color: fg,
+                  border: `1px solid ${sat}`,
+                  boxShadow: `0 0 0 2px ${withAlpha(sat, 0.35)}`,
+                }
+              : {
+                  backgroundColor: withAlpha(sat, 0.12),
+                  color: sat,
+                  border: `1px solid ${withAlpha(sat, 0.35)}`,
+                  opacity: 0.6,
+                };
             return (
               <div
                 key={s.label}
-                className={"px-2 py-1 rounded-md text-center text-xs font-semibold border transition-all " + (isCurrent ? s.bgActive + " " + s.textActive + " " + s.borderActive + " ring-2 " + s.ring + " shadow-sm" : s.bg + " " + s.text + " " + s.border + " opacity-50")}
+                className="px-2 py-1 rounded-md text-center text-xs font-semibold transition-all"
+                style={style}
               >
                 {s.label}
               </div>
