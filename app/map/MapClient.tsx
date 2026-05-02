@@ -265,15 +265,21 @@ const MILITARY_BASES = [
 
 // Color mapping for listing status
 const getStatusColor = (status: string): string => {
-  switch (status.toLowerCase()) {
+  // Match the listing-detail page status badges (PropertyDetailClient.tsx):
+  // Active = green, Contingent = yellow, Pending = orange, Sold = red.
+  switch (status.toLowerCase().trim()) {
     case 'active':
-      return '#22c55e'; // green
+      return '#22c55e'; // Tailwind green-500
+    case 'contingent':
+      return '#eab308'; // Tailwind yellow-500
     case 'pending':
-      return '#eab308'; // yellow
+      return '#f97316'; // Tailwind orange-500
     case 'sold':
-      return '#ef4444'; // red
+      return '#ef4444'; // Tailwind red-500
+    case 'coming soon':
+      return '#3b82f6'; // Tailwind blue-500 (distinct from the four primary statuses)
     default:
-      return '#6366f1'; // indigo
+      return '#6b7280'; // Tailwind gray-500 (unknown status — neutral)
   }
 };
 
