@@ -522,6 +522,7 @@ export function listingsToGeoJSON(listings: Listing[]): { type: string; features
 // this keeps any old hard-coded test IDs working during the transition.
 // =============================================================================
 
+import { cache } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 let _sbClient: any = null;
@@ -616,23 +617,36 @@ function _mapSupabaseRow(r: any): Listing {
   };
 }
 
-export async function getListingByIdAsync(id: number): Promise<Listing | null> {
-  // Try Supabase first
-  const supabase = _sb();
-  if (supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('listings')
-        .select('*')
-        .eq('id', id)
-        .maybeSingle();
-      if (data && !error) {
-        return _mapSupabaseRow(data);
+/**
+ * Per-request memoized listing fetch.
+ *
+ * React's cache() deduplicates calls within a single server-rendered request
+ * tree. Used so that `generateMetadata` and the page server component can each
+ * call `getListingByIdAsync(id)` without firing two Supabase queries — the
+ * second call returns the in-memory cached promise from the first.
+ *
+ * Important: cache() does NOT persist across requests (that's what ISR or
+ * `unstable_cache` is for). Each new HTTP request gets a fresh cache.
+ */
+export const getListingByIdAsync = cache(
+  async (id: number): Promise<Listing | null> => {
+    // Try Supabase first
+    const supabase = _sb();
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('listings')
+          .select('*')
+          .eq('id', id)
+          .maybeSingle();
+        if (data && !error) {
+          return _mapSupabaseRow(data);
+        }
+      } catch (e) {
+        console.warn('[listings] Supabase lookup error', e);
       }
-    } catch (e) {
-      console.warn('[listings] Supabase lookup error', e);
     }
+    // Fall back to legacy mock data (transitional)
+    return sampleListings.find((listing) => listing.id === id) || null;
   }
-  // Fall back to legacy mock data (transitional)
-  return sampleListings.find((listing) => listing.id === id) || null;
-}
+);
