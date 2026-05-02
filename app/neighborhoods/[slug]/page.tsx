@@ -33,6 +33,10 @@ import {
 } from "../../lib/neighborhoods";
 import { CITIES, getCity } from "../../lib/cities";
 import { canonicalListingSlug } from "../../lib/listing-slug";
+import { getApprovedReviews, aggregateReviews } from "../../lib/reviews";
+import ReviewForm from "../../components/reviews/ReviewForm";
+import ReviewList from "../../components/reviews/ReviewList";
+import ReviewSchema from "../../components/reviews/ReviewSchema";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -189,9 +193,20 @@ export default async function NeighborhoodPage({ params }: { params: { slug: str
     .filter((o) => o.slug !== n.slug)
     .slice(0, 12);
 
+  // Approved community reviews for this neighborhood + aggregate stats for schema
+  const reviews = await getApprovedReviews(n.slug);
+  const reviewAggregate = aggregateReviews(reviews);
+
   return (
     <div className="pt-20 min-h-screen">
       <NeighborhoodJsonLd n={n} listingCount={total} />
+      <ReviewSchema
+        neighborhoodSlug={n.slug}
+        neighborhoodName={n.displayName}
+        cityName={n.parentCityName}
+        reviews={reviews}
+        aggregate={reviewAggregate}
+      />
 
       <div className="max-w-[1400px] mx-auto px-4 py-8">
         {/* Breadcrumb */}
@@ -317,6 +332,23 @@ export default async function NeighborhoodPage({ params }: { params: { slug: str
             </p>
           </section>
         )}
+
+        {/* Community reviews — approved-only display + submit form */}
+        <section className="mt-16 max-w-3xl" id="reviews">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            What residents say about {n.displayName}
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Honest, moderated reviews from people who&rsquo;ve lived in {n.displayName}. Share
+            your own experience to help future neighbors decide.
+          </p>
+
+          <div className="mb-8">
+            <ReviewList reviews={reviews} neighborhoodName={n.displayName} />
+          </div>
+
+          <ReviewForm neighborhoodSlug={n.slug} neighborhoodName={n.displayName} />
+        </section>
 
         {/* Other neighborhoods in the same city */}
         {sameCityOthers.length > 0 && (
