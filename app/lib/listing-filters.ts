@@ -31,12 +31,11 @@ export type Filters = {
 export const DEFAULT_STATUS = ['Active', 'Pending', 'Contingent'];
 
 export const PROPERTY_TYPES: { value: string; label: string }[] = [
-  { value: 'Detached', label: 'Single Family' },
-  { value: 'Condo', label: 'Condo' },
-  { value: 'Townhouse', label: 'Townhouse' },
+  { value: 'Residential', label: 'Single Family' },
+  { value: 'Multi Family Residential', label: 'Multi-Family' },
   { value: 'Land and Farms', label: 'Land' },
-  { value: 'Multi-Family', label: 'Multi-Family' },
-  { value: 'Other', label: 'Other' },
+  { value: 'Rental', label: 'Rental' },
+  { value: 'Commercial/Industrial', label: 'Commercial' },
 ];
 
 export const STATUS_CHOICES: { value: string; label: string }[] = [
