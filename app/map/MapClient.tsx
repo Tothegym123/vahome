@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import Script from 'next/script';
 import { getDutyStation, distanceMiles, type DutyStation } from '../data/duty-stations';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
 
 declare const google: any;
 
@@ -281,6 +282,7 @@ export default function MapClient() {
   const mapRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<Map<number, any>>(new Map());
+  const clustererRef = useRef<MarkerClusterer | null>(null);
   const videoMarkersRef = useRef<Map<string, any>>(new Map());
   const infoWindowsRef = useRef<Map<string, any>>(new Map());
   const currentInfoWindowRef = useRef<any>(null);
@@ -557,27 +559,59 @@ export default function MapClient() {
       return;
     }
 
-    // Clear old listing markers
+    // Clear old listing markers from the clusterer (if present) and the map.
+    if (clustererRef.current) {
+      clustererRef.current.clearMarkers();
+    }
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current.clear();
     infoWindowsRef.current.forEach((iw) => iw.close());
     infoWindowsRef.current.clear();
 
+    // Lazy-create the MarkerClusterer the first time we have markers.
+    if (!clustererRef.current) {
+      clustererRef.current = new MarkerClusterer({
+        map: mapRef.current,
+        renderer: {
+          render: ({ count, position }: any) => {
+            // Tiered sizes for visual hierarchy at glance
+            const size = count < 20 ? 36 : count < 100 ? 44 : count < 500 ? 52 : 60;
+            const fontSize = count < 20 ? 13 : count < 100 ? 15 : 17;
+            const fill = '#1d4ed8'; // blue-700, distinct from green/yellow listing pills
+            const svg = `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${size}\" height=\"${size}\" viewBox=\"0 0 ${size} ${size}\"><circle cx=\"${size/2}\" cy=\"${size/2}\" r=\"${size/2 - 3}\" fill=\"${fill}\" fill-opacity=\"0.92\" stroke=\"white\" stroke-width=\"3\"/><text x=\"${size/2}\" y=\"${size/2 + fontSize/3}\" font-family=\"Arial,sans-serif\" font-size=\"${fontSize}\" font-weight=\"700\" fill=\"white\" text-anchor=\"middle\">${count}</text></svg>`;
+            return new google.maps.Marker({
+              position,
+              icon: {
+                url: `data:image/svg+xml,${encodeURIComponent(svg)}`,
+                scaledSize: new google.maps.Size(size, size),
+                anchor: new google.maps.Point(size/2, size/2),
+              },
+              zIndex: 1000 + count,
+              label: undefined,
+            });
+          },
+        },
+      });
+    }
+
     const PRICE_ZOOM_THRESHOLD = 13;
     const initialZoom = mapRef.current?.getZoom?.() ?? 10;
     const showPriceInitially = initialZoom >= PRICE_ZOOM_THRESHOLD;
 
-    // Create new markers for each listing
+    // Build new markers for each listing — but DON'T add to the map directly.
+    // The MarkerClusterer below manages map membership and clusters dense areas.
+    const newMarkers: any[] = [];
     listings.forEach((listing) => {
       const color = getStatusColor(listing.status);
       const marker = new google.maps.Marker({
         position: { lat: listing.lat, lng: listing.lng },
-        map: mapRef.current,
+        // map intentionally omitted — clusterer adds/removes as needed
         icon: buildPillIcon(color, showPriceInitially ? listing.priceFormatted : undefined),
         title: listing.address,
       });
 
       markersRef.current.set(listing.id, marker);
+      newMarkers.push(marker);
 
       const photoHtml = (listing as any).photo
         ? `<a href="/listings/${listing.id}/${listing.slug}" style="display:block;width:100%;height:160px;overflow:hidden;background:#f3f4f6;"><img src="${(listing as any).photo}" alt="${listing.address}" style="width:100%;height:100%;object-fit:cover;display:block;" /></a>`
@@ -612,6 +646,12 @@ export default function MapClient() {
         setSelectedListing(listing);
       });
     });
+
+    // Hand the new markers to the clusterer; it'll add them to the map and
+    // group dense areas into numbered circles.
+    if (clustererRef.current && newMarkers.length > 0) {
+      clustererRef.current.addMarkers(newMarkers);
+    }
 
     // Update pill icons when zoom crosses the price threshold
     const zoomListener = mapRef.current.addListener('zoom_changed', () => {
