@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NeighborhoodMatchLink from "../../../components/NeighborhoodMatchLink";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
@@ -80,31 +81,37 @@ export default function WilliamsburgMilitaryNeighborhoods() {
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Colonial Williamsburg / Historic Area</p>
+            <NeighborhoodMatchLink name="Colonial Williamsburg / Historic Area" />
             <p className="text-sm text-gray-700 mt-2">Walking distance to Colonial Williamsburg's restored 18th-century historic district. Limited inventory and premium pricing, but unique character. Mature trees and walkable downtown with restaurants and the College of William & Mary nearby.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> History enthusiasts, retirees, senior officers wanting unique character.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Kingsmill</p>
+            <NeighborhoodMatchLink name="Kingsmill" />
             <p className="text-sm text-gray-700 mt-2">Master-planned gated community on the James River with three golf courses (host of the LPGA Pure Silk Championship), tennis courts, marina, and a private beach. Higher-end pricing. Premium resale value.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Senior officers and DoD executives prioritizing amenities and resale.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Ford's Colony</p>
+            <NeighborhoodMatchLink name="Ford's Colony" />
             <p className="text-sm text-gray-700 mt-2">Large gated community in James City County. Three 18-hole golf courses, country club, tennis. Mid-tier to upscale pricing. Mature, established feel.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Mid-grade officers and senior NCOs wanting golf-community lifestyle.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Stonehouse</p>
+            <NeighborhoodMatchLink name="Stonehouse" />
             <p className="text-sm text-gray-700 mt-2">Newer master-planned community in the Norge / Toano area. Golf course, lake, hiking trails. Mid-range pricing with newer construction.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Families wanting newer construction and outdoor recreation.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Settlers Mill / The Vineyards</p>
+            <NeighborhoodMatchLink name="Settlers Mill / The Vineyards" />
             <p className="text-sm text-gray-700 mt-2">Established suburban neighborhoods near Route 199 and I-64. Mid-tier pricing, family-friendly streets, walkable to retail. Strong James River District schools.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Families prioritizing schools and quick I-64 access for commute.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Governor's Land</p>
+            <NeighborhoodMatchLink name="Governor's Land" />
             <p className="text-sm text-gray-700 mt-2">Premier gated community on the James River with golf course. Larger lots, custom homes, riverfront pricing. Smaller, exclusive feel.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Senior officers and retirees wanting riverfront and privacy.</p>
           </div>

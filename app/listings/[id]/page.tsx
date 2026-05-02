@@ -24,6 +24,7 @@ import HamptonRoadsAreaGuide from "../../components/HamptonRoadsAreaGuide";
 import { applyFiltersToSupabaseQuery } from "../../lib/listing-filters";
 import { canonicalListingSlug } from "../../lib/listing-slug";
 import { CITIES, CITY_SLUGS, getCity, type CityData } from "../../lib/cities";
+import { neighborhoodsByCity, type NeighborhoodData } from "../../lib/neighborhoods";
 import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, isContingentFromRaw } from "../../lib/listing-status";
 
 export const dynamic = "force-dynamic";
@@ -296,6 +297,34 @@ export default async function CityListingsPage({ params }: { params: { id: strin
             ))}
           </div>
         </section>
+
+        {/* Neighborhoods in this city — links to /neighborhoods/[slug]/ */}
+        {(() => {
+          const cityNeighborhoods = neighborhoodsByCity(city.slug);
+          if (cityNeighborhoods.length === 0) return null;
+          return (
+            <section className="mt-12 max-w-3xl">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Neighborhoods in {city.displayName}
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Browse {city.displayName} homes by neighborhood — every neighborhood page shows
+                live REIN MLS listings filtered to that area.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {cityNeighborhoods.map((n: NeighborhoodData) => (
+                  <a
+                    key={n.slug}
+                    href={`/neighborhoods/${n.slug}/`}
+                    className="inline-block bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-primary-600 hover:text-primary-700"
+                  >
+                    {n.displayName}
+                  </a>
+                ))}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* Nearby cities */}
         {city.nearby.length > 0 && (

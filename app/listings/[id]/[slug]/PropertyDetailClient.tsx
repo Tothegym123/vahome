@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, type DisplayStatus } from '../../../lib/listing-status';
 import ListingMapEmbed from './ListingMapEmbed';
 import { CITIES, citySlugFromName } from '../../../lib/cities';
+import { neighborhoodForSubdivision } from '../../../lib/neighborhoods';
 import { Listing, formatPriceFull, formatPrice, getFullAddress } from '../../../lib/listings';
 import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
@@ -669,7 +670,18 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 {titleCaseAddress(listing.city)}, {(listing.state || 'VA').length === 2 ? (listing.state || 'VA').toUpperCase() : titleCaseAddress(listing.state || 'Virginia')} {listing.zip}
               </p>
               <p className="text-gray-500 text-base mt-3">
-                MLS# {listing.mlsNumber} &middot; {listing.subdivision} &middot; {listing.county}
+                MLS# {listing.mlsNumber} &middot;{" "}
+                {(() => {
+                  const matched = neighborhoodForSubdivision(listing.subdivision);
+                  if (matched) {
+                    return (
+                      <a href={`/neighborhoods/${matched.slug}/`} className="text-primary-700 hover:underline">
+                        {listing.subdivision}
+                      </a>
+                    );
+                  }
+                  return listing.subdivision;
+                })()} &middot; {listing.county}
               </p>
             </div>
 

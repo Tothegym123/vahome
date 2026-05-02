@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NeighborhoodMatchLink from "../../../components/NeighborhoodMatchLink";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
@@ -63,31 +64,37 @@ export default function HamptonMilitaryNeighborhoods() {
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Riverdale</p>
+            <NeighborhoodMatchLink name="Riverdale" />
             <p className="text-sm text-gray-700 mt-2">Quiet, established suburban neighborhood north of I-64. Strong fit for Langley AFB families. Mature trees, ranch and split-level housing stock. Outside major flood zones.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Air Force families wanting low-stress family living near base.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Wythe</p>
+            <NeighborhoodMatchLink name="Wythe" />
             <p className="text-sm text-gray-700 mt-2">Historic walkable district close to downtown Hampton with bungalows and Victorians. Restaurants and parks. Tucker-Capps Elementary (10/10) zoned for parts of Wythe.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Buyers prioritizing walkability and character.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Fox Hill</p>
+            <NeighborhoodMatchLink name="Fox Hill" />
             <p className="text-sm text-gray-700 mt-2">Bay-front community on the Chesapeake. Boating culture, working-water character. Mix of cottages and larger waterfront homes.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Boating families; verify FEMA flood zones (some lots Zone AE).</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Phoebus</p>
+            <NeighborhoodMatchLink name="Phoebus" />
             <p className="text-sm text-gray-700 mt-2">Historic harbor district near Fort Monroe. Walkable downtown with restaurants, breweries, antique shops. Phoebus High (7/10) is the highest-rated Hampton public high.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Walkable urban-feel buyers, Fort Monroe-adjacent.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Buckroe</p>
+            <NeighborhoodMatchLink name="Buckroe" />
             <p className="text-sm text-gray-700 mt-2">Hampton's beach neighborhood on the Chesapeake Bay. Beach lifestyle without VB prices. Buckroe Beach Park is a community anchor.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Beach-lifestyle buyers willing to manage flood-zone exposure (many lots in AE/VE).</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Northampton (Bethel Manor area)</p>
+            <NeighborhoodMatchLink name="Northampton (Bethel Manor area)" />
             <p className="text-sm text-gray-700 mt-2">Adjacent to Langley AFB family housing area. Bethel Manor Elementary (10/10) — top-rated in Hampton. Quiet, family-oriented.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Air Force families wanting top elementary school + closest commute.</p>
           </div>

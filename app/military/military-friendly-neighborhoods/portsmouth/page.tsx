@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NeighborhoodMatchLink from "../../../components/NeighborhoodMatchLink";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
@@ -78,31 +79,37 @@ export default function PortsmouthMilitaryNeighborhoods() {
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Olde Towne Portsmouth</p>
+            <NeighborhoodMatchLink name="Olde Towne Portsmouth" />
             <p className="text-sm text-gray-700 mt-2">Historic walkable district along the Elizabeth River with cobblestone streets, ferry to Norfolk Waterside, and 18th/19th century homes. Premium address but check flood zones — many lots are AE.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> NNSY shipyard workers, history buffs, walkability priority.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Churchland</p>
+            <NeighborhoodMatchLink name="Churchland" />
             <p className="text-sm text-gray-700 mt-2">Suburban West Portsmouth with established neighborhoods, larger lots, and Churchland High School. Quick I-664 access for commutes to Suffolk or Newport News via the MMMBT.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Families wanting space, dual-commute households.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Western Branch</p>
+            <NeighborhoodMatchLink name="Western Branch" />
             <p className="text-sm text-gray-700 mt-2">Crosses the Portsmouth/Chesapeake city line. Strong public schools (Western Branch HS, Chesapeake side) and varied housing stock from ranches to newer construction.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Families prioritizing schools while keeping NNSY/NMCP commute reasonable.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Cradock</p>
+            <NeighborhoodMatchLink name="Cradock" />
             <p className="text-sm text-gray-700 mt-2">Compact WWI-era planned community next to NNSY. Affordable starter homes, walkable. Listed on the National Register of Historic Places. Closest residential neighborhood to the shipyard.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Junior enlisted at NNSY, first-time buyers.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Park View</p>
+            <NeighborhoodMatchLink name="Park View" />
             <p className="text-sm text-gray-700 mt-2">Quiet residential area near NMCP with mid-century homes. Tree-lined streets, walkable to Park View Elementary.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Hospital corpsmen and medical staff at NMCP.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Port Norfolk</p>
+            <NeighborhoodMatchLink name="Port Norfolk" />
             <p className="text-sm text-gray-700 mt-2">Waterfront historic neighborhood, smaller and more affordable than Olde Towne. Direct views of the Norfolk skyline. Verify FEMA flood zones carefully.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Buyers wanting waterfront on a tighter budget.</p>
           </div>

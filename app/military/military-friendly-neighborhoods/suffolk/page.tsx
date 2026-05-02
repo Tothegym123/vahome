@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NeighborhoodMatchLink from "../../../components/NeighborhoodMatchLink";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
@@ -63,31 +64,37 @@ export default function SuffolkMilitaryNeighborhoods() {
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Harbour View</p>
+            <NeighborhoodMatchLink name="Harbour View" />
             <p className="text-sm text-gray-700 mt-2">North Suffolk's premier master-planned community. Manicured neighborhoods, retail at Harbour View Marketplace, walking trails. Quick I-664 access — under 25 min to NSN/Portsmouth, 25 min to JBLE/Newport News via MMMBT.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Officers and senior NCOs prioritizing dual-commute symmetry and resale.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Bennett's Creek / Bennett's Pasture</p>
+            <NeighborhoodMatchLink name="Bennett's Creek / Bennett's Pasture" />
             <p className="text-sm text-gray-700 mt-2">Established North Suffolk neighborhood with mature trees, larger lots, and quick MMMBT access. Strong public schools.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Families wanting space without going fully rural.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">River's Edge / Eagle Harbor</p>
+            <NeighborhoodMatchLink name="River's Edge / Eagle Harbor" />
             <p className="text-sm text-gray-700 mt-2">Newer construction along the Nansemond River. Waterfront and water-view options. Family-friendly.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Buyers wanting newer construction with water access.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Driver / Sleepy Hole</p>
+            <NeighborhoodMatchLink name="Driver / Sleepy Hole" />
             <p className="text-sm text-gray-700 mt-2">Established North Suffolk neighborhoods with country-club golf course (Sleepy Hole). Larger lots, mature character.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Senior officers wanting space and golf-community lifestyle.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Hillpoint Farms / Burbage Grant</p>
+            <NeighborhoodMatchLink name="Hillpoint Farms / Burbage Grant" />
             <p className="text-sm text-gray-700 mt-2">Mid-tier suburban North Suffolk. Family-friendly, school-zoned to strong feeders. Mid-range pricing.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> First-time buyers and growing families.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Downtown Suffolk / Olde Towne</p>
+            <NeighborhoodMatchLink name="Downtown Suffolk / Olde Towne" />
             <p className="text-sm text-gray-700 mt-2">Historic downtown with revival energy — restaurants, breweries, walkable streetscape. Smaller homes, character architecture.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Walkability priority, character-home enthusiasts.</p>
           </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NeighborhoodMatchLink from "../../../components/NeighborhoodMatchLink";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
@@ -64,31 +65,37 @@ export default function NewportNewsMilitaryNeighborhoods() {
         <div className="mt-6 space-y-5">
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Hilton Village</p>
+            <NeighborhoodMatchLink name="Hilton Village" />
             <p className="text-sm text-gray-700 mt-2">National Register historic district along the James River. Walkable Main Street, mature trees, Tudor-style cottages built 1918 for shipyard workers. Hilton Elementary (8/10).</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Buyers prioritizing character and walkability; Fort Eustis families.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Kiln Creek</p>
+            <NeighborhoodMatchLink name="Kiln Creek" />
             <p className="text-sm text-gray-700 mt-2">Master-planned suburban community at the Newport News-York County line. Golf course, lake, pool, manicured streets. Kiln Creek Elementary serves the area.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Mid-grade officers and senior NCOs wanting strong resale, suburban feel, quick I-64 access.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Riverside / Hilton Heights</p>
+            <NeighborhoodMatchLink name="Riverside / Hilton Heights" />
             <p className="text-sm text-gray-700 mt-2">Mid-century neighborhoods near Riverside Regional Medical Center. Established, mature housing stock. Mid-range pricing.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Buyers wanting Peninsula urban-amenities with hospital proximity.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Denbigh</p>
+            <NeighborhoodMatchLink name="Denbigh" />
             <p className="text-sm text-gray-700 mt-2">Large suburban area in northern Newport News close to Fort Eustis (~10 min). Mix of older ranches and 80s-90s subdivisions. Affordable.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Junior enlisted Fort Eustis families, first-time buyers. Verify zoned schools — wide variation.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Lee Hall / Patrick Henry</p>
+            <NeighborhoodMatchLink name="Lee Hall / Patrick Henry" />
             <p className="text-sm text-gray-700 mt-2">Newport News closest to Fort Eustis. Older housing stock; Patrick Henry Mall area. Quick base access.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Fort Eustis families wanting under 10-min commute.</p>
           </div>
           <div className="border border-gray-200 rounded-lg p-5">
             <p className="font-bold text-gray-900">Port Warwick / City Center at Oyster Point</p>
+            <NeighborhoodMatchLink name="Port Warwick / City Center at Oyster Point" />
             <p className="text-sm text-gray-700 mt-2">Newer urban-village developments. Walkable retail, restaurants, condos and townhomes. Town-like feel.</p>
             <p className="text-sm text-gray-600 mt-2"><strong>Best for:</strong> Younger officers/NCOs wanting low-maintenance urban living.</p>
           </div>

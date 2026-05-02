@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NeighborhoodMatchLink from "../../../components/NeighborhoodMatchLink";
 import HamptonRoadsAreaGuide from '../../../components/HamptonRoadsAreaGuide'
 
 export const metadata: Metadata = {
@@ -79,6 +80,7 @@ export default function ChesapeakeNeighborhoodsPage() {
                 <h3 className="text-lg font-bold text-gray-900">{n.name}</h3>
                 <p className="text-sm text-blue-700 mt-1 font-semibold">Best for: {n.bestFor}</p>
                 <p className="mt-2 text-gray-700">{n.note}</p>
+                <NeighborhoodMatchLink name={n.name} />
               </article>
             ))}
           </div>
