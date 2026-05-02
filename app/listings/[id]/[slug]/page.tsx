@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
-import { getListingByIdAsync, formatPriceFull } from '../../../lib/listings';
+import { getListingByIdAsync, formatPrice, formatPriceFull } from '../../../lib/listings';
 import { canonicalListingSlug } from '../../../lib/listing-slug';
 import PropertyDetailClient from './PropertyDetailClient';
 import ListingJsonLd from './ListingJsonLd';
@@ -31,10 +31,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = canonicalListingSlug({ address: listing.address, city: listing.city });
   const canonical = `${BASE}/listings/${listing.id}/${slug}/`;
   const fullAddress = `${street}, ${listing.city}, ${listing.state || 'VA'} ${listing.zip || ''}`.trim();
-  const title = `${fullAddress} | VaHome.com`;
+  const cityState = `${listing.city}, ${listing.state || 'VA'}`;
+  const priceCompact = listing.price ? formatPrice(listing.price) : '';
+  // Unique title that survives REIN duplicate-listing re-lists (same address, different MLS#).
+  // Format: "{Street}, {City}, VA {ZIP} - {Price} | VaHome.com"
+  // The price differs across re-listings even when address is identical.
+  // Length budget: 60 chars street+city, 8 char price, 14 char " | VaHome.com" = ~82 max.
+  // For very long addresses, drop the ZIP.
+  let title = `${street}, ${cityState} ${listing.zip || ''} - ${priceCompact} | VaHome.com`.trim();
+  if (title.length > 70) {
+    title = `${street}, ${cityState} - ${priceCompact} | VaHome.com`.trim();
+  }
+  if (title.length > 70) {
+    title = `${street}, ${cityState} | VaHome.com`.trim();
+  }
+  // Unique meta description: lead with MLS# + price (always unique across re-lists).
   const description =
-    `${listing.beds || 0} bed, ${listing.baths || 0} bath, ${(listing.sqft || 0).toLocaleString()} sq ft ` +
-    `${listing.propertyType || 'home'} for sale at ${formatPriceFull(listing.price)} in ${listing.city}, VA.`;
+    `MLS# ${listing.id}: ${listing.beds || 0} bed, ${listing.baths || 0} bath, ` +
+    `${(listing.sqft || 0).toLocaleString()} sq ft ${listing.propertyType || 'home'} ` +
+    `for sale at ${formatPriceFull(listing.price)} — ${street}, ${listing.city}, VA ${listing.zip || ''}.`;
 
   const heroImage = Array.isArray(listing.photos) && listing.photos.length > 0 ? listing.photos[0] : undefined;
 

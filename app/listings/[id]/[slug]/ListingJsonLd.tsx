@@ -86,8 +86,16 @@ function buildRoot(l: Listing) {
   pushAmenity("Sewer", l.sewer);
   pushAmenity("Waterfront", l.waterfront ? "Yes" : undefined);
 
+  // Pick an itemOffered @type based on the listing's property type.
+  // Land/farm/lot listings are NOT SingleFamilyResidence; mis-typing them was
+  // failing structured-data validation for those records.
+  const ptype = (l.propertyType || '').toLowerCase();
+  const isLandOrFarm = /land|farm|lot|acre/.test(ptype);
+  const isCondo = /condo|townhouse|town home|town-home/.test(ptype);
+  const itemType = isLandOrFarm ? 'Place' : isCondo ? 'Residence' : 'SingleFamilyResidence';
+
   const residence: Record<string, unknown> = {
-    "@type": "SingleFamilyResidence",
+    "@type": itemType,
     name: streetAddress(l),
     address: {
       "@type": "PostalAddress",
@@ -150,7 +158,7 @@ function buildRoot(l: Listing) {
 
   return {
     "@context": "https://schema.org",
-    "@type": ["RealEstateListing", "Product"],
+    "@type": "RealEstateListing",
     "@id": url,
     name: `${streetAddress(l)}, ${l.city}, ${l.state || "VA"} ${l.zip || ""}`.trim(),
     url,
