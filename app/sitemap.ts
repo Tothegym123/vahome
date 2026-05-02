@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { CITY_SLUGS } from "./lib/cities";
+import { NEIGHBORHOOD_SLUGS } from "./lib/neighborhoods";
 
 const BASE = "https://vahome.com";
 
@@ -66,6 +67,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "daily" as const,
   }));
 
+  // Neighborhood detail pages (80 — Hampton Roads neighborhoods)
+  const neighborhoodUrls = NEIGHBORHOOD_SLUGS.map((slug) => ({
+    path: `/neighborhoods/${slug}/`,
+    priority: 0.7,
+    changeFrequency: "daily" as const,
+  }));
+
   // Other military pages
   const militaryOther = [
     { path: "/military/bah-calculator/hampton-roads/", priority: 0.85, changeFrequency: "monthly" as const },
@@ -79,6 +87,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const all = [
     ...marketing,
     ...cityListingUrls,
+    ...neighborhoodUrls,
     ...militaryHub,
     ...baseClusterUrls,
     ...cityUrls,
