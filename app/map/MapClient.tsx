@@ -567,7 +567,13 @@ export default function MapClient() {
     }
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current.clear();
-    infoWindowsRef.current.forEach((iw) => iw.close());
+    // Close all InfoWindows EXCEPT the one currently open - preserves the
+    // user's popup across listings refreshes triggered by map pan/zoom.
+    infoWindowsRef.current.forEach((iw) => {
+      if (iw !== currentInfoWindowRef.current) {
+        iw.close();
+      }
+    });
     infoWindowsRef.current.clear();
 
     // Lazy-create the MarkerClusterer the first time we have markers.
@@ -651,7 +657,8 @@ export default function MapClient() {
         if (currentInfoWindowRef.current) {
           currentInfoWindowRef.current.close();
         }
-        infoWindow.open(mapRef.current, marker);
+        infoWindow.setPosition(marker.getPosition());
+        infoWindow.open(mapRef.current);
         currentInfoWindowRef.current = infoWindow;
         setSelectedListing(listing);
       });
@@ -744,7 +751,8 @@ export default function MapClient() {
         if (currentInfoWindowRef.current) {
           currentInfoWindowRef.current.close();
         }
-        infoWindow.open(mapRef.current, marker);
+        infoWindow.setPosition(marker.getPosition());
+        infoWindow.open(mapRef.current);
         currentInfoWindowRef.current = infoWindow;
       });
     });
@@ -808,7 +816,8 @@ export default function MapClient() {
       if (currentInfoWindowRef.current) {
         currentInfoWindowRef.current.close();
       }
-      infoWindow.open(mapRef.current, marker);
+      infoWindow.setPosition(marker.getPosition());
+        infoWindow.open(mapRef.current);
       currentInfoWindowRef.current = infoWindow;
     }
 
