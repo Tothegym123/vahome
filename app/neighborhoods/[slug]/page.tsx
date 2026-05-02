@@ -21,13 +21,13 @@
 // =============================================================================
 
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import {
-  NEIGHBORHOODS,
   NEIGHBORHOOD_SLUGS,
   getNeighborhood,
   neighborhoodsByCity,
+  resolveCanonicalSlug,
   subdivisionMatchPattern,
   type NeighborhoodData,
 } from "../../lib/neighborhoods";
@@ -169,7 +169,15 @@ function NeighborhoodJsonLd({ n, listingCount }: { n: NeighborhoodData; listingC
 }
 
 export default async function NeighborhoodPage({ params }: { params: { slug: string } }) {
-  const n = getNeighborhood(params.slug);
+  // Accept either canonical (hyphenated) or legacy (un-hyphenated Lofty) slugs.
+  // Anything else 404s; legacy slugs 301 to canonical so search-engine equity
+  // transfers cleanly.
+  const canonical = resolveCanonicalSlug(params.slug);
+  if (!canonical) notFound();
+  if (canonical !== params.slug) {
+    permanentRedirect(`/neighborhoods/${canonical}/`);
+  }
+  const n = getNeighborhood(canonical);
   if (!n) notFound();
 
   const { listings, total } = await fetchNeighborhoodListings(n);
