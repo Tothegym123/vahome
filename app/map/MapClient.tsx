@@ -610,7 +610,7 @@ export default function MapClient() {
       });
     }
 
-    const PRICE_ZOOM_THRESHOLD = 13;
+    const PRICE_ZOOM_THRESHOLD = 11;
     const initialZoom = mapRef.current?.getZoom?.() ?? 10;
     const showPriceInitially = initialZoom >= PRICE_ZOOM_THRESHOLD;
 
