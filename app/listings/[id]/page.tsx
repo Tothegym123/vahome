@@ -23,7 +23,7 @@ import { createClient } from "@supabase/supabase-js";
 import HamptonRoadsAreaGuide from "../../components/HamptonRoadsAreaGuide";
 import { applyFiltersToSupabaseQuery } from "../../lib/listing-filters";
 import { CITIES, CITY_SLUGS, getCity, type CityData } from "../../lib/cities";
-import { getDisplayStatus, getDisplayStatusBadgeClasses, isContingentFromRaw } from "../../lib/listing-status";
+import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, isContingentFromRaw } from "../../lib/listing-status";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -220,7 +220,13 @@ export default async function CityListingsPage({ params }: { params: { id: strin
                       </div>
                     )}
                     {l.displayStatus !== "Active" && l.displayStatus !== "Unknown" && (
-                      <span className={`absolute top-2 left-2 px-2 py-1 rounded text-xs font-semibold ${getDisplayStatusBadgeClasses(l.displayStatus)}`}>
+                      <span
+                        className="absolute top-2 left-2 px-2 py-1 rounded text-xs font-semibold"
+                        style={{
+                          backgroundColor: getDisplayStatusColor(l.displayStatus),
+                          color: getDisplayStatusTextColor(l.displayStatus),
+                        }}
+                      >
                         {l.displayStatus}
                       </span>
                     )}

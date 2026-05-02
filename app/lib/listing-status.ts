@@ -77,26 +77,54 @@ export function getDisplayStatus(
   }
 }
 
-// Hex color for map pills and inline-styled badges (no Tailwind classes).
+// Hex color for status pill backgrounds. Used by inline style across the
+// site so every surface (map pills, sidebar pills, card photo overlays,
+// detail-page tracker active state) renders the exact same byte-for-byte
+// color value.
+//
+// Palette picked 2026-05-02: iOS system green/red + Bootstrap yellow/orange.
+//   Active / New Listing  -> #34c759 (iOS system green)
+//   Under Contract        -> #ffc107 (Bootstrap warning yellow — dark text)
+//   Pending               -> #fd7e14 (Bootstrap orange)
+//   Sold                  -> #ff3b30 (iOS system red)
+//   Coming Soon           -> #007aff (iOS system blue, kept consistent with iOS picks)
+//   Off Market / Rented   -> #6b7280 (neutral gray)
 export function getDisplayStatusColor(display: DisplayStatus): string {
   switch (display) {
     case "Active":
     case "New Listing":
-      return "#22c55e"; // Tailwind green-500
+      return "#34c759";
     case "Under Contract":
-      return "#eab308"; // Tailwind yellow-500
+      return "#ffc107";
     case "Pending":
-      return "#f97316"; // Tailwind orange-500
+      return "#fd7e14";
     case "Sold":
-      return "#ef4444"; // Tailwind red-500
+      return "#ff3b30";
     case "Coming Soon":
-      return "#3b82f6"; // Tailwind blue-500
+      return "#007aff";
     case "Off Market":
     case "Rented":
     case "Unknown":
     default:
-      return "#6b7280"; // Tailwind gray-500
+      return "#6b7280";
   }
+}
+
+// Foreground text color for status pills. Yellow (#ffc107) needs dark text
+// for accessibility/legibility; everything else uses white.
+export function getDisplayStatusTextColor(display: DisplayStatus): string {
+  if (display === "Under Contract") return "#1a1a1a";
+  return "#ffffff";
+}
+
+// Convenience: pill colors keyed on (raw status, contingent) — wraps both
+// getDisplayStatus and getDisplayStatusColor so callers can ask for the
+// final pill color in one call.
+export function getStatusPillBg(status: string | null | undefined, contingent?: boolean | null): string {
+  return getDisplayStatusColor(getDisplayStatus(status, contingent));
+}
+export function getStatusPillFg(status: string | null | undefined, contingent?: boolean | null): string {
+  return getDisplayStatusTextColor(getDisplayStatus(status, contingent));
 }
 
 // Tailwind class set for status pills/badges across the site. Used by listing

@@ -10,7 +10,7 @@ import {
   type Filters,
 } from '../lib/listing-filters'
 import { citySlugFromName, CITIES } from '../lib/cities'
-import { getDisplayStatus, getDisplayStatusBadgeClasses, isContingentFromRaw } from '../lib/listing-status'
+import { getDisplayStatus, getDisplayStatusColor, getDisplayStatusTextColor, isContingentFromRaw } from '../lib/listing-status'
 
 // Returns true when ?city= is the only filter set on the URL (so we can offer
 // users + Google a redirect/canonical to the clean /listings/[city]/ page).
@@ -256,7 +256,13 @@ export default async function ListingsPage({
                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm italic">No photo provided</div>
                       )}
                       {l.displayStatus !== 'Active' && l.displayStatus !== 'Unknown' && (
-                        <span className={`absolute top-2 left-2 px-2 py-1 rounded text-xs font-semibold ${getDisplayStatusBadgeClasses(l.displayStatus)}`}>{l.displayStatus}</span>
+                        <span
+                          className="absolute top-2 left-2 px-2 py-1 rounded text-xs font-semibold"
+                          style={{
+                            backgroundColor: getDisplayStatusColor(l.displayStatus),
+                            color: getDisplayStatusTextColor(l.displayStatus),
+                          }}
+                        >{l.displayStatus}</span>
                       )}
                     </div>
                     <div className="p-4">

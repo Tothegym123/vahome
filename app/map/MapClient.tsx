@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { getDisplayStatus } from '../lib/listing-status';
+import { getDisplayStatus, getStatusPillBg, getStatusPillFg } from '../lib/listing-status';
 import Script from 'next/script';
 import { getDutyStation, distanceMiles, type DutyStation } from '../data/duty-stations';
 import { MarkerClusterer, SuperClusterAlgorithm } from '@googlemaps/markerclusterer';
@@ -266,37 +266,11 @@ const MILITARY_BASES = [
 ];
 
 // Color mapping for listing status
-const getStatusColor = (status: string, contingent?: boolean): string => {
-  // Match the listing-detail page status badges (PropertyDetailClient.tsx):
-  // Active = green, Contingent = yellow, Pending = orange, Sold = red.
-  //
-  // REIN's data model: a listing can be Active AND have a contingency at the
-  // same time (~19% of Active listings carry one). When `contingent` is true
-  // — sourced from REIN's ContingencyExists/Contingencies fields server-side —
-  // we return yellow regardless of the headline status, so buyers see at a
-  // glance that the home is under a contingency. Sold and similar terminal
-  // statuses keep their own color since the contingency is moot.
-  const s = (status || '').toLowerCase().trim();
-  if (contingent && s !== 'sold' && s !== 'off market' && s !== 'rented') {
-    return '#eab308'; // Tailwind yellow-500
-  }
-  switch (s) {
-    case 'active':
-    case 'new listing':
-      return '#22c55e'; // Tailwind green-500
-    case 'contingent':
-      return '#eab308'; // Tailwind yellow-500
-    case 'pending':
-    case 'under contract':
-      return '#f97316'; // Tailwind orange-500 (REIN uses 'Under Contract' for the pending equivalent)
-    case 'sold':
-      return '#ef4444'; // Tailwind red-500
-    case 'coming soon':
-      return '#3b82f6'; // Tailwind blue-500
-    default:
-      return '#6b7280'; // Tailwind gray-500 (unknown status — neutral)
-  }
-};
+// Pill background color — delegates to the shared listing-status helper so
+// the entire site (map pills, sidebar pills, listing card badges, etc.)
+// pulls from a single palette source of truth.
+const getStatusColor = (status: string, contingent?: boolean): string =>
+  getStatusPillBg(status, contingent);
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default function MapClient() {
