@@ -890,16 +890,9 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
             {/* Footer Info */}
             <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 text-center text-base text-gray-500">
               <p className="mb-2">
-                {listing.listingOffice && !/^\d+$/.test(String(listing.listingOffice).trim()) ? (
-                  <>
-                    Listing Provided by{' '}
-                    <span className="font-medium text-gray-700">{listing.listingOffice}</span>{' '}
-                    &middot;{' '}
-                  </>
-                ) : (
-                  <>Listed via REIN MLS &middot;{' '}</>
-                )}
-                MLS#{' '}
+                Listing Provided by{' '}
+                <span className="font-medium text-gray-700">{listing.listingOffice}</span>{' '}
+                &middot; MLS#{' '}
                 <span className="font-medium text-gray-700">{listing.mlsNumber}</span>
               </p>
               <p>Data provided by REIN MLS. Information deemed reliable but not guaranteed.</p>
