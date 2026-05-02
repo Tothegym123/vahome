@@ -1,12 +1,19 @@
 import { Metadata } from "next";
 import { createClient } from '@supabase/supabase-js';
 import HamptonRoadsAreaGuide from '../components/HamptonRoadsAreaGuide'
+import FilterBar from '../components/filters/FilterBar'
+import ActiveFilterChips from '../components/filters/ActiveFilterChips'
+import {
+  parseFiltersFromSearchParams,
+  applyFiltersToSupabaseQuery,
+  serializeFiltersToQueryString,
+  type Filters,
+} from '../lib/listing-filters'
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 const PAGE_SIZE = 60;
-const VISIBLE_STATUSES = ['Active', 'Pending', 'Contingent'];
 
 function generateSlug(address: string, city: string, state: string, zip: string): string {
   return [address, city, state, zip]
@@ -25,28 +32,22 @@ function sb() {
   return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
 }
 
-async function fetchListings(searchParams: { city?: string; q?: string; page?: string }) {
+async function fetchListings(filters: Filters) {
   const supabase = sb();
-  const page = Math.max(1, parseInt(searchParams.page || '1', 10) || 1);
+  const page = Math.max(1, filters.page || 1);
   const offset = (page - 1) * PAGE_SIZE;
 
   let q = supabase
     .from('listings')
-    .select('id, address, city, state, zip, price, beds, baths, sqft, status, photos, mls_number', { count: 'exact' })
-    .in('status', VISIBLE_STATUSES)
-    .eq('excluded', false)
-    .is('removed_at', null)
+    .select(
+      'id, address, city, state, zip, price, beds, baths, sqft, status, photos, mls_number',
+      { count: 'exact' },
+    )
     .gt('price', 0)
     .order('price', { ascending: false })
     .range(offset, offset + PAGE_SIZE - 1);
 
-  if (searchParams.city) {
-    q = q.ilike('city', searchParams.city.replace(/-/g, ' '));
-  }
-  if (searchParams.q) {
-    const term = `%${searchParams.q}%`;
-    q = q.or(`address.ilike.${term},city.ilike.${term},zip.ilike.${term},mls_number.ilike.${term}`);
-  }
+  q = applyFiltersToSupabaseQuery(q, filters);
 
   const { data, count, error } = await q;
   if (error) {
@@ -87,10 +88,10 @@ const CITY_INTROS: Record<string, string> = {
 export function generateMetadata({ searchParams }: { searchParams: { city?: string; q?: string } }): Metadata {
   const city = searchParams.city;
   const query = searchParams.q;
-  
+
   let title = "Homes for Sale in Hampton Roads";
   let description = "Browse homes for sale in Hampton Roads, Virginia. Find your perfect property in Virginia Beach, Norfolk, Chesapeake, and more.";
-  
+
   if (city) {
     title = "Homes for Sale in " + city + ", VA";
     description = "Browse homes for sale in " + city + ", Virginia. View listings, prices, and property details with VaHome.com.";
@@ -99,7 +100,7 @@ export function generateMetadata({ searchParams }: { searchParams: { city?: stri
     description = "Property search results for " + query + " in Hampton Roads, Virginia.";
   }
   title += " | VaHome.com";
-  
+
   return {
     title,
     description,
@@ -114,45 +115,55 @@ export function generateMetadata({ searchParams }: { searchParams: { city?: stri
 export default async function ListingsPage({
   searchParams,
 }: {
-  searchParams: { city?: string; q?: string; page?: string };
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const { listings, total, page } = await fetchListings(searchParams);
+  const filters = parseFiltersFromSearchParams(searchParams);
+  const { listings, total, page } = await fetchListings(filters);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
   const buildPageUrl = (n: number) => {
-    const params = new URLSearchParams();
-    if (searchParams.city) params.set('city', searchParams.city);
-    if (searchParams.q) params.set('q', searchParams.q);
-    if (n > 1) params.set('page', String(n));
-    const qs = params.toString();
+    const next: Filters = { ...filters, page: n > 1 ? n : undefined };
+    const qs = serializeFiltersToQueryString(next);
     return qs ? `/listings?${qs}` : '/listings';
   };
+
+  // Initial value for the search input — preserves typed text across reloads.
+  const initialQ = filters.q || '';
+
   return (
     <div className="pt-20 min-h-screen">
       {/* Search / Filter Bar */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4">
-          <div className="flex-1 relative">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search by city, zip, address..."
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-            />
+        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-3">
+          <div className="flex items-center gap-4 flex-wrap">
+            <form action="/listings" method="get" className="flex-1 min-w-[240px] relative">
+              {/* Preserve other filter params across a search submit */}
+              {filters.city && <input type="hidden" name="city" value={filters.city} />}
+              {filters.min_price !== undefined && <input type="hidden" name="min_price" value={String(filters.min_price)} />}
+              {filters.max_price !== undefined && <input type="hidden" name="max_price" value={String(filters.max_price)} />}
+              {filters.beds !== undefined && <input type="hidden" name="beds" value={String(filters.beds)} />}
+              {filters.baths !== undefined && <input type="hidden" name="baths" value={String(filters.baths)} />}
+              {filters.type && filters.type.length > 0 && <input type="hidden" name="type" value={filters.type.join(',')} />}
+              {filters.min_sqft !== undefined && <input type="hidden" name="min_sqft" value={String(filters.min_sqft)} />}
+              {filters.max_sqft !== undefined && <input type="hidden" name="max_sqft" value={String(filters.max_sqft)} />}
+              {filters.min_year !== undefined && <input type="hidden" name="min_year" value={String(filters.min_year)} />}
+              {filters.max_year !== undefined && <input type="hidden" name="max_year" value={String(filters.max_year)} />}
+              {filters.status && filters.status.length > 0 && <input type="hidden" name="status" value={filters.status.join(',')} />}
+              {filters.dom_max !== undefined && <input type="hidden" name="dom_max" value={String(filters.dom_max)} />}
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                name="q"
+                defaultValue={initialQ}
+                placeholder="Search by city, zip, address..."
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+              />
+            </form>
+            <FilterBar />
           </div>
-          <button className="px-4 py-2.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50">
-            Price
-          </button>
-          <button className="px-4 py-2.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50">
-            Beds / Baths
-          </button>
-          <button className="px-4 py-2.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50">
-            Home Type
-          </button>
-          <button className="px-4 py-2.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50">
-            More Filters
-          </button>
+          <ActiveFilterChips />
         </div>
       </div>
 

@@ -6,6 +6,9 @@
 // Field shape EXACTLY matches the prior mock-data response so MapClient
 // does not need any change.
 //
+// Filter parsing/application is delegated to app/lib/listing-filters.ts so the
+// /listings page and the /map endpoint stay in lockstep on the URL contract.
+//
 // Performance:
 //   - Uses partial index `listings_status_idx` (status, where excluded=false
 //     and removed_at is null) for status filtering.
@@ -18,13 +21,13 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import {
+  parseFiltersFromSearchParams,
+  applyFiltersToSupabaseQuery,
+} from '../../lib/listing-filters'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-
-// Listing statuses we surface on the map. Sold/Withdrawn/Expired are excluded
-// because they are not actionable for a buyer browsing the map.
-const VISIBLE_STATUSES = ['Active', 'Pending', 'Contingent']
 
 function generateSlug(address: string, city: string, state: string, zip: string): string {
   return [address, city, state, zip]
@@ -70,21 +73,20 @@ export async function GET(request: NextRequest) {
 
     // hard cap at 500 to protect the response size + map render
     const limit = Math.min(parseInt(sp.get('limit') || '500', 10) || 500, 500)
-    const type = (sp.get('type') || '').trim()
-    const min_price = sp.get('min_price') ? parseInt(sp.get('min_price')!, 10) : null
-    const max_price = sp.get('max_price') ? parseInt(sp.get('max_price')!, 10) : null
-    const beds = sp.get('beds') ? parseInt(sp.get('beds')!, 10) : null
+
+    // Build a plain object of search params for the shared filter parser.
+    const spObj: Record<string, string> = {}
+    sp.forEach((v: string, k: string) => { spObj[k] = v })
+    const filters = parseFiltersFromSearchParams(spObj)
 
     const supabase = sb()
 
     let q = supabase
       .from('listings')
-      .select('id, address, city, state, zip, price, beds, baths, sqft, lat, lng, status, property_type, photos', {
-        count: 'exact',
-      })
-      .in('status', VISIBLE_STATUSES)
-      .eq('excluded', false)
-      .is('removed_at', null)
+      .select(
+        'id, address, city, state, zip, price, beds, baths, sqft, lat, lng, status, property_type, photos',
+        { count: 'exact' },
+      )
       .gte('lat', sw_lat).lte('lat', ne_lat)
       .gte('lng', sw_lng).lte('lng', ne_lng)
       .not('lat', 'is', null)
@@ -92,10 +94,10 @@ export async function GET(request: NextRequest) {
       .order('price', { ascending: false })  // larger numbers first; matches typical "headline price" UX
       .limit(limit)
 
-    if (min_price !== null) q = q.gte('price', min_price)
-    if (max_price !== null) q = q.lte('price', max_price)
-    if (beds !== null) q = q.gte('beds', beds)
-    if (type) q = q.ilike('property_type', type)
+    // Shared filter application — status, price, beds, baths, type, sqft,
+    // year_built, dom_max, q (text search), city. Note this also injects the
+    // status/excluded/removed_at clauses that used to live inline.
+    q = applyFiltersToSupabaseQuery(q, filters)
 
     const { data, count, error } = await q
 
