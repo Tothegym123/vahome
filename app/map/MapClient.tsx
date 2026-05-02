@@ -283,6 +283,8 @@ export default function MapClient() {
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<Map<number, any>>(new Map());
   const clustererRef = useRef<MarkerClusterer | null>(null);
+  const clustererActiveRef = useRef<boolean>(false);
+  const clusterIdleListenerRef = useRef<any>(null);
   const videoMarkersRef = useRef<Map<string, any>>(new Map());
   const infoWindowsRef = useRef<Map<string, any>>(new Map());
   const currentInfoWindowRef = useRef<any>(null);
@@ -647,11 +649,67 @@ export default function MapClient() {
       });
     });
 
-    // Hand the new markers to the clusterer; it'll add them to the map and
-    // group dense areas into numbered circles.
-    if (clustererRef.current && newMarkers.length > 0) {
-      clustererRef.current.addMarkers(newMarkers);
+    // Conditional clustering: only group markers when MORE THAN 200 are
+    // visible in the current viewport. Below that threshold, show all pills
+    // individually. The decision re-runs on every map idle (pan/zoom).
+    const CLUSTER_THRESHOLD = 200;
+
+    const evaluateClustering = () => {
+      if (!mapRef.current) return;
+      const bounds = mapRef.current.getBounds?.();
+      if (!bounds) return;
+
+      let inViewCount = 0;
+      for (const m of newMarkers) {
+        const pos = m.getPosition?.();
+        if (pos && bounds.contains(pos)) inViewCount++;
+      }
+
+      const shouldCluster = inViewCount > CLUSTER_THRESHOLD;
+
+      if (shouldCluster && !clustererActiveRef.current) {
+        // Switch ON: hand markers to clusterer (it will manage map membership)
+        for (const m of newMarkers) m.setMap(null);
+        if (clustererRef.current) {
+          clustererRef.current.addMarkers(newMarkers);
+        }
+        clustererActiveRef.current = true;
+      } else if (!shouldCluster && clustererActiveRef.current) {
+        // Switch OFF: take markers back from clusterer, add to map directly
+        if (clustererRef.current) {
+          clustererRef.current.clearMarkers();
+        }
+        for (const m of newMarkers) m.setMap(mapRef.current);
+        clustererActiveRef.current = false;
+      } else if (!shouldCluster && !clustererActiveRef.current) {
+        // Initial: ensure all markers are on the map
+        for (const m of newMarkers) {
+          if (!m.getMap?.()) m.setMap(mapRef.current);
+        }
+      }
+    };
+
+    // Initial evaluation now that markers are built
+    if (newMarkers.length > 0) {
+      // The first idle event will fire the real check; but for SSR-safety
+      // we also evaluate immediately if bounds are already known.
+      if (mapRef.current?.getBounds?.()) {
+        evaluateClustering();
+      } else {
+        // Bounds not yet ready — add directly so something shows up; the
+        // first idle below will then re-evaluate.
+        for (const m of newMarkers) m.setMap(mapRef.current);
+      }
     }
+
+    // Re-evaluate on every pan/zoom (idle = after the user stops moving)
+    if (clusterIdleListenerRef.current && typeof google !== 'undefined' && google.maps) {
+      google.maps.event.removeListener(clusterIdleListenerRef.current);
+    }
+    clusterIdleListenerRef.current = mapRef.current?.addListener?.(
+      'idle',
+      evaluateClustering
+    );
 
     // Update pill icons when zoom crosses the price threshold
     const zoomListener = mapRef.current.addListener('zoom_changed', () => {
@@ -668,6 +726,10 @@ export default function MapClient() {
     return () => {
       if (zoomListener && typeof google !== 'undefined' && google.maps) {
         google.maps.event.removeListener(zoomListener);
+      }
+      if (clusterIdleListenerRef.current && typeof google !== 'undefined' && google.maps) {
+        google.maps.event.removeListener(clusterIdleListenerRef.current);
+        clusterIdleListenerRef.current = null;
       }
     };
   }, [listings]);
