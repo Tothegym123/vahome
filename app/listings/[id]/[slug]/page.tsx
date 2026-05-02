@@ -5,8 +5,23 @@ import { canonicalListingSlug } from '../../../lib/listing-slug';
 import PropertyDetailClient from './PropertyDetailClient';
 import ListingJsonLd from './ListingJsonLd';
 
-export const revalidate = 0;
-export const dynamic = 'force-dynamic';
+// =============================================================================
+// Listing detail rendering mode: ISR (Incremental Static Regeneration).
+//
+// Pages are server-rendered on first request, then cached at the Vercel edge.
+// After 600 seconds (10 min) the next request triggers a background re-render
+// while still serving the stale HTML — so users never wait on a regen.
+//
+// REIN sync triggers immediate refreshes via /api/revalidate when listing data
+// actually changes, so the 600s ceiling only applies if a change misses the
+// webhook (e.g. the sync host is unreachable). Worst-case staleness: 10 min.
+//
+// We intentionally do NOT generateStaticParams — the listing inventory is too
+// large (~3-5k active) and constantly churning. Each path is built lazily on
+// first request and cached after.
+// =============================================================================
+export const revalidate = 600;
+export const dynamicParams = true;
 
 interface Props {
   params: {
@@ -27,6 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Property Not Found | VaHome.com' };
   }
 
+  // Treat closed/sold/withdrawn/expired listings as inactive — see robots block below.
+  const _statusLower = (listing.status || '').toLowerCase().trim();
+  const isInactive = ['sold','off market','off-market','closed','cancelled','canceled','withdrawn','expired','rented'].some(
+    (k) => _statusLower.includes(k)
+  );
   const street = streetOnly(listing.address);
   const slug = canonicalListingSlug({ address: listing.address, city: listing.city });
   const canonical = `${BASE}/listings/${listing.id}/${slug}/`;
@@ -58,10 +78,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical },
     robots: {
-      index: true,
+      // Sold/off-market/withdrawn/expired: keep the URL alive (so existing
+      // backlinks don't 404 and so users with the link can still read the
+      // record) but pull it from Google's fresh-results pool.
+      index: !isInactive,
       follow: true,
-      // Tells Google it can use a large image preview in SERPs (per
-      // https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag).
       'max-image-preview': 'large',
       'max-snippet': -1,
       'max-video-preview': -1,
