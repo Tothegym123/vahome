@@ -66,8 +66,12 @@ export async function GET(request: NextRequest) {
     const ne_lat = parseFloat(sp.get('ne_lat') || '90')
     const ne_lng = parseFloat(sp.get('ne_lng') || '180')
 
-    // hard cap at 500 to protect the response size + map render
-    const limit = Math.min(parseInt(sp.get('limit') || '500', 10) || 500, 500)
+    // Cap at 5000 — generous enough to feed every listing in the visible
+    // viewport to the client-side MarkerClusterer (Hampton Roads has ~7K
+    // active+contingent total). The clusterer collapses dense areas into
+    // counted blue circles, so the visible-object count on the map stays
+    // small regardless of how many we return.
+    const limit = Math.min(parseInt(sp.get('limit') || '5000', 10) || 5000, 5000)
 
     // Build a plain object of search params for the shared filter parser.
     const spObj: Record<string, string> = {}
@@ -147,13 +151,4 @@ export async function GET(request: NextRequest) {
     // every pan/zoom; cache absorbs the burst without hammering Supabase.
     // Cache disabled while listings table is being seeded with real REIN data.
     // Re-enable as 'public, s-maxage=60, stale-while-revalidate=300' once feed is reliably flowing.
-    res.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate')
-    return res
-  } catch (e) {
-    console.error('[map-listings] exception', e)
-    return NextResponse.json(
-      { error: 'Failed to fetch listings', listings: [], total: 0 },
-      { status: 500 },
-    )
-  }
-}
+    res.
