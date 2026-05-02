@@ -288,4 +288,9 @@ export default async function ListingsPage({
             </>
           )}
         </main>
-    
+      </div>
+
+      <HamptonRoadsAreaGuide />
+    </div>
+  )
+}
