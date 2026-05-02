@@ -1,4 +1,4 @@
-\'use client\'
+'use client'
 
 // app/components/filters/sections/PriceSection.tsx
 // =============================================================================
@@ -12,9 +12,9 @@
 //   100%        -> $20M
 // =============================================================================
 
-import { useEffect, useState } from \'react\'
-import Section from \'../shared/Section\'
-import RangeSlider from \'../shared/RangeSlider\'
+import { useEffect, useState } from 'react'
+import Section from '../shared/Section'
+import RangeSlider from '../shared/RangeSlider'
 
 const PRICE_MIN = 0
 const PRICE_MAX = 20_000_000
@@ -74,10 +74,10 @@ type Props = {
 function fmtPrice(n: number): string {
   if (n >= 1_000_000) {
     const m = n / 1_000_000
-    return \'$\' + (Math.round(m * 10) / 10) + \'M\'
+    return '$' + (Math.round(m * 10) / 10) + 'M'
   }
-  if (n >= 1_000) return \'$\' + Math.round(n / 1_000) + \'k\'
-  return \'$\' + n
+  if (n >= 1_000) return '$' + Math.round(n / 1_000) + 'k'
+  return '$' + n
 }
 
 export default function PriceSection({ minPrice, maxPrice, onChange }: Props) {
@@ -86,18 +86,18 @@ export default function PriceSection({ minPrice, maxPrice, onChange }: Props) {
 
   // Local input strings so the user can type freely (e.g. mid-edit "30")
   // before we coerce back to numbers on blur.
-  const [minStr, setMinStr] = useState<string>(minPrice !== undefined ? String(minPrice) : \'\')
-  const [maxStr, setMaxStr] = useState<string>(maxPrice !== undefined ? String(maxPrice) : \'\')
+  const [minStr, setMinStr] = useState<string>(minPrice !== undefined ? String(minPrice) : '')
+  const [maxStr, setMaxStr] = useState<string>(maxPrice !== undefined ? String(maxPrice) : '')
 
-  useEffect(() => { setMinStr(minPrice !== undefined ? String(minPrice) : \'\') }, [minPrice])
-  useEffect(() => { setMaxStr(maxPrice !== undefined ? String(maxPrice) : \'\') }, [maxPrice])
+  useEffect(() => { setMinStr(minPrice !== undefined ? String(minPrice) : '') }, [minPrice])
+  useEffect(() => { setMaxStr(maxPrice !== undefined ? String(maxPrice) : '') }, [maxPrice])
 
   const commitMin = () => {
-    if (minStr === \'\') {
+    if (minStr === '') {
       onChange({ minPrice: undefined, maxPrice })
       return
     }
-    const n = parseInt(minStr.replace(/[^0-9]/g, \'\'), 10)
+    const n = parseInt(minStr.replace(/[^0-9]/g, ''), 10)
     if (!Number.isFinite(n)) {
       onChange({ minPrice: undefined, maxPrice })
       return
@@ -105,11 +105,11 @@ export default function PriceSection({ minPrice, maxPrice, onChange }: Props) {
     onChange({ minPrice: Math.max(0, n), maxPrice })
   }
   const commitMax = () => {
-    if (maxStr === \'\') {
+    if (maxStr === '') {
       onChange({ minPrice, maxPrice: undefined })
       return
     }
-    const n = parseInt(maxStr.replace(/[^0-9]/g, \'\'), 10)
+    const n = parseInt(maxStr.replace(/[^0-9]/g, ''), 10)
     if (!Number.isFinite(n)) {
       onChange({ minPrice, maxPrice: undefined })
       return
@@ -146,7 +146,7 @@ export default function PriceSection({ minPrice, maxPrice, onChange }: Props) {
             value={minStr}
             onChange={(e) => setMinStr(e.target.value)}
             onBlur={commitMin}
-            onKeyDown={(e) => { if (e.key === \'Enter\') (e.target as HTMLInputElement).blur() }}
+            onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
           />
         </label>
@@ -159,7 +159,7 @@ export default function PriceSection({ minPrice, maxPrice, onChange }: Props) {
             value={maxStr}
             onChange={(e) => setMaxStr(e.target.value)}
             onBlur={commitMax}
-            onKeyDown={(e) => { if (e.key === \'Enter\') (e.target as HTMLInputElement).blur() }}
+            onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
           />
         </label>
