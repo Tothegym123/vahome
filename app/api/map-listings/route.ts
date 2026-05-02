@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     let q = supabase
       .from('listings')
       .select(
-        'id, address, city, state, zip, price, beds, baths, sqft, lat, lng, status, property_type, photos',
+        'id, address, city, state, zip, price, beds, baths, sqft, lat, lng, status, property_type, photos, raw',
         { count: 'exact' },
       )
       .gte('lat', sw_lat).lte('lat', ne_lat)
@@ -111,24 +111,37 @@ export async function GET(request: NextRequest) {
 
     const rows = data ?? []
 
-    const listings = rows.map((r: any) => ({
-      id: r.id,
-      address: r.address,
-      city: r.city,
-      state: r.state,
-      zip: r.zip,
-      price: r.price,
-      priceFormatted: formatPriceShort(r.price),
-      beds: r.beds ?? 0,
-      baths: r.baths != null ? Number(r.baths) : 0,
-      sqft: r.sqft ?? 0,
-      propertyType: r.property_type ?? '',
-      status: r.status,
-      lat: r.lat,
-      lng: r.lng,
-      slug: generateSlug(r.address, r.city, r.state, r.zip),
-      photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : '',
-    }))
+    const listings = rows.map((r: any) => {
+      // REIN's contingency model: ContingencyExists is the canonical boolean
+      // ('Contingent' or 'Non Contingent'); Contingencies is the text list of
+      // active contingencies (e.g. 'Home/EIFS Insp. Con.,POA/Condo'). About
+      // 19% of Active listings carry a contingency — we surface that on the
+      // map pill via a yellow color override regardless of headline status.
+      const contingencyExists = r.raw?.ContingencyExists ?? null
+      const contingenciesText = r.raw?.Contingencies ?? ''
+      const contingent =
+        contingencyExists === 'Contingent' ||
+        (typeof contingenciesText === 'string' && contingenciesText.trim().length > 0)
+      return {
+        id: r.id,
+        address: r.address,
+        city: r.city,
+        state: r.state,
+        zip: r.zip,
+        price: r.price,
+        priceFormatted: formatPriceShort(r.price),
+        beds: r.beds ?? 0,
+        baths: r.baths != null ? Number(r.baths) : 0,
+        sqft: r.sqft ?? 0,
+        propertyType: r.property_type ?? '',
+        status: r.status,
+        contingent,
+        lat: r.lat,
+        lng: r.lng,
+        slug: generateSlug(r.address, r.city, r.state, r.zip),
+        photo: Array.isArray(r.photos) && r.photos.length > 0 ? r.photos[0] : '',
+      }
+    })
 
     const res = NextResponse.json({
       listings,

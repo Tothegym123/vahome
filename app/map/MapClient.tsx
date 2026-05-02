@@ -21,6 +21,7 @@ interface MapListing {
   sqft: number;
   propertyType: string;
   status: string;
+  contingent?: boolean;
   lat: number;
   lng: number;
   slug: string;
@@ -264,20 +265,33 @@ const MILITARY_BASES = [
 ];
 
 // Color mapping for listing status
-const getStatusColor = (status: string): string => {
+const getStatusColor = (status: string, contingent?: boolean): string => {
   // Match the listing-detail page status badges (PropertyDetailClient.tsx):
   // Active = green, Contingent = yellow, Pending = orange, Sold = red.
-  switch (status.toLowerCase().trim()) {
+  //
+  // REIN's data model: a listing can be Active AND have a contingency at the
+  // same time (~19% of Active listings carry one). When `contingent` is true
+  // — sourced from REIN's ContingencyExists/Contingencies fields server-side —
+  // we return yellow regardless of the headline status, so buyers see at a
+  // glance that the home is under a contingency. Sold and similar terminal
+  // statuses keep their own color since the contingency is moot.
+  const s = (status || '').toLowerCase().trim();
+  if (contingent && s !== 'sold' && s !== 'off market' && s !== 'rented') {
+    return '#eab308'; // Tailwind yellow-500
+  }
+  switch (s) {
     case 'active':
+    case 'new listing':
       return '#22c55e'; // Tailwind green-500
     case 'contingent':
       return '#eab308'; // Tailwind yellow-500
     case 'pending':
-      return '#f97316'; // Tailwind orange-500
+    case 'under contract':
+      return '#f97316'; // Tailwind orange-500 (REIN uses 'Under Contract' for the pending equivalent)
     case 'sold':
       return '#ef4444'; // Tailwind red-500
     case 'coming soon':
-      return '#3b82f6'; // Tailwind blue-500 (distinct from the four primary statuses)
+      return '#3b82f6'; // Tailwind blue-500
     default:
       return '#6b7280'; // Tailwind gray-500 (unknown status — neutral)
   }
@@ -624,7 +638,7 @@ export default function MapClient() {
     // The MarkerClusterer below manages map membership and clusters dense areas.
     const newMarkers: any[] = [];
     listings.forEach((listing) => {
-      const color = getStatusColor(listing.status);
+      const color = getStatusColor(listing.status, listing.contingent);
       const marker = new google.maps.Marker({
         position: { lat: listing.lat, lng: listing.lng },
         // map intentionally omitted — clusterer adds/removes as needed
@@ -696,7 +710,7 @@ export default function MapClient() {
       markersRef.current.forEach((m, id) => {
         const l = listings.find((x) => x.id === id);
         if (!l) return;
-        const c = getStatusColor(l.status);
+        const c = getStatusColor(l.status, l.contingent);
         m.setIcon(buildPillIcon(c, showPrice ? l.priceFormatted : undefined));
       });
     });
@@ -1048,7 +1062,7 @@ export default function MapClient() {
                       <span
                         className="px-2 py-1 rounded text-xs font-semibold text-white whitespace-nowrap"
                         style={{
-                          backgroundColor: getStatusColor(listing.status),
+                          backgroundColor: getStatusColor(listing.status, listing.contingent),
                         }}
                       >
                         {listing.status}
@@ -1123,7 +1137,7 @@ export default function MapClient() {
                         <span
                           className="px-2 py-1 rounded text-xs font-semibold text-white whitespace-nowrap"
                           style={{
-                            backgroundColor: getStatusColor(listing.status),
+                            backgroundColor: getStatusColor(listing.status, listing.contingent),
                           }}
                         >
                           {listing.status}
