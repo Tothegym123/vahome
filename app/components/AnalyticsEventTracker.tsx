@@ -29,17 +29,19 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  }
+type GtagFn = (...args: unknown[]) => void;
+
+function getGtag(): GtagFn | null {
+  if (typeof window === "undefined") return null;
+  const g = (window as unknown as { gtag?: GtagFn }).gtag;
+  return typeof g === "function" ? g : null;
 }
 
 function fire(event: string, params: Record<string, unknown> = {}) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  const gtag = getGtag();
+  if (!gtag) return;
   try {
-    window.gtag("event", event, {
+    gtag("event", event, {
       page_location: window.location.href,
       page_path: window.location.pathname,
       ...params,
