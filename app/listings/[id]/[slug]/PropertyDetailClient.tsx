@@ -13,6 +13,7 @@ import PhotoGallery from '../../../components/PhotoGallery';
 import StickyNav from './sections/StickyNav';
 import StickyMobileBar from './sections/StickyMobileBar';
 import MortgageCalculator from './sections/MortgageCalculator';
+import Comps from './sections/Comps';
 
 interface PropertyDetailClientProps {
   listing: Listing;
@@ -539,6 +540,7 @@ const NAV_ANCHORS = [
   { id: 'map', label: 'Location' },
   { id: 'details', label: 'Details' },
   { id: 'history', label: 'Price & Tax' },
+  { id: 'comps', label: 'Comps' },
   { id: 'description', label: 'Description' },
   { id: 'neighborhood', label: 'Neighborhood' },
   { id: 'commute', label: 'Military Commute' },
@@ -932,6 +934,11 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                   Tax data from public records. Full sale-history timeline coming soon.
                 </p>
               </div>
+            </section>
+
+            {/* === 9b. COMPARABLE PROPERTIES (V2 Phase B) ===== */}
+            <section id="comps" className="scroll-mt-20">
+              <Comps mlsNumber={listing.mlsNumber} />
             </section>
 
             {/* === 10. DESCRIPTION ============================= */}
