@@ -291,6 +291,7 @@ export default function MapClient() {
   const [mapActivated, setMapActivated] = useState(true);
   const [listings, setListings] = useState<MapListing[]>([]);
   const [showBases, setShowBases] = useState(false);
+  const [showSold, setShowSold] = useState(false);
   const [videos, setVideos] = useState<MapVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -345,6 +346,10 @@ export default function MapClient() {
           ...(filters.minPrice && { min_price: filters.minPrice }),
           ...(filters.maxPrice && { max_price: filters.maxPrice }),
           ...(filters.beds && { beds: filters.beds }),
+          // When 'Show Sold' is on, request the full set of statuses including
+          // recent closed sales. When off, omit the status param so the API
+          // defaults to buyer-relevant only (Active/Pending/Contingent).
+          ...(showSold && { status: 'Active,Pending,Contingent,Coming Soon,Under Contract,Sold,Closed' }),
         });
 
         const [listingsRes, videosRes] = await Promise.all([
@@ -390,13 +395,26 @@ export default function MapClient() {
         setLoading(false);
       }
     },
-    [filters]
+    [filters, showSold]
   );
 
   // Keep a ref to the latest fetchMapData so the idle listener always uses current filters
   useEffect(() => {
     fetchMapDataRef.current = fetchMapData;
   }, [fetchMapData]);
+
+  // Re-fetch when "Show Sold" toggles — pulls solds in or removes them.
+  useEffect(() => {
+    if (!boundsRef.current || !fetchMapDataRef.current) return;
+    const b = boundsRef.current;
+    fetchMapDataRef.current({
+      sw_lat: b.getSouthWest().lat(),
+      sw_lng: b.getSouthWest().lng(),
+      ne_lat: b.getNorthEast().lat(),
+      ne_lng: b.getNorthEast().lng(),
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showSold]);
 
   // Create marker SVG icon - returns data URI (used for video markers)
   const createMarkerIcon = (color: string, isVideo = false): string => {
@@ -905,6 +923,18 @@ export default function MapClient() {
                 }`}
               >
                 {showBases ? 'Hide Bases' : 'Military Bases'}
+              </button>
+
+              <button
+                onClick={() => setShowSold((prev) => !prev)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                  showSold
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+                title="Show recent sold listings on the map"
+              >
+                {showSold ? 'Hide Sold' : 'Show Sold'}
               </button>
             </div>
           </div>
