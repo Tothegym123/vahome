@@ -43,7 +43,10 @@ export const STATUS_CHOICES: { value: string; label: string }[] = [
   { value: 'Active', label: 'Active' },
   { value: 'Pending', label: 'Pending' },
   { value: 'Contingent', label: 'Contingent' },
+  { value: 'Under Contract', label: 'Under Contract' },
   { value: 'Coming Soon', label: 'Coming Soon' },
+  { value: 'Sold', label: 'Sold' },
+  { value: 'Closed', label: 'Closed' },
 ];
 
 const parseInt_ = (v: string | undefined): number | undefined => {

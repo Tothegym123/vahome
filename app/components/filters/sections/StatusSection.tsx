@@ -16,7 +16,8 @@ type StatusOpt = { label: string; values: string[] }
 const OPTIONS: StatusOpt[] = [
   { label: 'Coming Soon', values: ['Coming Soon'] },
   { label: 'Active', values: ['Active'] },
-  { label: 'Under Contract / Pending', values: ['Pending', 'Contingent'] },
+  { label: 'Under Contract / Pending', values: ['Pending', 'Contingent', 'Under Contract'] },
+  { label: 'Sold (recent)', values: ['Sold', 'Closed'] },
 ]
 
 type Props = {
