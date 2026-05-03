@@ -21,23 +21,45 @@ function client() {
 // Build a full address string from listing fields.
 // REIN's `address` field usually has the full address ("123 Main St, City VA 23456"),
 // but if not, reconstruct from components.
-export function buildAddress(row) {
-  if (row.address && row.address.trim()) {
-    // Append city/state/zip if not already in address
-    const a = row.address.trim();
+export function buildAddress(row, raw = null) {
+  // The raw REIN payload (jsonb 'raw' column) carries multiple address encodings.
+  // We try them in order of richness, picking the first non-empty one. Each
+  // candidate gets city/state/zip appended if not already present so Google's
+  // geocoder always has a chance at a precise match.
+  const r = raw || row.raw || {};
+
+  function decorate(addr) {
+    if (!addr) return '';
+    const a = String(addr).trim();
+    if (!a) return '';
+    const lower = a.toLowerCase();
     const parts = [a];
-    if (row.city && !a.includes(row.city)) parts.push(row.city);
-    if (row.state && !a.includes(row.state)) parts.push(row.state);
-    if (row.zip && !a.includes(row.zip)) parts.push(row.zip);
+    if (row.city && !lower.includes(String(row.city).toLowerCase())) parts.push(row.city);
+    if (row.state && !lower.includes(String(row.state).toLowerCase())) parts.push(row.state);
+    if (row.zip && !lower.includes(String(row.zip))) parts.push(row.zip);
     return parts.join(', ');
   }
-  const parts = [];
-  const street = [row.street_number, row.street_name].filter(Boolean).join(' ');
-  if (street) parts.push(street);
-  if (row.city) parts.push(row.city);
-  if (row.state) parts.push(row.state);
-  if (row.zip) parts.push(row.zip);
-  return parts.join(', ').trim();
+
+  // 1. row.address (usually AddressLine — full street + city + state + zip)
+  if (row.address && String(row.address).trim()) return decorate(row.address);
+
+  // 2. raw AddressLine (fallback if row.address wasn't populated)
+  if (r.AddressLine && String(r.AddressLine).trim()) return decorate(r.AddressLine);
+
+  // 3. AddressWebsite (street with abbreviated type, e.g. "3416 Crimson Holly CT")
+  if (r.AddressWebsite && String(r.AddressWebsite).trim()) return decorate(r.AddressWebsite);
+
+  // 4. AddressStreetNumWebsite + AddressStreetNameWebsite split fields
+  const split = [r.AddressStreetNumWebsite, r.AddressStreetNameWebsite]
+    .filter(Boolean).map(String).map((s) => s.trim()).filter(Boolean).join(' ');
+  if (split) return decorate(split);
+
+  // 5. Old structured fields on the row itself
+  const oldStreet = [row.street_number, row.street_name]
+    .filter(Boolean).map(String).map((s) => s.trim()).filter(Boolean).join(' ');
+  if (oldStreet) return decorate(oldStreet);
+
+  return '';
 }
 
 // SHA256 short hash of normalized address. Used to detect when an address
@@ -109,10 +131,8 @@ export async function runGeocodePass() {
   // Exclude sold/closed listings to save API calls
   const { data: pending, error } = await supabase
     .from('listings')
-    .select('id, mls_number, address, city, state, zip, coordinate_source, address_hash, status')
-    .or('coordinate_source.is.null,coordinate_source.eq.failed')
-    .neq('status', 'Sold')
-    .neq('status', 'Closed');
+    .select('id, mls_number, address, city, state, zip, coordinate_source, address_hash, status, raw')
+    .or('coordinate_source.is.null,coordinate_source.eq.failed');
 
   if (error) {
     logger.error({ err: error.message }, 'geocode pass: failed to fetch pending');
@@ -128,7 +148,7 @@ export async function runGeocodePass() {
   logger.info({ count: pending.length }, 'geocode pass: starting');
 
   for (const row of pending) {
-    const addr = buildAddress(row);
+    const addr = buildAddress(row, row.raw);
     if (!addr) {
       await supabase.from('listings').update({
         coordinate_source: 'failed',
