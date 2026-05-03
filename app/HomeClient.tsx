@@ -468,7 +468,14 @@ export default function HomeClient() {
                   type="text"
                   placeholder={isMil ? 'Search by base name, city, or ZIP...' : 'Search by address, city, or ZIP...'}
                   className="border-0 bg-transparent shadow-none focus:ring-0 w-full text-lg text-white placeholder-white/70 px-4 py-3"
-                  onKeyDown={(e) => { if (e.key === 'Enter') window.location.href = '/listings'; }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const q = (e.currentTarget as HTMLInputElement).value.trim();
+                      window.location.href = q
+                        ? `/listings?q=${encodeURIComponent(q)}`
+                        : '/listings';
+                    }
+                  }}
                 />
             </div>
             )}
