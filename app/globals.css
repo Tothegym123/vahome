@@ -40,3 +40,22 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #a1a1a1;
 }
+
+/* APPEND these rules to the END of /tmp/vahome/app/globals.css.
+   Used by StickyNav (no-scrollbar) and the ListingClient mobile-pad utility. */
+
+/* StickyNav: hide overflow scrollbar on the horizontal anchor strip */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Add bottom padding on listing detail pages so sticky mobile bar doesn't cover content */
+@media (max-width: 1023px) {
+    .listing-detail-mobile-pad {
+        padding-bottom: 88px;
+    }
+}

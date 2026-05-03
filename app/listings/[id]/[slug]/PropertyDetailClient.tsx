@@ -10,6 +10,9 @@ import FavoriteButton from '../../../components/FavoriteButton'
 import { createClient } from '../../../lib/supabase/client'
 import CommuteTimes from '../../../components/CommuteTimes';
 import PhotoGallery from '../../../components/PhotoGallery';
+import StickyNav from './sections/StickyNav';
+import StickyMobileBar from './sections/StickyMobileBar';
+import MortgageCalculator from './sections/MortgageCalculator';
 
 interface PropertyDetailClientProps {
   listing: Listing;
@@ -530,12 +533,25 @@ function TourModal({
 
 /* ── Main Component ── */
 
+const NAV_ANCHORS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'facts', label: 'Quick Facts' },
+  { id: 'map', label: 'Location' },
+  { id: 'details', label: 'Details' },
+  { id: 'history', label: 'Price & Tax' },
+  { id: 'description', label: 'Description' },
+  { id: 'neighborhood', label: 'Neighborhood' },
+  { id: 'commute', label: 'Military Commute' },
+  { id: 'mortgage', label: 'Mortgage' },
+];
+
 export default function PropertyDetailClient({ listing }: PropertyDetailClientProps) {
   const [showTourModal, setShowTourModal] = useState(false);
   const [selectedBase, setSelectedBase] = useState<{name: string; shortName: string; lat: number; lng: number; branch: string} | null>(null);
   const [analyzeResult, setAnalyzeResult] = useState<{driveMinutes: number; driveMiles: number} | null>(null);
   const [analyzeLoading, setAnalyzeLoading] = useState(false);
   const [analyzeExpanded, setAnalyzeExpanded] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   useEffect(() => {
     try {
@@ -550,7 +566,6 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
     setAnalyzeLoading(true);
     setAnalyzeExpanded(true);
     try {
-      // Call our drive-times API which uses Google Maps Distance Matrix
       const resp = await fetch(`/api/drive-times?lat=${listing.lat}&lng=${listing.lng}&count=10`);
       const data = await resp.json();
       const match = data.bases?.find((b: any) => b.shortName === selectedBase.shortName);
@@ -562,12 +577,39 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
     } catch (err) { console.error('Analyze error:', err); }
     finally { setAnalyzeLoading(false); }
   }, [selectedBase, analyzeResult, listing.lat, listing.lng]);
-    const photos = listing.photos && listing.photos.length > 0 ? listing.photos : [listing.img];
+
+  const photos = listing.photos && listing.photos.length > 0 ? listing.photos : [listing.img];
   const pricePerSqft = listing.sqft > 0 ? Math.round(listing.price / listing.sqft) : 0;
   const isActive = listing.status?.toLowerCase() === 'active';
+  const cityFullState = (listing.state || 'VA').length === 2 ? (listing.state || 'VA').toUpperCase() : titleCaseAddress(listing.state || 'Virginia');
+
+  // Quick estimate of monthly payment for the QuickFactsBar card.
+  // Uses 20% down, 30yr, 6.75% — same defaults as MortgageCalculator.
+  const quickEstPayment = (() => {
+    const principal = listing.price * 0.8;
+    const r = 0.0675 / 12;
+    const n = 360;
+    const pi = (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const tax = (listing.taxAmount || 0) / 12;
+    const ins = (listing.price * 0.0035) / 12;
+    const hoa = listing.hoaFee || 0;
+    return Math.round(pi + tax + ins + hoa);
+  })();
+
+  // Description: long descriptions get a Read more toggle.
+  const fullDesc = listing.remarks || listing.description || '';
+  const descIsLong = fullDesc.length > 420;
+  const descShown = showFullDescription || !descIsLong ? fullDesc : fullDesc.slice(0, 420).trim() + '…';
+
+  // Neighborhood (city) context lookup.
+  const citySlug = citySlugFromName(listing.city);
+  const cityCtx = citySlug ? CITIES[citySlug] : undefined;
+
+  // Subdivision link (if it maps to a known neighborhood page).
+  const matchedNeighborhood = neighborhoodForSubdivision(listing.subdivision);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 listing-detail-mobile-pad">
       {/* Tour Modal */}
       {showTourModal && (
         <TourModal listing={listing} onClose={() => setShowTourModal(false)} />
@@ -575,18 +617,12 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
 
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <a href="/" className="hover:text-gray-900">
-            Home
-          </a>
+        <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
+          <a href="/" className="hover:text-gray-900">Home</a>
           <span>/</span>
-          <a href="/listings" className="hover:text-gray-900">
-            Virginia
-          </a>
+          <a href="/listings" className="hover:text-gray-900">Virginia</a>
           <span>/</span>
-          <a href={`/listings?city=${listing.city}`} className="hover:text-gray-900">
-            {listing.city}
-          </a>
+          <a href={`/listings?city=${listing.city}`} className="hover:text-gray-900">{listing.city}</a>
           <span>/</span>
           <span>{listing.neighborhood || listing.subdivision}</span>
           <span>/</span>
@@ -594,258 +630,250 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
         </div>
       </div>
 
+      {/* Sticky anchor nav */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <StickyNav anchors={NAV_ANCHORS} />
+      </div>
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 pb-10">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
           {/* Main Column */}
           <div className="space-y-3">
-            {/* Photo Gallery */}
-          <PhotoGallery photos={photos} address={listing.address} />
 
-          {/* Price Bar */}
-                          <div className="bg-white rounded-xl border border-gray-100 px-6 py-3 mb-2">
+            {/* === 1. HERO ====================================== */}
+            <section id="overview" className="scroll-mt-20 space-y-3">
+              <PhotoGallery photos={photos} address={listing.address} />
+
+              <div className="bg-white rounded-xl border border-gray-100 px-6 py-3">
                 <ListingStatusTracker status={listing.status} contingent={listing.contingent} daysOnMarket={listing.daysOnMarket} />
               </div>
 
-            {/* Military Analyze Button */}
-            {selectedBase && (
-              <div className="bg-white rounded-xl border-2 border-red-200 overflow-hidden transition-all duration-300">
-                <button
-                  onClick={handleAnalyze}
-                  disabled={analyzeLoading}
-                  className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold py-5 px-6 text-2xl transition-colors flex items-center justify-center gap-3"
-                >
-                  {analyzeLoading ? (
-                    <>
-                      <div className="w-7 h-7 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Analyzing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                      </svg>
-                      <span>Analyze</span>
-                      {analyzeResult && (
-                        <svg className={`w-5 h-5 ml-1 transition-transform ${analyzeExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      )}
-                    </>
-                  )}
-                </button>
-                {analyzeExpanded && analyzeResult && (
-                  <div className="px-6 py-5 bg-red-50 border-t border-red-200">
-                    <div className="flex items-center justify-center gap-2 mb-3">
-                      <span className="text-2xl">{selectedBase.branch === 'Navy' ? '\u2693' : selectedBase.branch === 'Air Force' ? '\u2708\uFE0F' : selectedBase.branch === 'Army' ? '\u2B50' : selectedBase.branch === 'Marines' ? '\uD83E\uDE96' : '\uD83C\uDFDB\uFE0F'}</span>
-                      <span className="text-lg font-bold text-gray-900">Drive to {selectedBase.shortName}</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-8">
-                      <div className="text-center">
-                        <span className="text-4xl font-black text-red-600">{analyzeResult.driveMinutes}</span>
-                        <p className="text-sm text-gray-500 mt-1">minutes</p>
-                      </div>
-                      <div className="w-px h-12 bg-red-200"></div>
-                      <div className="text-center">
-                        <span className="text-4xl font-black text-gray-800">{analyzeResult.driveMiles}</span>
-                        <p className="text-sm text-gray-500 mt-1">miles</p>
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-400 text-center mt-3">Estimated drive time via Google Maps</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-<div className="bg-white rounded-xl border border-gray-100 px-6 py-5 flex items-center justify-between">
-              
-              <p className="text-5xl font-bold text-gray-900">{formatPriceFull(listing.price)}</p>
-              <FavoriteButton listingId={listing.id} listingData={listing} size="lg" />
-            </div>
-
-            {/* Address & MLS Info */}
-            <div className="bg-white rounded-xl border border-gray-100 px-6 py-5">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{titleCaseAddress(streetOnly(listing.address))}</h1>
-              <p className="text-gray-600 text-sm">
-                {titleCaseAddress(listing.city)}, {(listing.state || 'VA').length === 2 ? (listing.state || 'VA').toUpperCase() : titleCaseAddress(listing.state || 'Virginia')} {listing.zip}
-              </p>
-              <p className="text-gray-500 text-base mt-3">
-                MLS# {listing.mlsNumber} &middot;{" "}
-                {(() => {
-                  const matched = neighborhoodForSubdivision(listing.subdivision);
-                  if (matched) {
-                    return (
-                      <a href={`/neighborhoods/${matched.slug}/`} className="text-primary-700 hover:underline">
-                        {listing.subdivision}
-                      </a>
-                    );
-                  }
-                  return listing.subdivision;
-                })()} &middot; {listing.county}
-              </p>
-            </div>
-
-            {/* Key Stats */}
-            <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-              <div className="grid grid-cols-6 divide-x divide-gray-200">
-                {[
-                  { label: 'Beds', value: listing.beds.toString() },
-                  { label: 'Baths', value: `${listing.baths}${listing.halfBaths ? `.${listing.halfBaths}` : ''}` },
-                  { label: 'Sq Ft', value: listing.sqft.toLocaleString() },
-                  { label: '$/Sq Ft', value: `$${pricePerSqft}` },
-                  { label: 'Built', value: listing.yearBuilt.toString() },
-                  { label: 'Garage', value: listing.garage.toString() },
-                ].map((stat, idx) => (
-                  <div key={idx} className="px-4 py-4 text-center">
-                    <p className="text-lg text-gray-500 mb-1">{stat.label}</p>
-                    <p className="text-xl font-bold text-gray-900">{stat.value}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Facts Pills */}
-            <div className="flex flex-wrap gap-2">
-              {[
-                listing.propertyType,
-                listing.style,
-                listing.stories && `${listing.stories} Story`,
-                listing.hoaFee > 0 && `HOA: $${listing.hoaFee}/${listing.hoaFrequency}`,
-                listing.waterfront && 'Waterfront',
-              ]
-                .filter(Boolean)
-                .map((fact, idx) => (
-                  <span
-                    key={idx}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-base font-medium"
+              {/* Military Analyze Button (preserved) */}
+              {selectedBase && (
+                <div className="bg-white rounded-xl border-2 border-red-200 overflow-hidden transition-all duration-300">
+                  <button
+                    onClick={handleAnalyze}
+                    disabled={analyzeLoading}
+                    className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold py-5 px-6 text-2xl transition-colors flex items-center justify-center gap-3"
                   >
-                    {fact}
-                  </span>
-                ))}
-            </div>
+                    {analyzeLoading ? (
+                      <>
+                        <div className="w-7 h-7 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Analyzing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <span>Analyze</span>
+                        {analyzeResult && (
+                          <svg className={`w-5 h-5 ml-1 transition-transform ${analyzeExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        )}
+                      </>
+                    )}
+                  </button>
+                  {analyzeExpanded && analyzeResult && (
+                    <div className="px-6 py-5 bg-red-50 border-t border-red-200">
+                      <div className="flex items-center justify-center gap-2 mb-3">
+                        <span className="text-2xl">{selectedBase.branch === 'Navy' ? '⚓' : selectedBase.branch === 'Air Force' ? '✈️' : selectedBase.branch === 'Army' ? '⭐' : selectedBase.branch === 'Marines' ? '🪖' : '🏛️'}</span>
+                        <span className="text-lg font-bold text-gray-900">Drive to {selectedBase.shortName}</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-8">
+                        <div className="text-center">
+                          <span className="text-4xl font-black text-red-600">{analyzeResult.driveMinutes}</span>
+                          <p className="text-sm text-gray-500 mt-1">minutes</p>
+                        </div>
+                        <div className="w-px h-12 bg-red-200"></div>
+                        <div className="text-center">
+                          <span className="text-4xl font-black text-gray-800">{analyzeResult.driveMiles}</span>
+                          <p className="text-sm text-gray-500 mt-1">miles</p>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-400 text-center mt-3">Estimated drive time via Google Maps</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {/* Collapsible Sections */}
-            <div className="space-y-4">
-              {/* Description */}
-              <CollapsibleSection
-                id="description"
-                title="Description"
-                icon={"\uD83D\uDCDD"}
-                iconBg="bg-blue-100"
-              
-                  defaultOpen={true}>
-                <p className="text-gray-700 text-lg leading-8">
-                  {listing.remarks || listing.description || 'No description available.'}
+              {/* Price + Favorite */}
+              <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 flex items-center justify-between">
+                <p className="text-5xl font-bold text-gray-900">{formatPriceFull(listing.price)}</p>
+                <FavoriteButton listingId={listing.id} listingData={listing} size="lg" />
+              </div>
+
+              {/* Address & MLS Info */}
+              <div className="bg-white rounded-xl border border-gray-100 px-6 py-5">
+                <h1 className="text-4xl font-bold text-gray-900 mb-2">{titleCaseAddress(streetOnly(listing.address))}</h1>
+                <p className="text-gray-600 text-sm">
+                  {titleCaseAddress(listing.city)}, {cityFullState} {listing.zip}
                 </p>
-              </CollapsibleSection>
+                <p className="text-gray-500 text-base mt-3">
+                  MLS# {listing.mlsNumber} &middot;{' '}
+                  {matchedNeighborhood ? (
+                    <a href={`/neighborhoods/${matchedNeighborhood.slug}/`} className="text-primary-700 hover:underline">
+                      {listing.subdivision}
+                    </a>
+                  ) : (
+                    listing.subdivision
+                  )} &middot; {listing.county}
+                </p>
+              </div>
+            </section>
 
-              {/* Property Details */}
+            {/* === 2. QUICK FACTS BAR (5 cards) ================= */}
+            <section id="facts" className="scroll-mt-20">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <FactCard
+                  label="Est. payment"
+                  value={`$${quickEstPayment.toLocaleString()}`}
+                  sub="/mo"
+                  hint="Edit below"
+                />
+                <FactCard
+                  label="Price / sq ft"
+                  value={`$${pricePerSqft}`}
+                  sub=""
+                  hint={`${listing.sqft.toLocaleString()} sq ft`}
+                />
+                <FactCard
+                  label="Days on market"
+                  value={listing.daysOnMarket.toString()}
+                  sub=""
+                  hint={listing.daysOnMarket < 14 ? 'New listing' : ''}
+                />
+                <FactCard
+                  label="HOA"
+                  value={listing.hoaFee > 0 ? `$${listing.hoaFee}` : 'None'}
+                  sub={listing.hoaFee > 0 ? `/${listing.hoaFrequency || 'mo'}` : ''}
+                  hint=""
+                />
+                <FactCard
+                  label="Year built"
+                  value={listing.yearBuilt > 0 ? listing.yearBuilt.toString() : 'N/A'}
+                  sub=""
+                  hint={listing.yearBuilt > 0 ? `${new Date().getFullYear() - listing.yearBuilt} yrs old` : ''}
+                />
+              </div>
+
+              {/* Bed/Bath/Sqft strip */}
+              <div className="bg-white rounded-xl border border-gray-100 mt-3 overflow-hidden">
+                <div className="grid grid-cols-4 divide-x divide-gray-200">
+                  {[
+                    { label: 'Beds', value: listing.beds.toString() },
+                    { label: 'Baths', value: `${listing.baths}${listing.halfBaths ? `.${listing.halfBaths}` : ''}` },
+                    { label: 'Sq Ft', value: listing.sqft.toLocaleString() },
+                    { label: 'Garage', value: listing.garage > 0 ? `${listing.garage} car` : 'None' },
+                  ].map((stat, idx) => (
+                    <div key={idx} className="px-4 py-4 text-center">
+                      <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
+                      <p className="text-xl font-bold text-gray-900">{stat.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Facts Pills (preserved) */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {[
+                  listing.propertyType,
+                  listing.style,
+                  listing.stories && `${listing.stories} Story`,
+                  listing.waterfront && 'Waterfront',
+                ]
+                  .filter(Boolean)
+                  .map((fact, idx) => (
+                    <span
+                      key={idx}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-base font-medium"
+                    >
+                      {fact}
+                    </span>
+                  ))}
+              </div>
+            </section>
+
+            {/* === 4. LOCATION (Map) ============================ */}
+            <section id="map" className="scroll-mt-20">
+              <ListingMapEmbed lat={listing.lat} lng={listing.lng} address={streetOnly(listing.address)} city={listing.city} />
+            </section>
+
+            {/* === 5. DETAILS ACCORDION (consolidated 6 panels) === */}
+            <section id="details" className="scroll-mt-20 space-y-3">
+              <h2 className="text-2xl font-semibold text-gray-900 px-1">Property Details</h2>
+
               <CollapsibleSection
-                id="property-details"
-                title="Property Details"
-                icon={"\uD83C\uDFE0"}
-                iconBg="bg-green-100"
-              
-                  defaultOpen={true}>
+                id="details-interior"
+                title="Interior Features"
+                icon={"✨"}
+                iconBg="bg-purple-100"
+                defaultOpen={true}
+              >
                 <DetailGrid
                   items={[
-                    { label: 'Property Type', value: listing.propertyType },
-                    { label: 'Style', value: listing.style },
-                    { label: 'Stories', value: listing.stories.toString() },
-                    { label: 'Year Built', value: listing.yearBuilt.toString() },
-                    { label: 'Approx Sq Ft', value: listing.sqft.toLocaleString() },
                     { label: 'Bedrooms', value: listing.beds.toString() },
                     { label: 'Full Baths', value: listing.baths.toString() },
                     { label: 'Half Baths', value: listing.halfBaths.toString() },
+                    { label: 'Approx Sq Ft', value: listing.sqft.toLocaleString() },
+                    { label: 'Stories', value: listing.stories.toString() },
                     { label: 'Fireplaces', value: listing.fireplaces.toString() },
-                    { label: 'Lot Size', value: listing.lotSize },
+                    { label: 'Flooring', value: listing.flooring.join(', ') || 'N/A' },
+                    { label: 'Heating', value: listing.heating },
+                    { label: 'Cooling', value: listing.cooling },
+                    { label: 'Laundry', value: listing.laundry },
+                    { label: 'Interior Features', value: listing.interiorFeatures.join(', ') || 'N/A' },
+                    ...(listing.appliancesIncluded && listing.appliancesIncluded.length > 0
+                      ? [{ label: 'Appliances', value: listing.appliancesIncluded.join(', ') }]
+                      : []),
                   ]}
                 />
               </CollapsibleSection>
 
-              {/* Construction & Exterior */}
               <CollapsibleSection
-                id="construction"
+                id="details-exterior"
                 title="Construction &amp; Exterior"
-                icon={"\uD83D\uDD28"}
+                icon={"🔨"}
                 iconBg="bg-amber-100"
               >
                 <DetailGrid
                   items={[
+                    { label: 'Property Type', value: listing.propertyType },
+                    { label: 'Style', value: listing.style },
+                    { label: 'Year Built', value: listing.yearBuilt.toString() },
                     { label: 'Exterior', value: listing.construction.join(', ') || 'N/A' },
                     { label: 'Foundation', value: listing.foundation },
                     { label: 'Roof', value: listing.roof },
                     { label: 'Exterior Features', value: listing.exteriorFeatures.join(', ') || 'N/A' },
                     { label: 'Pool', value: listing.pool },
                     { label: 'Fencing', value: listing.fencing },
-                    {
-                      label: 'Waterfront',
-                      value: listing.waterfront ? listing.waterfrontDescription : 'Not Waterfront',
-                    },
+                    { label: 'Waterfront', value: listing.waterfront ? listing.waterfrontDescription : 'Not Waterfront' },
                   ]}
                 />
               </CollapsibleSection>
 
-              {/* Interior Features */}
               <CollapsibleSection
-                id="interior"
-                title="Interior Features"
-                icon={"\u2728"}
-                iconBg="bg-purple-100"
+                id="details-lot"
+                title="Lot &amp; Location"
+                icon={"📍"}
+                iconBg="bg-red-100"
               >
                 <DetailGrid
                   items={[
-                    { label: 'Flooring', value: listing.flooring.join(', ') || 'N/A' },
-                    { label: 'Cooling', value: listing.cooling },
-                    { label: 'Heating', value: listing.heating },
-                    { label: 'Laundry', value: listing.laundry },
-                    {
-                      label: 'Interior Features',
-                      value: listing.interiorFeatures.join(', ') || 'N/A',
-                    },
+                    { label: 'Lot Size', value: listing.lotSize },
+                    { label: 'County', value: listing.county },
+                    { label: 'Subdivision', value: listing.subdivision },
+                    { label: 'Directions', value: listing.directions },
                   ]}
                 />
               </CollapsibleSection>
 
-              {/* Appliances & Equipment */}
-              {listing.appliancesIncluded && listing.appliancesIncluded.length > 0 && (
-                <CollapsibleSection
-                  id="appliances"
-                  title="Appliances &amp; Equipment"
-                  icon={"\u2699\uFE0F"}
-                  iconBg="bg-slate-100"
-                >
-                  <div className="space-y-2">
-                    {listing.appliancesIncluded.map((appliance, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-lg text-gray-700">
-                        <span className="text-green-600 font-bold">{"\u2713"}</span>
-                        <span>{appliance}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CollapsibleSection>
-              )}
-
-              {/* Parking & Garage */}
               <CollapsibleSection
-                id="parking"
-                title="Parking &amp; Garage"
-                icon={"\uD83D\uDE97"}
-                iconBg="bg-blue-100"
-              >
-                <DetailGrid
-                  items={[
-                       { label: 'Garage', value: listing.garage > 0 ? 'Yes' : 'No' },
-                    { label: 'Parking', value: listing.parkingFeatures.join(', ') || 'N/A' },
-                  ]}
-                />
-              </CollapsibleSection>
-
-              {/* Utilities */}
-              <CollapsibleSection
-                id="utilities"
+                id="details-utilities"
                 title="Utilities"
-                icon={"\u26A1"}
+                icon={"⚡"}
                 iconBg="bg-green-100"
               >
                 <DetailGrid
@@ -858,92 +886,103 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
                 />
               </CollapsibleSection>
 
-              {/* Financial Details */}
               <CollapsibleSection
-                id="financial"
-                title="Financial Details"
-                icon={"\uD83D\uDCB0"}
-                iconBg="bg-amber-100"
+                id="details-parking"
+                title="Parking &amp; Garage"
+                icon={"🚗"}
+                iconBg="bg-blue-100"
               >
                 <DetailGrid
                   items={[
-                    { label: 'List Price', value: formatPriceFull(listing.price) },
-                    { label: 'Price/Sq Ft', value: `$${pricePerSqft}` },
-                    { label: 'Approx Taxes', value: `$${listing.taxAmount.toLocaleString()}/yr` },
-                    {
-                      label: 'HOA',
-                      value:
-                        listing.hoaFee > 0
-                          ? `$${listing.hoaFee}/${listing.hoaFrequency}`
-                          : 'None',
-                    },
+                    { label: 'Garage', value: listing.garage > 0 ? `${listing.garage} car` : 'No' },
+                    { label: 'Parking', value: listing.parkingFeatures.join(', ') || 'N/A' },
                   ]}
                 />
               </CollapsibleSection>
 
-              {/* Schools */}
               <CollapsibleSection
-                id="schools"
+                id="details-schools"
                 title="Schools"
-                icon={"\uD83C\uDF93"}
+                icon={"🎓"}
                 iconBg="bg-blue-100"
               >
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <SchoolCard label="Elementary School" school={listing.elementarySchool} />
                   <SchoolCard label="Middle School" school={listing.middleSchool} />
                   <SchoolCard label="High School" school={listing.highSchool} />
                 </div>
               </CollapsibleSection>
+            </section>
 
-              {/* Location & Zoning */}
-              <CollapsibleSection
-                id="location"
-                title="Location &amp; Zoning"
-                icon={"\uD83D\uDCCD"}
-                iconBg="bg-red-100"
-              >
+            {/* === 6. PRICE & TAX HISTORY ======================= */}
+            <section id="history" className="scroll-mt-20">
+              <div className="bg-white rounded-xl border border-gray-100 p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Price &amp; Tax</h2>
                 <DetailGrid
                   items={[
-                    { label: 'County', value: listing.county },
-                    { label: 'Subdivision', value: listing.subdivision },
-                    { label: 'Directions', value: listing.directions },
+                    { label: 'List Price', value: formatPriceFull(listing.price) },
+                    { label: 'Price / Sq Ft', value: `$${pricePerSqft}` },
+                    { label: 'Annual Taxes', value: listing.taxAmount > 0 ? `$${listing.taxAmount.toLocaleString()}` : 'N/A' },
+                    { label: 'Tax Year', value: listing.taxYear > 0 ? listing.taxYear.toString() : 'N/A' },
+                    { label: 'HOA', value: listing.hoaFee > 0 ? `$${listing.hoaFee}/${listing.hoaFrequency || 'mo'}` : 'None' },
+                    { label: 'List Date', value: listing.listDate || 'N/A' },
                   ]}
                 />
-              </CollapsibleSection>
+                <p className="text-xs text-gray-400 mt-4">
+                  Tax data from public records. Full sale-history timeline coming soon.
+                </p>
+              </div>
+            </section>
 
-                {/* Military Base Commute Times */}
-                <CollapsibleSection
-                  id="commute-times"
-                  title="Military Base Commute Times"
-                  icon={"\uD83C\uDFDB\uFE0F"}
-                  iconBg="bg-indigo-50"
-                  defaultOpen={true}
-                >
-                  <CommuteTimes lat={listing.lat} lng={listing.lng} />
-                </CollapsibleSection>
+            {/* === 10. DESCRIPTION ============================= */}
+            <section id="description" className="scroll-mt-20">
+              <div className="bg-white rounded-xl border border-gray-100 p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-3">About this home</h2>
+                <p className="text-gray-700 text-base leading-7 whitespace-pre-line">
+                  {descShown || 'No description available.'}
+                </p>
+                {descIsLong && (
+                  <button
+                    onClick={() => setShowFullDescription((s) => !s)}
+                    className="mt-3 text-blue-600 hover:text-blue-700 font-medium text-sm"
+                  >
+                    {showFullDescription ? 'Show less' : 'Read more'}
+                  </button>
+                )}
+              </div>
+            </section>
 
-                {/* Embedded Google Map + Street View — gives Google a strong physical-location signal */}
-                <ListingMapEmbed lat={listing.lat} lng={listing.lng} address={streetOnly(listing.address)} city={listing.city} />
+            {/* === 11. NEIGHBORHOOD ============================ */}
+            {cityCtx && (
+              <section id="neighborhood" className="scroll-mt-20">
+                <div className="bg-white rounded-xl border border-gray-100 p-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3">About buying in {cityCtx.displayName}</h2>
+                  <p className="text-gray-700 leading-relaxed text-base">{cityCtx.intro}</p>
+                  <p className="mt-3 text-sm">
+                    <a href={`/listings/${cityCtx.slug}/`} className="text-primary-600 hover:underline font-medium">
+                      See more {cityCtx.displayName} homes for sale &rarr;
+                    </a>
+                  </p>
+                </div>
+              </section>
+            )}
 
-                {/* City context — pulled from app/lib/cities.ts so the listing detail
-                    inherits the same canonical city copy used on /listings/[city]/. */}
-                {(() => {
-                  const slug = citySlugFromName(listing.city);
-                  const c = slug ? CITIES[slug] : undefined;
-                  if (!c) return null;
-                  return (
-                    <section className="bg-white rounded-xl border border-gray-100 p-6">
-                      <h2 className="text-lg font-semibold text-gray-900 mb-2">About buying in {c.displayName}</h2>
-                      <p className="text-gray-700 leading-relaxed text-sm">{c.intro}</p>
-                      <p className="mt-3 text-sm">
-                        <a href={`/listings/${c.slug}/`} className="text-primary-600 hover:underline font-medium">
-                          See more {c.displayName} homes for sale →
-                        </a>
-                      </p>
-                    </section>
-                  );
-                })()}
-            </div>
+            {/* === 12. MILITARY COMMUTE ======================== */}
+            <section id="commute" className="scroll-mt-20">
+              <div className="bg-white rounded-xl border border-gray-100 p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-3">Military Base Commute Times</h2>
+                <CommuteTimes lat={listing.lat} lng={listing.lng} />
+              </div>
+            </section>
+
+            {/* === 13. MORTGAGE CALCULATOR ===================== */}
+            <section id="mortgage" className="scroll-mt-20">
+              <MortgageCalculator
+                price={listing.price}
+                taxAmountAnnual={listing.taxAmount}
+                hoaFeeMonthly={listing.hoaFee}
+              />
+            </section>
 
             {/* Footer Info */}
             <div className="bg-white rounded-xl border border-gray-100 px-6 py-5 text-center text-base text-gray-500">
@@ -962,64 +1001,100 @@ export default function PropertyDetailClient({ listing }: PropertyDetailClientPr
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6 lg:sticky lg:top-8 lg:h-fit">
-            {/* CTA Card */}
-            <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-              <div
-                className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${
-                  isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}
-              >
-                {isActive ? 'ACTIVE LISTING' : 'SOLD'}
-              </div>
-              <p className="text-4xl font-bold text-gray-900 mb-3">
-                {formatPriceFull(listing.price)}
-              </p>
-              <p className="text-lg font-medium text-gray-700 mb-1">{listing.address}</p>
-              <p className="text-sm text-gray-600 mb-6">
-                {listing.city}, {listing.state} {listing.zip}
-              </p>
-
-              <button
-                onClick={() => setShowTourModal(true)}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-3"
-              >
-                Schedule a Tour
-              </button>
-              <a
-                href={`/contact?intent=info&address=${encodeURIComponent(listing.address + ', ' + listing.city + ', ' + listing.state + ' ' + listing.zip)}&mls=${listing.mlsNumber || ''}`}
-                className="block text-center w-full bg-white hover:bg-gray-50 text-blue-600 font-semibold py-3 px-4 rounded-lg border-2 border-blue-600 transition-colors mb-4"
-              >
-                Request Info
-              </a>
-            </div>
-
-            {/* Quick Facts Card */}
-            <div className="bg-white rounded-xl border border-gray-100 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4 text-lg">Quick Facts</h3>
-              <div className="space-y-3">
-                {[
-                  { label: 'Type', value: listing.type },
-                  { label: 'Year Built', value: listing.yearBuilt.toString() },
-                  { label: 'Lot Size', value: listing.lotSize },
-                  { label: 'Taxes', value: `$${listing.taxAmount.toLocaleString()}/yr` },
-                  {
-                    label: 'HOA',
-                    value: listing.hoaFee > 0 ? `${listing.hoaFee}/${listing.hoaFrequency || 'mo'}` : 'None',
-                  },
-                  { label: 'Parking', value: `${listing.garage} Car Garage` },
-                  { label: 'Heating', value: listing.heating },
-                  { label: 'Cooling', value: listing.cooling },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-center">
-                    <span className="text-base text-gray-600">{item.label}</span>
-                    <span className="text-base font-medium text-gray-900">{item.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Sidebar (sticky on desktop) */}
+          <div className="space-y-6 lg:sticky lg:top-20 lg:h-fit">
+            <AgentCard
+              listing={listing}
+              isActive={isActive}
+              onTourClick={() => setShowTourModal(true)}
+            />
           </div>
+        </div>
+      </div>
+
+      {/* Sticky bottom bar (mobile only) */}
+      <StickyMobileBar listing={listing} onTourClick={() => setShowTourModal(true)} />
+    </div>
+  );
+}
+
+/* ── Helper sub-components used inline ── */
+
+function FactCard({ label, value, sub, hint }: { label: string; value: string; sub: string; hint: string }) {
+  return (
+    <div className="bg-white rounded-xl border border-gray-100 px-4 py-4">
+      <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">{label}</p>
+      <p className="text-2xl font-bold text-gray-900">
+        {value}
+        {sub && <span className="text-sm font-normal text-gray-500 ml-1">{sub}</span>}
+      </p>
+      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+    </div>
+  );
+}
+
+function AgentCard({
+  listing,
+  isActive,
+  onTourClick,
+}: {
+  listing: Listing;
+  isActive: boolean;
+  onTourClick: () => void;
+}) {
+  const contactHref = `/contact?intent=info&address=${encodeURIComponent(
+    `${listing.address}, ${listing.city}, ${listing.state || 'VA'} ${listing.zip || ''}`
+  )}&mls=${listing.mlsNumber || ''}`;
+  return (
+    <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
+      <div
+        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${
+          isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        }`}
+      >
+        {isActive ? 'ACTIVE LISTING' : 'OFF MARKET'}
+      </div>
+      <p className="text-4xl font-bold text-gray-900 mb-3">
+        {formatPriceFull(listing.price)}
+      </p>
+      <p className="text-lg font-medium text-gray-700 mb-1">{listing.address}</p>
+      <p className="text-sm text-gray-600 mb-6">
+        {listing.city}, {listing.state} {listing.zip}
+      </p>
+
+      <button
+        onClick={onTourClick}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-3"
+      >
+        Schedule a Tour
+      </button>
+      <a
+        href={contactHref}
+        className="block text-center w-full bg-white hover:bg-gray-50 text-blue-600 font-semibold py-3 px-4 rounded-lg border-2 border-blue-600 transition-colors mb-4"
+      >
+        Request Info
+      </a>
+
+      <div className="border-t border-gray-100 pt-4 text-left">
+        <p className="font-semibold text-gray-900 mb-2 text-base text-center">Quick Facts</p>
+        <div className="space-y-2">
+          {[
+            { label: 'Type', value: listing.type || listing.propertyType },
+            { label: 'Year Built', value: listing.yearBuilt.toString() },
+            { label: 'Lot Size', value: listing.lotSize },
+            { label: 'Taxes', value: listing.taxAmount > 0 ? `$${listing.taxAmount.toLocaleString()}/yr` : 'N/A' },
+            {
+              label: 'HOA',
+              value: listing.hoaFee > 0 ? `$${listing.hoaFee}/${listing.hoaFrequency || 'mo'}` : 'None',
+            },
+            { label: 'Heating', value: listing.heating },
+            { label: 'Cooling', value: listing.cooling },
+          ].map((item, idx) => (
+            <div key={idx} className="flex justify-between items-center text-sm">
+              <span className="text-gray-600">{item.label}</span>
+              <span className="font-medium text-gray-900">{item.value}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
