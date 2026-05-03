@@ -151,4 +151,13 @@ export async function GET(request: NextRequest) {
     // every pan/zoom; cache absorbs the burst without hammering Supabase.
     // Cache disabled while listings table is being seeded with real REIN data.
     // Re-enable as 'public, s-maxage=60, stale-while-revalidate=300' once feed is reliably flowing.
-    res.
+    res.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate')
+    return res
+  } catch (e) {
+    console.error('[map-listings] exception', e)
+    return NextResponse.json(
+      { error: 'Failed to fetch listings', listings: [], total: 0 },
+      { status: 500 },
+    )
+  }
+}
